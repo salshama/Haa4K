@@ -1,0 +1,23 @@
+# ----- output files -----
+analysis/final_output/
+analysis/stage1_output/
+analysis/plots_output/
+
+# ----- sample files -----
+analysis/samples/
+
+# ----- entire directory -----
+HTCondor/
+
+# ----- temporary files -----
+analysis/__pycache__/
+README.md
+
+# ----- Other potential Python-generated files -----
+*.pyc
+*.pyo
+*.pyd
+
+# ----- Optional: editor or OS-specific files -----
+.DS_Store
+*.swp
