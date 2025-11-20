@@ -1,11 +1,10 @@
 import ROOT
 
 # Mandatory: list of processes
-# There is a different list for signal and background processes due to different directories
 
 # signal processes
 processList = {
-# 		'mgp8_ee_eeH_HAlpAlp':		{},
+		'mgp8_ee_eeH_HAlpAlp':		{},
 		'p8_ee_eeH_Hpsps_ecm240':	{},
 }
 
@@ -18,11 +17,10 @@ processList = {
 #Comment out when running over centrally produced events
 #Mandatory when running over privately produced events
 # For now, signal and background processes have different directories
-inputDir = "/ceph/salshamaily/h4k_FCCee/analysis/samples"
-# inputDir = "/ceph/sgiappic/HiggsCP/winter23"
+inputDir = "/ceph/salshamaily/h4k_FCCee/delphes"
 
 # Output directory, default is local dir
-outputDir = "/ceph/salshamaily/h4k_FCCee/analysis/stage1_output/only_signal_102025"
+outputDir = "/ceph/salshamaily/h4k_FCCee/samples"
 
 #Additional/custom C++ functions
 includePaths = ["functions.h"]
@@ -46,7 +44,7 @@ class RDFanalysis():
 	   .Alias("MCRecoAssociations0",	"MCRecoAssociations#0.index")
 	   .Alias("MCRecoAssociations1",	"MCRecoAssociations#1.index")
 	   
-	   # PHOTONS
+	   ### PHOTONS ###
 	   .Alias("Photon0", "Photon#0.index")
 	   
 	   #all final state gen photons
@@ -77,7 +75,7 @@ class RDFanalysis():
 	   .Define("RecoPhoton_phi",	"ReconstructedParticle::get_phi(RecoPhotons)") #polar angle in the transverse plane phi
 	   .Define("RecoPhoton_charge", "ReconstructedParticle::get_charge(RecoPhotons)")
 	   
-	   # ELECTRONS
+	   ### ELECTRONS ###
 	   .Alias("Electron0", "Electron#0.index")
 	   
 	   #all final state gen electrons and positrons
@@ -120,7 +118,7 @@ class RDFanalysis():
 	   .Define("RecoElectronTrack_D0cov",		"ReconstructedParticle2Track::getRP2TRK_D0_cov(RecoElectrons,EFlowTrack_1)") #variance (not sigma)
 	   .Define("RecoElectronTrack_Z0cov",		"ReconstructedParticle2Track::getRP2TRK_Z0_cov(RecoElectrons,EFlowTrack_1)")
 		
-		# MUONS
+		### MUONS ###
 		.Alias("Muon0", "Muon#0.index")
 		
 		.Define("GenMuon_PID", "FCCAnalyses::MCParticle::sel_pdgID(13, true)(Particle)")
@@ -162,13 +160,28 @@ class RDFanalysis():
 		.Define("RecoMuonTrack_D0cov",	  "ReconstructedParticle2Track::getRP2TRK_D0_cov(RecoMuons,EFlowTrack_1)") #variance (not sigma)
 		.Define("RecoMuonTrack_Z0cov",	  "ReconstructedParticle2Track::getRP2TRK_Z0_cov(RecoMuons,EFlowTrack_1)")
 		
-		#removing electrons and muons from reconstructed particles to make sure to get only (charged and neutral) kaons
-		# selecting charge of "candidates" to get only charged kaons
-		.Define("Cands",		"ReconstructedParticle::remove(ReconstructedParticles, RecoElectrons)")
-		.Define("Candidates",	"ReconstructedParticle::remove(Cands, RecoMuons)")
-		.Define("RecoKplus",	"ReconstructedParticle::sel_charge(1, true)(Candidates)")
+		### LEPTONS ###
+		.Define("RecoLeptons",			"ReconstructedParticle::merge(RecoElectrons, RecoMuons)")
+        .Define("n_RecoLeptons",  		"ReconstructedParticle::get_n(RecoLeptons)") 
+        .Define("RecoLepton_e",      	"ReconstructedParticle::get_e(RecoLeptons)")
+        .Define("RecoLepton_p",      	"ReconstructedParticle::get_p(RecoLeptons)")
+        .Define("RecoLepton_pt",      	"ReconstructedParticle::get_pt(RecoLeptons)")
+        .Define("RecoLepton_px",      	"ReconstructedParticle::get_px(RecoLeptons)")
+        .Define("RecoLepton_py",      	"ReconstructedParticle::get_py(RecoLeptons)")
+        .Define("RecoLepton_pz",      	"ReconstructedParticle::get_pz(RecoLeptons)")
+        .Define("RecoLepton_eta",     	"ReconstructedParticle::get_eta(RecoLeptons)") #pseudorapidity eta
+        .Define("RecoLepton_theta",   	"ReconstructedParticle::get_theta(RecoLeptons)")
+        .Define("RecoLepton_phi",     	"ReconstructedParticle::get_phi(RecoLeptons)") #polar angle in the transverse plane phi
+        .Define("RecoLepton_charge",  	"ReconstructedParticle::get_charge(RecoLeptons)")
+        .Define("RecoLeptonTrack",		"ReconstructedParticle2Track::getRP2TRK(RecoLeptons, EFlowTrack_1)")
+        .Define("RecoLeptonTrack_absD0", 	"return abs(ReconstructedParticle2Track::getRP2TRK_D0(RecoLeptons,EFlowTrack_1))")
+        .Define("RecoLeptonTrack_absZ0", 	"return abs(ReconstructedParticle2Track::getRP2TRK_Z0(RecoLeptons,EFlowTrack_1))")
+        .Define("RecoLeptonTrack_absD0sig",	"return abs(ReconstructedParticle2Track::getRP2TRK_D0_sig(RecoLeptons,EFlowTrack_1))") #significance
+        .Define("RecoLeptonTrack_absZ0sig", "return abs(ReconstructedParticle2Track::getRP2TRK_Z0_sig(RecoLeptons,EFlowTrack_1))")
+        .Define("RecoLeptonTrack_D0cov", 	"ReconstructedParticle2Track::getRP2TRK_D0_cov(RecoLeptons,EFlowTrack_1)") #variance (not sigma)
+        .Define("RecoLeptonTrack_Z0cov", 	"ReconstructedParticle2Track::getRP2TRK_Z0_cov(RecoLeptons,EFlowTrack_1)")
 		
-		# K PLUS
+		### K PLUS ###
 	   .Define("GenKplus",			"FCCAnalyses::MCParticle::sel_pdgID(321, true)(Particle)")
 	   .Define("n_GenKplus",		"FCCAnalyses::MCParticle::get_n(GenKplus)")
 	   .Define("GenKplus_e",		"if (n_GenKplus>0) return FCCAnalyses::MCParticle::get_e(GenKplus); else return FCCAnalyses::MCParticle::get_genStatus(GenKplus);")
@@ -183,6 +196,13 @@ class RDFanalysis():
 	   .Define("GenKplus_phi",		"FCCAnalyses::MCParticle::get_phi(GenKplus)")
 	   .Define("GenKplus_charge",	"FCCAnalyses::MCParticle::get_charge(GenKplus)")
 	   
+	   # removing electrons and muons from reco particles and setting charge==1 to get K candidates
+	   .Define("Cands",        	"ReconstructedParticle::remove(ReconstructedParticles, RecoElectrons)")
+	   .Define("Candidates",   	"ReconstructedParticle::remove(Cands, RecoMuons)")
+	   .Define("RecoKplus",		"ReconstructedParticle::sel_charge(1, true)(Candidates)")
+	   
+	   ### KAONS ###
+		
 	   .Define("n_RecoKplus",	  	"ReconstructedParticle::get_n(RecoKplus)") #count how many K+ are in the event in total
 	   .Define("RecoKplus_e",	  	"ReconstructedParticle::get_e(RecoKplus)")
 	   .Define("RecoKplus_mass",	"ReconstructedParticle::get_mass(RecoKplus)")
@@ -195,58 +215,82 @@ class RDFanalysis():
 	   .Define("RecoKplus_theta",  	"ReconstructedParticle::get_theta(RecoKplus)")
 	   .Define("RecoKplus_phi",	  	"ReconstructedParticle::get_phi(RecoKplus)") #polar angle in the transverse plane phi
 	   .Define("RecoKplus_charge", 	"ReconstructedParticle::get_charge(RecoKplus)")
-	   .Define("RecoKplusTrack_absD0",		"return abs(ReconstructedParticle2Track::getRP2TRK_D0(RecoKplus,EFlowTrack_1))")
-	   .Define("RecoKplusTrack_absZ0", 		"return abs(ReconstructedParticle2Track::getRP2TRK_Z0(RecoKplus,EFlowTrack_1))")
-	   .Define("RecoKplusTrack_absD0sig",	"return abs(ReconstructedParticle2Track::getRP2TRK_D0_sig(RecoKplus,EFlowTrack_1))") #significance
-	   .Define("RecoKplusTrack_absZ0sig",	"return abs(ReconstructedParticle2Track::getRP2TRK_Z0_sig(RecoKplus,EFlowTrack_1))")
-	   .Define("RecoKplusTrack_D0cov",		"ReconstructedParticle2Track::getRP2TRK_D0_cov(RecoKplus,EFlowTrack_1)") #variance (not sigma)
-	   .Define("RecoKplusTrack_Z0cov",		"ReconstructedParticle2Track::getRP2TRK_Z0_cov(RecoKplus,EFlowTrack_1)")
-		
-		# JETS
+	   # constructing a TLV to apply kaon mass cut
+	   .Define("RecoKplus_tlv",			"FCCAnalyses::ZHfunctions::build_p4(RecoKplus_px, RecoKplus_py, RecoKplus_pz, RecoKplus_e)")
+	   .Define("RecoKplus_tlv_mass",	"FCCAnalyses::ZHfunctions::get_mass_tlv(RecoKplus_tlv)")
+	   .Define("RecoKplus_MassCut",		"RecoKplus_tlv[RecoKplus_tlv_mass>0.2 && RecoKplus_tlv_mass<0.7]")
+	   # tracks
+	   .Define("RecoKplus_TrackSel",		"RecoKplus[RecoKplus_tlv_mass>0.2 && RecoKplus_tlv_mass<0.7]")
+	   .Define("RecoKplusTrack",			"ReconstructedParticle2Track::getRP2TRK(RecoKplus_TrackSel, EFlowTrack_1)")
+	   .Define("RecoKplusTrack_absD0",		"return abs(ReconstructedParticle2Track::getRP2TRK_D0(RecoKplus_TrackSel,EFlowTrack_1))")
+	   .Define("RecoKplusTrack_absZ0", 		"return abs(ReconstructedParticle2Track::getRP2TRK_Z0(RecoKplus_TrackSel,EFlowTrack_1))")
+	   .Define("RecoKplusTrack_absD0sig",	"return abs(ReconstructedParticle2Track::getRP2TRK_D0_sig(RecoKplus_TrackSel,EFlowTrack_1))") #significance
+	   .Define("RecoKplusTrack_absZ0sig",	"return abs(ReconstructedParticle2Track::getRP2TRK_Z0_sig(RecoKplus_TrackSel,EFlowTrack_1))")
+	   .Define("RecoKplusTrack_D0cov",		"ReconstructedParticle2Track::getRP2TRK_D0_cov(RecoKplus_TrackSel,EFlowTrack_1)") #variance (not sigma)
+	   .Define("RecoKplusTrack_Z0cov",		"ReconstructedParticle2Track::getRP2TRK_Z0_cov(RecoKplus_TrackSel,EFlowTrack_1)")
+	   
+	   ### KAON SELECTION ###
+	   .Filter("RecoKplus_MassCut.size()==4 && (RecoKplus_charge.at(0)+RecoKplus_charge.at(1)+RecoKplus_charge.at(2)+RecoKplus_charge.at(3))==0")
+	   
+		### JETS ###
 
-		### Jet clustering with different algorithm, only on non leptons ###
-		.Define("RP_px",	"ReconstructedParticle::get_px(Candidates) ")
-		.Define("RP_py",	"ReconstructedParticle::get_py(Candidates) ")
-		.Define("RP_pz",	"ReconstructedParticle::get_pz(Candidates) ")
-		.Define("RP_e",		"ReconstructedParticle::get_e(Candidates) ")
+		# Jet clustering with different algorithm, only on non leptons #
+# 		.Define("RP_px",	"ReconstructedParticle::get_px(RecoKplus) ")
+# 		.Define("RP_py",	"ReconstructedParticle::get_py(RecoKplus) ")
+# 		.Define("RP_pz",	"ReconstructedParticle::get_pz(RecoKplus) ")
+# 		.Define("RP_e",		"ReconstructedParticle::get_e(RecoKplus) ")
+# 		
+# 		# build pseudo jets with the RP, using the interface that takes px,py,pz,E
+# 		.Define("pseudo_jets",	"JetClusteringUtils::set_pseudoJets(RP_px, RP_py, RP_pz, RP_e)")
+# 		
+# 		# Durham algo, exclusive clustering (first number 2) N_jets=4 (second number), E-scheme=0 (third and forth numbers) #
+# 		.Define("FCCAnalysesJets_ee_kt",	"JetClustering::clustering_ee_kt(2, 4, 1, 0)(pseudo_jets)")
+# 		.Define("Jets_kt2",					"JetClusteringUtils::get_pseudoJets( FCCAnalysesJets_ee_kt )")
+# 		.Define("Jet_GetConstituents_kt2",	"JetClusteringUtils::get_constituents(FCCAnalysesJets_ee_kt)") # constituents indices
+# 		.Define("Jets_Constituents_kt2",	"JetConstituentsUtils::build_constituents_cluster(RecoKplus, Jet_GetConstituents_kt2)") #build jet constituents lists for reconstruction
+# 		.Define("Jets_kt2_e",				"JetClusteringUtils::get_e(Jets_kt2)")
+# 		.Define("Jets_kt2_mass",			"JetClusteringUtils::get_m(Jets_kt2)")
+# 		.Define("Jets_kt2_p",				"JetClusteringUtils::get_p(Jets_kt2)")  #momentum p
+# 		.Define("Jets_kt2_pt",				"JetClusteringUtils::get_pt(Jets_kt2)") #transverse momentum pt
+# 		.Define("Jets_kt2_px",				"JetClusteringUtils::get_px(Jets_kt2)")
+# 		.Define("Jets_kt2_py",				"JetClusteringUtils::get_py(Jets_kt2)")
+# 		.Define("Jets_kt2_pz",				"JetClusteringUtils::get_pz(Jets_kt2)")
+# 		.Define("Jets_kt2_eta",				"JetClusteringUtils::get_eta(Jets_kt2)") #pseudorapidity eta
+# 		.Define("Jets_kt2_theta",   		"JetClusteringUtils::get_theta(Jets_kt2)")
+# 		.Define("Jets_kt2_phi",				"JetClusteringUtils::get_phi(Jets_kt2)") #polar angle in the transverse plane phi
+# 		.Define("n_Jets_kt2_constituents",	"JetConstituentsUtils::get_n_constituents(Jets_Constituents_kt2)")
+# 		.Define("n_Jets_kt2_charged_constituents", "JetConstituentsUtils::get_ncharged_constituents(Jets_Constituents_kt2)")
+# 		.Define("n_Jets_kt2_neutral_constituents", "JetConstituentsUtils::get_nneutral_constituents(Jets_Constituents_kt2)")
+# 		.Define("n_Jets_kt2",						"Jets_kt2_e.size()")
 		
-		# build pseudo jets with the RP, using the interface that takes px,py,pz,E
-		.Define("pseudo_jets",	"JetClusteringUtils::set_pseudoJets(RP_px, RP_py, RP_pz, RP_e)")
+		### VERTEX RECONSTRUCTION ###
 		
-		### Durham algo, exclusive clustering (first number 2) N_jets=4 (second number), E-scheme=0 (third and forth numbers) ###
-		.Define("FCCAnalysesJets_ee_kt",	"JetClustering::clustering_ee_kt(2, 4, 1, 0)(pseudo_jets)")
-		.Define("Jets_kt2",					"JetClusteringUtils::get_pseudoJets( FCCAnalysesJets_ee_kt )")
-		.Define("Jet_GetConstituents_kt2",	"JetClusteringUtils::get_constituents(FCCAnalysesJets_ee_kt)") # constituents indices
-		.Define("Jets_Constituents_kt2",	"JetConstituentsUtils::build_constituents_cluster(Candidates, Jet_GetConstituents_kt2)") #build jet constituents lists for reconstruction
-		.Define("Jets_kt2_e",				"JetClusteringUtils::get_e(Jets_kt2)")
-		.Define("Jets_kt2_mass",			"JetClusteringUtils::get_m(Jets_kt2)")
-		.Define("Jets_kt2_p",				"JetClusteringUtils::get_p(Jets_kt2)")  #momentum p
-		.Define("Jets_kt2_pt",				"JetClusteringUtils::get_pt(Jets_kt2)") #transverse momentum pt
-		.Define("Jets_kt2_px",				"JetClusteringUtils::get_px(Jets_kt2)")
-		.Define("Jets_kt2_py",				"JetClusteringUtils::get_py(Jets_kt2)")
-		.Define("Jets_kt2_pz",				"JetClusteringUtils::get_pz(Jets_kt2)")
-		.Define("Jets_kt2_eta",				"JetClusteringUtils::get_eta(Jets_kt2)") #pseudorapidity eta
-		.Define("Jets_kt2_theta",   		"JetClusteringUtils::get_theta(Jets_kt2)")
-		.Define("Jets_kt2_phi",				"JetClusteringUtils::get_phi(Jets_kt2)") #polar angle in the transverse plane phi
-		.Define("n_Jets_kt2_constituents",	"JetConstituentsUtils::get_n_constituents(Jets_Constituents_kt2)")
-		.Define("n_Jets_kt2_charged_constituents", "JetConstituentsUtils::get_ncharged_constituents(Jets_Constituents_kt2)")
-		.Define("n_Jets_kt2_neutral_constituents", "JetConstituentsUtils::get_nneutral_constituents(Jets_Constituents_kt2)")
-		.Define("n_Jets_kt2",						"Jets_kt2_e.size()")
+		# Primary IP (Primary IP) -> for leptons
+		.Define("RecoDecayVertexObjectLepton",	"VertexFitterSimple::VertexFitter_Tk(0, RecoLeptonTrack)")
+		.Define("RecoDecayVertexLepton",		"VertexingUtils::get_VertexData(RecoDecayVertexObjectLepton)")
+		.Define("RecoLeptonIP_p4",				"TLorentzVector(RecoDecayVertexLepton.position.x, RecoDecayVertexLepton.position.y, RecoDecayVertexLepton.position.z, 0.)")
+		.Define("RecoLeptonIP_px",				"RecoLeptonIP_p4.Px()")
+		.Define("RecoLeptonIP_py",				"RecoLeptonIP_p4.Py()")
+		.Define("RecoLeptonIP_pz",				"RecoLeptonIP_p4.Pz()")
 		
-		# getting mass of charged hadrons from the time of flight
-		.Define("IP",	"FCCAnalyses::MCParticle::get_EventPrimaryVertexP4()(Particle)") #position and time, if we don't want to rely on truth then it's probably just 0,0,0,0
-		.Define("Mtof",	"FCCAnalyses::JetConstituentsUtils::get_mtof(Jets_Constituents_kt2, EFlowTrack_L, EFlowTrack, TrackerHits, EFlowPhoton, EFlowNeutralHadron, CalorimeterHits, IP)")
+		# Secondary IP or Displaced Vertex (Secondary IP or DV) -> for kaons
+		.Define("RecoDecayVertexObjectKplus",	"VertexFitterSimple::VertexFitter_Tk(0, RecoKplusTrack)")
+		.Define("RecoDecayVertexKplus",			"VertexingUtils::get_VertexData(RecoDecayVertexObjectKplus)")
+		.Define("RecoKplusIP_p4",				"TLorentzVector(RecoDecayVertexKplus.position.x, RecoDecayVertexKplus.position.y, RecoDecayVertexKplus.position.z, 0.)")
+		.Define("RecoKplusIP_px",				"RecoKplusIP_p4.Px()")
+		.Define("RecoKplusIP_py",				"RecoKplusIP_p4.Py()")
+		.Define("RecoKplusIP_pz",				"RecoKplusIP_p4.Pz()")
 		
-		# HIGGS RECONSTRUCTION
+		# Displacement between the two vertices
+		.Define("RecoIP_Lxyz",	"(RecoKplusIP_p4.Vect() - RecoLeptonIP_p4.Vect()).Mag()")
 		
-		# filtering events with only 4 kaons
-		.Filter("n_RecoKplus == 4")
+		### HIGGS RECONSTRUCTION ###
 		
 		# starting with the first four kaons
-		.Define("Kplus_0",	"TLorentzVector(RecoKplus_px.at(0), RecoKplus_py.at(0), RecoKplus_pz.at(0), RecoKplus_e.at(0))")
-		.Define("Kplus_1",	"TLorentzVector(RecoKplus_px.at(1), RecoKplus_py.at(1), RecoKplus_pz.at(1), RecoKplus_e.at(1))")
-		.Define("Kplus_2",	"TLorentzVector(RecoKplus_px.at(2), RecoKplus_py.at(2), RecoKplus_pz.at(2), RecoKplus_e.at(2))")
-		.Define("Kplus_3",	"TLorentzVector(RecoKplus_px.at(3), RecoKplus_py.at(3), RecoKplus_pz.at(3), RecoKplus_e.at(3))")
+		.Define("Kplus_0",	"RecoKplus_MassCut.at(0)")
+		.Define("Kplus_1",	"RecoKplus_MassCut.at(1)")
+		.Define("Kplus_2",	"RecoKplus_MassCut.at(2)")
+		.Define("Kplus_3",	"RecoKplus_MassCut.at(3)")
 		
 		# accessing the individual 4 kaon masses
 		.Define("Kplus_0_m",	"Kplus_0.M()")
@@ -303,10 +347,10 @@ class RDFanalysis():
 		.Define("RecoHiggs_eta",	"RecoHiggs.Eta()")
 		.Define("RecoHiggs_phi",	"RecoHiggs.Phi()")
 		
-		# Z RECONSTRUCTION
+		### ELECTRON SELECTION ###
+		.Filter("n_RecoElectrons==2 && (RecoElectron_charge.at(0)+RecoElectron_charge.at(1))==0")
 		
-		# filtering events with only 2 electrons
-		.Filter("n_RecoElectrons == 2")
+		### Z RECONSTRUCTION ###
 		
 		# starting with the first two electrons
 		.Define("Electron_0",	"TLorentzVector(RecoElectron_px.at(0), RecoElectron_py.at(0), RecoElectron_pz.at(0), RecoElectron_e.at(0))")
@@ -347,6 +391,15 @@ class RDFanalysis():
 		.Define("RecoZ_eta",	"RecoZ.Eta()")
 		.Define("RecoZ_phi",	"RecoZ.Phi()")
 		
+		 ### MISSING ENERGY ###
+		.Define("RecoEmiss",		"FCCAnalyses::ZHfunctions::missingEnergy(240., ReconstructedParticles)") #ecm=240
+        .Define("RecoEmiss_px",		"RecoEmiss[0].momentum.x")
+        .Define("RecoEmiss_py",		"RecoEmiss[0].momentum.y")
+        .Define("RecoEmiss_pz",		"RecoEmiss[0].momentum.z")
+        .Define("RecoEmiss_pt",		"return sqrt(RecoEmiss_px*RecoEmiss_px + RecoEmiss_py*RecoEmiss_py)")
+        .Define("RecoEmiss_p",		"return sqrt(RecoEmiss_px*RecoEmiss_px + RecoEmiss_py*RecoEmiss_py + RecoEmiss_pz*RecoEmiss_pz)")
+        .Define("RecoEmiss_e",		"RecoEmiss[0].energy")
+        .Define("RecoEmiss_mass",	"RecoEmiss[0].mass")
 		)
 		
 		return df2
@@ -425,6 +478,7 @@ class RDFanalysis():
 				"RecoKplus_py",
 				"RecoKplus_pz",
 				"RecoKplus_charge",
+				"RecoKplusTrack",
 				"RecoKplusTrack_absD0",
 				"RecoKplusTrack_absZ0",
 				"RecoKplusTrack_absD0sig",
@@ -464,7 +518,6 @@ class RDFanalysis():
 				"RecoElectronTrack_absZ0sig",
 				"RecoElectronTrack_D0cov",
 				"RecoElectronTrack_Z0cov",
-
 				
 				# RECO mu
 				"n_RecoMuons",
@@ -487,24 +540,21 @@ class RDFanalysis():
 				"RecoMuonTrack_Z0cov",
 				
 				# JETS
-				"Jets_kt2_e",
-				"Jets_kt2_mass",
-				"Jets_kt2_p",
-				"Jets_kt2_pt",
-				"Jets_kt2_px",
-				"Jets_kt2_py",
-				"Jets_kt2_pz",
-				"Jets_kt2_eta",
-				"Jets_kt2_theta",
-				"Jets_kt2_phi",
-				"Jets_Constituents_kt2",
-				"n_Jets_kt2_constituents",
-				"n_Jets_kt2_charged_constituents",
-				"n_Jets_kt2_neutral_constituents",
-				"n_Jets_kt2",
-				
-				# mass from time of flight
-				"Mtof",
+# 				"Jets_kt2_e",
+# 				"Jets_kt2_mass",
+# 				"Jets_kt2_p",
+# 				"Jets_kt2_pt",
+# 				"Jets_kt2_px",
+# 				"Jets_kt2_py",
+# 				"Jets_kt2_pz",
+# 				"Jets_kt2_eta",
+# 				"Jets_kt2_theta",
+# 				"Jets_kt2_phi",
+# 				"Jets_Constituents_kt2",
+# 				"n_Jets_kt2_constituents",
+# 				"n_Jets_kt2_charged_constituents",
+# 				"n_Jets_kt2_neutral_constituents",
+# 				"n_Jets_kt2",
 				
 				# RECO H
 				"RecoHiggs_e",
@@ -590,5 +640,27 @@ class RDFanalysis():
 				"Electron_1_eta",
 				"Electron_1_phi",
 				
+				# RECO VERTEX
+				"RecoLeptonIP_p4",
+				"RecoLeptonIP_px",
+				"RecoLeptonIP_py",
+				"RecoLeptonIP_pz",
+				
+				"RecoKplusIP_p4",
+				"RecoKplusIP_px",
+				"RecoKplusIP_py",
+				"RecoKplusIP_pz",
+				
+				"RecoIP_Lxyz",
+
+				# RECO EMISS
+				"RecoEmiss_e",
+				"RecoEmiss_mass",
+				"RecoEmiss_p",
+				"RecoEmiss_pt",
+				"RecoEmiss_px",
+				"RecoEmiss_py",
+				"RecoEmiss_pz",
 				]
+
 		return branchList

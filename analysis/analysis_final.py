@@ -1,11 +1,11 @@
 #Input directory where the files produced at the stage1 level are
-inputDir = "/ceph/salshamaily/h4k_FCCee/analysis/samples"
+inputDir = "/ceph/salshamaily/h4k_FCCee/samples"
 
 #Output directory where the files produced at the final-selection level are
-outputDir = "/ceph/salshamaily/h4k_FCCee/analysis/final_output/all_samples_102025"
+outputDir = "/ceph/salshamaily/h4k_FCCee/analysis/final_output/all_samples_112025"
 
 #Integrated luminosity for scaling number of events (required only if setting doScale to true)
-intLumi = 108e6 #pb^-1
+intLumi = 10.8e6 #pb^-1
 
 #Scale event yields by intLumi and cross section (optional)
 # if scaling, both the number of events in the table and in the histograms will be scaled
@@ -17,20 +17,98 @@ saveTabular = True
 #produces ROOT TTrees, default is False
 doTree = False
 
-# list of signal processes
+# list of processes
 processList = {
-# 	"mgp8_ee_eeH_HAlpAlp":		{},
+	"mgp8_ee_eeH_HAlpAlp":		{},
 	"p8_ee_eeH_Hpsps_ecm240":	{},
+	
 	"p8_ee_WW_ecm240":			{},
 	"p8_ee_Zqq_ecm240":			{},
 	"p8_ee_ZZ_ecm240":			{},
+	
+	"wzp6_ee_tautau_ecm240":		{},
+    "wzp6_ee_mumu_ecm240":			{},
+    "wzp6_ee_ee_Mee_30_150_ecm240":	{},
+
+    "wzp6_ee_tautauH_Htautau_ecm240":	{},
+    "wzp6_ee_tautauH_Hbb_ecm240":		{},
+    "wzp6_ee_tautauH_Hcc_ecm240":		{},
+    "wzp6_ee_tautauH_Hss_ecm240":		{},
+    "wzp6_ee_tautauH_Hgg_ecm240":		{},
+    "wzp6_ee_tautauH_HWW_ecm240":		{},
+    "wzp6_ee_tautauH_HZZ_ecm240":		{},
+
+    "wzp6_egamma_eZ_Zmumu_ecm240":	{},
+    "wzp6_egamma_eZ_Zee_ecm240":	{},
+    "wzp6_gammae_eZ_Zmumu_ecm240":	{},
+    "wzp6_gammae_eZ_Zee_ecm240":	{},
+
+    "wzp6_gaga_tautau_60_ecm240":	{},
+    "wzp6_gaga_mumu_60_ecm240":		{},
+    "wzp6_gaga_ee_60_ecm240":		{},
+
+    "wzp6_ee_nuenueZ_ecm240":		{},
+    "wzp6_ee_nunuH_Htautau_ecm240":	{},
+    "wzp6_ee_nunuH_Hbb_ecm240":		{},
+    "wzp6_ee_nunuH_Hcc_ecm240":		{},
+    "wzp6_ee_nunuH_Hss_ecm240":		{},
+    "wzp6_ee_nunuH_Hgg_ecm240":		{},
+    "wzp6_ee_nunuH_HWW_ecm240":		{},
+    "wzp6_ee_nunuH_HZZ_ecm240":		{},
+
+    "wzp6_ee_eeH_Htautau_ecm240":	{},
+    "wzp6_ee_eeH_Hbb_ecm240":		{},
+    "wzp6_ee_eeH_Hcc_ecm240":		{},
+    "wzp6_ee_eeH_Hss_ecm240":		{},
+    "wzp6_ee_eeH_Hgg_ecm240":		{},
+    "wzp6_ee_eeH_HWW_ecm240":		{},
+    "wzp6_ee_eeH_HZZ_ecm240":		{},
+
+    "wzp6_ee_mumuH_Htautau_ecm240":	{},
+    "wzp6_ee_mumuH_Hbb_ecm240":		{},
+    "wzp6_ee_mumuH_Hcc_ecm240":		{},
+    "wzp6_ee_mumuH_Hss_ecm240":		{},
+    "wzp6_ee_mumuH_Hgg_ecm240":		{},
+    "wzp6_ee_mumuH_HWW_ecm240":		{},
+    "wzp6_ee_mumuH_HZZ_ecm240":		{},
+
+    "wzp6_ee_bbH_Htautau_ecm240":	{},
+    "wzp6_ee_bbH_Hbb_ecm240":		{},
+    "wzp6_ee_bbH_Hcc_ecm240":		{},
+    "wzp6_ee_bbH_Hss_ecm240":		{},
+    "wzp6_ee_bbH_Hgg_ecm240":		{},
+    "wzp6_ee_bbH_HWW_ecm240":		{},
+    "wzp6_ee_bbH_HZZ_ecm240":		{},
+
+    "wzp6_ee_ccH_Htautau_ecm240":	{},
+    "wzp6_ee_ccH_Hbb_ecm240":		{},
+    "wzp6_ee_ccH_Hcc_ecm240":		{},
+    "wzp6_ee_ccH_Hss_ecm240":		{},
+    "wzp6_ee_ccH_Hgg_ecm240":		{},
+    "wzp6_ee_ccH_HWW_ecm240":		{},
+    "wzp6_ee_ccH_HZZ_ecm240":		{},
+
+    "wzp6_ee_ssH_Htautau_ecm240":	{},
+    "wzp6_ee_ssH_Hbb_ecm240":		{},
+    "wzp6_ee_ssH_Hcc_ecm240":		{},
+    "wzp6_ee_ssH_Hss_ecm240":		{},
+    "wzp6_ee_ssH_Hgg_ecm240":		{},
+    "wzp6_ee_ssH_HWW_ecm240":		{},
+    "wzp6_ee_ssH_HZZ_ecm240":		{},
+
+    "wzp6_ee_qqH_Htautau_ecm240":	{},
+    "wzp6_ee_qqH_Hbb_ecm240":		{},
+    "wzp6_ee_qqH_Hcc_ecm240":		{},
+    "wzp6_ee_qqH_Hss_ecm240":		{},
+    "wzp6_ee_qqH_Hgg_ecm240":		{},
+    "wzp6_ee_qqH_HWW_ecm240":		{},
+    "wzp6_ee_qqH_HZZ_ecm240":		{},
 }
 
 #Dictionary for prettier names of processes (optional)
 # change them if you want but they don't do anything
 processLabels = {
-	#signal
-# 	'mgp8_ee_eeH_HAlpAlp':		"H $/rightarrow$ AlpAlp",
+	"mgp8_ee_eeH_HAlpAlp":		"H $/rightarrow$ AlpAlp",
 	"p8_ee_eeH_Hpsps_ecm240":	"H $\rightarrow$ psps",
 	"p8_ee_WW_ecm240":			"ee $\rightarrow$ WW",
 	"p8_ee_Zqq_ecm240":			"ee $\rightarrow$ Zqq",
@@ -42,19 +120,21 @@ procDict = "FCCee_procDict_winter2023_IDEA.json"
 
 #Add provate samples as it is not an offical process
 procDictAdd = {
-# 	"mgp8_ee_eeH_HAlpAlp":		{"numberOfEvents": 100000, "sumOfWeights": 100000, "crossSection": 0.00095, "kfactor": 1.0, "matchingEfficiency": 1.0},
-	"p8_ee_eeH_Hpsps_ecm240":	{"numberOfEvents": 500000, "sumOfWeights": 500000, "crossSection": 1e-5, "kfactor": 1.0, "matchingEfficiency": 1.0},
+	"mgp8_ee_eeH_HAlpAlp":		{"numberOfEvents": 100000, "sumOfWeights": 100000, "crossSection": 0.00095, "kfactor": 1.0, "matchingEfficiency": 1.0},
+	"p8_ee_eeH_Hpsps_ecm240":	{"numberOfEvents": 500000, "sumOfWeights": 500000, "crossSection": 0.00095, "kfactor": 1.0, "matchingEfficiency": 1.0},
 }
 	
 #Dictionary of the list of cuts. The key is the name of the selection that will be added to the output file
 cutList = {
 	### no selection, just builds the histograms, it will not be shown in the latex table
-	"NoCut":	"true",
+	"NoCut":			"1>0",
+	"KinematicCut":		"RecoHiggs_mass>120",
 }
 
 #Dictionary of the labels of cuts.
 cutLabels = {
-	"NoCut":	"No cut",
+	"NoCut":			"No cut",
+	"KinematicCut":		"Higgs mass > 120 GeV",
 }
 
 #Dictionary for the ouput variable/hitograms.
@@ -89,14 +169,14 @@ histoList = {
 	# MC e-
 	"n_FSGenElectron":	  	{"name":"n_FSGenElectron",		"title":"Number of MC Electrons",	"bin":50,	"xmin":0,	"xmax":10},
 	"FSGenElectron_e":		{"name":"FSGenElectron_e",		"title":"Energy of MC Electrons",	"bin":50,	"xmin":0,	"xmax":90},
-	"FSGenElectron_mass":	{"name":"FSGenElectron_mass",	"title":"Mass of MC Electrons",		"bin":50,	"xmin":0,	"xmax":2},
+	"FSGenElectron_mass":	{"name":"FSGenElectron_mass",	"title":"Mass of MC Electrons",		"bin":50,	"xmin":0,	"xmax":1},
 	"FSGenElectron_pt":  	{"name":"FSGenElectron_pt",		"title":"$\p_{t}$ of MC Electrons",	"bin":50,	"xmin":0,	"xmax":90},
 	"FSGenElectron_p":	 	{"name":"FSGenElectron_p",		"title":"Momentum of MC Electrons",	"bin":50,	"xmin":0,	"xmax":90},
 	"FSGenElectron_px":		{"name":"FSGenElectron_px",		"title":"$\p_{x}$ of MC Electrons",	"bin":50,	"xmin":0,	"xmax":90},
 	"FSGenElectron_py":		{"name":"FSGenElectron_py",		"title":"$\p_{y}$ of MC Electrons",	"bin":50,	"xmin":0,	"xmax":90},
 	"FSGenElectron_pz":		{"name":"FSGenElectron_pz",		"title":"$\p_{z}$ of MC Electrons",	"bin":50,	"xmin":0,	"xmax":90},
 	"FSGenElectron_eta":	{"name":"FSGenElectron_eta",	"title":"Eta of MC Electrons",		"bin":50,	"xmin":-4,	"xmax":4},
-	"FSGenElectron_theta":	{"name":"FSGenElectron_theta",	"title":"Theta of MC Electrons",	"bin":50,	"xmin":-3,	"xmax":3},
+	"FSGenElectron_theta":	{"name":"FSGenElectron_theta",	"title":"Theta of MC Electrons",	"bin":50,	"xmin":-1,	"xmax":3},
 	"FSGenElectron_phi":	{"name":"FSGenElectron_phi",	"title":"Phi of MC Electrons",		"bin":50,	"xmin":-4,	"xmax":4},
 	"FSGenElectron_charge":	{"name":"FSGenElectron_charge",	"title":"Charge of MC Electrons",   "bin":50,	"xmin":0,	"xmax":2},
 	
@@ -115,15 +195,15 @@ histoList = {
 	"FSGenMuon_charge":	{"name":"FSGenMuon_charge",	"title":"Charge of MC Muons",   "bin":50,	"xmin":0,	"xmax":2},
 	
 	# RECO k+
-	"n_RecoKplus":	  	{"name":"n_RecoKplus",	   	"title":"Number of Reco Kplus",		"bin":50,	"xmin":0,	"xmax":10},
-	"RecoKplus_e":	  	{"name":"RecoKplus_e",	   	"title":"Energy of Reco Kplus",		"bin":50,	"xmin":0,	"xmax":100},
-	"RecoKplus_mass":	{"name":"RecoKplus_mass",	"title":"Mass of Reco Kplus",		"bin":50,	"xmin":0,	"xmax":1},
-	"RecoKplus_p":	  	{"name":"RecoKplus_p",	   	"title":"Momentum of Reco Kplus",	"bin":50,	"xmin":0,	"xmax":100},
-	"RecoKplus_pt":	  	{"name":"RecoKplus_pt",	   	"title":"$\p_{t}$ of Reco Kplus",	"bin":50,	"xmin":0,	"xmax":100},
-	"RecoKplus_px":	  	{"name":"RecoKplus_px",	   	"title":"$\p_{x}$ of Reco Kplus",	"bin":50,	"xmin":0,	"xmax":100},
-	"RecoKplus_py":	  	{"name":"RecoKplus_py",	   	"title":"$\p_{y}$ of Reco Kplus",	"bin":50,	"xmin":0,	"xmax":100},
-	"RecoKplus_pz":	  	{"name":"RecoKplus_pz",	   	"title":"$\p_{z}$ of Reco Kplus",	"bin":50,	"xmin":0,	"xmax":100},
-	"RecoKplus_charge":	{"name":"RecoKplus_charge",	"title":"Charge of Reco Kplus",		"bin":50,	"xmin":0,	"xmax":2},
+	"n_RecoKplus":	  			{"name":"n_RecoKplus",	   	"title":"Number of Reco Kplus",		"bin":50,	"xmin":0,	"xmax":10},
+	"RecoKplus_e":	  			{"name":"RecoKplus_e",	   	"title":"Energy of Reco Kplus",		"bin":50,	"xmin":0,	"xmax":100},
+	"RecoKplus_mass":			{"name":"RecoKplus_mass",	"title":"Mass of Reco Kplus",		"bin":50,	"xmin":0,	"xmax":1},
+	"RecoKplus_p":	  			{"name":"RecoKplus_p",	   	"title":"Momentum of Reco Kplus",	"bin":50,	"xmin":0,	"xmax":100},
+	"RecoKplus_pt":	  			{"name":"RecoKplus_pt",	   	"title":"$\p_{t}$ of Reco Kplus",	"bin":50,	"xmin":0,	"xmax":100},
+	"RecoKplus_px":	  			{"name":"RecoKplus_px",	   	"title":"$\p_{x}$ of Reco Kplus",	"bin":50,	"xmin":0,	"xmax":100},
+	"RecoKplus_py":	  			{"name":"RecoKplus_py",	   	"title":"$\p_{y}$ of Reco Kplus",	"bin":50,	"xmin":0,	"xmax":100},
+	"RecoKplus_pz":	  			{"name":"RecoKplus_pz",	   	"title":"$\p_{z}$ of Reco Kplus",	"bin":50,	"xmin":0,	"xmax":100},
+	"RecoKplus_charge":			{"name":"RecoKplus_charge",	"title":"Charge of Reco Kplus",		"bin":50,	"xmin":0,	"xmax":2},
 	
 	# RECO gamma
 	"n_RecoPhotons":	{"name":"n_RecoPhotons",	"title":"Number of Reco Photons",	  "bin":50,	"xmin":0,	"xmax":10},
@@ -143,7 +223,7 @@ histoList = {
 	"RecoElectron_px":		{"name":"RecoElectron_px",		"title":"$\p_{x}$ of Reco Electrons",	"bin":50, 	"xmin":0,	"xmax":100},
 	"RecoElectron_py":		{"name":"RecoElectron_py",		"title":"$\p_{y}$ of Reco Electrons",	"bin":50, 	"xmin":0,	"xmax":100},
 	"RecoElectron_pz":		{"name":"RecoElectron_pz",		"title":"$\p_{z}$ of Reco Electrons",	"bin":50, 	"xmin":0,	"xmax":100},
-	"RecoElectron_charge":	{"name":"RecoElectron_charge",	"title":"Charge of Reco Electron",		"bin":50, 	"xmin":0,	"xmax":1},
+	"RecoElectron_charge":	{"name":"RecoElectron_charge",	"title":"Charge of Reco Electron",		"bin":50, 	"xmin":0,	"xmax":2},
 	
 	# RECO mu
 	"n_RecoMuons":		{"name":"n_RecoMuons",		"title":"Number of Reco Muons",		"bin":50,	"xmin":0,	"xmax":10},
@@ -157,24 +237,24 @@ histoList = {
 	"RecoMuon_charge":	{"name":"RecoMuon_charge",	"title":"Charge of Reco Muon",		"bin":50,	"xmin":0,	"xmax":2},
 	
 	# JETS
-	"Jets_kt2_e":						{"name":"Jets_kt2_e",						"title":"Energy of Jets",							"bin":50,	"xmin":0,	"xmax":120},
-	"Jets_kt2_mass":					{"name":"Jets_kt2_mass",					"title":"Mass of Jets",								"bin":50,	"xmin":0,	"xmax":30},
-	"Jets_kt2_p":						{"name":"Jets_kt2_p",						"title":"Momentum of Jets",							"bin":50,	"xmin":0,	"xmax":120},
-	"Jets_kt2_pt":						{"name":"Jets_kt2_pt",						"title":"$\p_{t}$ of Jets",							"bin":50,	"xmin":0,	"xmax":120},
-	"Jets_kt2_px":						{"name":"Jets_kt2_px",						"title":"$\p_{x}$ of Jets",							"bin":50,	"xmin":0,	"xmax":120},
-	"Jets_kt2_py":						{"name":"Jets_kt2_py",						"title":"$\p_{y}$ of Jets",							"bin":50,	"xmin":0,	"xmax":120},
-	"Jets_kt2_pz":						{"name":"Jets_kt2_pz",						"title":"$\p_{z}$ of Jets",							"bin":50,	"xmin":0,	"xmax":120},
-	"Jets_kt2_eta":						{"name":"Jets_kt2_eta",						"title":"Eta of Jets",								"bin":50,	"xmin":-4,	"xmax":4},
-	"Jets_kt2_theta":					{"name":"Jets_kt2_theta",					"title":"Theta of Jets",							"bin":50,	"xmin":0,	"xmax":4},
-	"Jets_kt2_phi":						{"name":"Jets_kt2_phi",						"title":"Phi of Jets",								"bin":50,	"xmin":0,	"xmax":4},
-	"n_Jets_kt2_constituents":			{"name":"n_Jets_kt2_constituents",			"title":"Number of Jet Constituents",				"bin":50,	"xmin":0,	"xmax":20},
-	"n_Jets_kt2_charged_constituents":	{"name":"n_Jets_kt2_charged_constituents",	"title":"Number of Charged Constituents of Jets",	"bin":50,	"xmin":0,	"xmax":10},
-	"n_Jets_kt2_neutral_constituents":	{"name":"n_Jets_kt2_neutral_constituents",	"title":"Number of Neutral Constituents of Jets",	"bin":50,	"xmin":0,	"xmax":20},
-	"n_Jets_kt2":						{"name":"n_Jets_kt2",						"title":"Number of Jets",							"bin":50,	"xmin":0,	"xmax":10},
+# 	"Jets_kt2_e":						{"name":"Jets_kt2_e",						"title":"Energy of Jets",							"bin":50,	"xmin":0,	"xmax":120},
+# 	"Jets_kt2_mass":					{"name":"Jets_kt2_mass",					"title":"Mass of Jets",								"bin":50,	"xmin":0,	"xmax":30},
+# 	"Jets_kt2_p":						{"name":"Jets_kt2_p",						"title":"Momentum of Jets",							"bin":50,	"xmin":0,	"xmax":120},
+# 	"Jets_kt2_pt":						{"name":"Jets_kt2_pt",						"title":"$\p_{t}$ of Jets",							"bin":50,	"xmin":0,	"xmax":120},
+# 	"Jets_kt2_px":						{"name":"Jets_kt2_px",						"title":"$\p_{x}$ of Jets",							"bin":50,	"xmin":0,	"xmax":120},
+# 	"Jets_kt2_py":						{"name":"Jets_kt2_py",						"title":"$\p_{y}$ of Jets",							"bin":50,	"xmin":0,	"xmax":120},
+# 	"Jets_kt2_pz":						{"name":"Jets_kt2_pz",						"title":"$\p_{z}$ of Jets",							"bin":50,	"xmin":0,	"xmax":120},
+# 	"Jets_kt2_eta":						{"name":"Jets_kt2_eta",						"title":"Eta of Jets",								"bin":50,	"xmin":-4,	"xmax":4},
+# 	"Jets_kt2_theta":					{"name":"Jets_kt2_theta",					"title":"Theta of Jets",							"bin":50,	"xmin":0,	"xmax":4},
+# 	"Jets_kt2_phi":						{"name":"Jets_kt2_phi",						"title":"Phi of Jets",								"bin":50,	"xmin":0,	"xmax":4},
+# 	"n_Jets_kt2_constituents":			{"name":"n_Jets_kt2_constituents",			"title":"Number of Jet Constituents",				"bin":50,	"xmin":0,	"xmax":20},
+# 	"n_Jets_kt2_charged_constituents":	{"name":"n_Jets_kt2_charged_constituents",	"title":"Number of Charged Constituents of Jets",	"bin":50,	"xmin":0,	"xmax":10},
+# 	"n_Jets_kt2_neutral_constituents":	{"name":"n_Jets_kt2_neutral_constituents",	"title":"Number of Neutral Constituents of Jets",	"bin":50,	"xmin":0,	"xmax":20},
+# 	"n_Jets_kt2":						{"name":"n_Jets_kt2",						"title":"Number of Jets",							"bin":50,	"xmin":0,	"xmax":10},
 	
 	# RECO H
-	"RecoHiggs_e":		{"name":"RecoHiggs_e",		"title":"Energy of Reco Higgs",		"bin":50,	"xmin":0,	"xmax":160},
-	"RecoHiggs_mass":	{"name":"RecoHiggs_mass",	"title":"Mass of Reco Higgs",		"bin":50,	"xmin":0,	"xmax":130},
+	"RecoHiggs_e":		{"name":"RecoHiggs_e",		"title":"Energy of Reco Higgs",		"bin":50,	"xmin":0,	"xmax":180},
+	"RecoHiggs_mass":	{"name":"RecoHiggs_mass",	"title":"Mass of Reco Higgs",		"bin":50,	"xmin":0,	"xmax":180},
 	"RecoHiggs_p":		{"name":"RecoHiggs_p",		"title":"Momentum of Reco Higgs",	"bin":50,	"xmin":0,	"xmax":90},
 	"RecoHiggs_pt":		{"name":"RecoHiggs_pt",		"title":"Pt of Reco Higgs",			"bin":50,	"xmin":0,	"xmax":90},
 	"RecoHiggs_px":		{"name":"RecoHiggs_px",		"title":"Px of Reco Higgs",			"bin":50,	"xmin":0,	"xmax":90},
@@ -255,5 +335,14 @@ histoList = {
 	"Electron_1_pz":	{"name":"Electron_1_pz",	"title":"Pz of 2nd Electron",		"bin":50,	"xmin":0,	"xmax":80},
 	"Electron_1_eta":	{"name":"Electron_1_eta",	"title":"Eta of 2nd Electron",		"bin":50,	"xmin":0,	"xmax":3},
 	"Electron_1_phi":	{"name":"Electron_1_phi",	"title":"Phi of 2nd Electron",		"bin":50,	"xmin":0,	"xmax":4},
-
-}	
+	
+	"RecoEmiss_e":		{"name":"RecoEmiss_e",		"title":"Energy of Emiss",		"bin":50,	"xmin":0,	"xmax":100},
+	"RecoEmiss_mass":	{"name":"RecoEmiss_mass",	"title":"Mass of Emiss",		"bin":50,	"xmin":0,	"xmax":20},
+	"RecoEmiss_p":		{"name":"RecoEmiss_p",		"title":"Momentum of Emiss",	"bin":50,	"xmin":0,	"xmax":80},
+	"RecoEmiss_pt":		{"name":"RecoEmiss_pt",		"title":"Pt of Emiss",			"bin":50,	"xmin":0,	"xmax":80},
+	"RecoEmiss_px":		{"name":"RecoEmiss_px",		"title":"Px of Emiss",			"bin":50,	"xmin":0,	"xmax":80},
+	"RecoEmiss_py":		{"name":"RecoEmiss_py",		"title":"Py of Emiss",			"bin":50,	"xmin":0,	"xmax":80},
+	"RecoEmiss_pz":		{"name":"RecoEmiss_pz",		"title":"Pz of Emiss",			"bin":50,	"xmin":0,	"xmax":80},
+	
+	"RecoIP_Lxyz":		{"name":"RecoIP_Lxyz",		"title":"Reco Displacement",	"bin":50,	"xmin":0,	"xmax":20},
+}

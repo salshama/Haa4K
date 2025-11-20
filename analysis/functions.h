@@ -262,6 +262,102 @@ float get_cosTheta_miss(Vec_rp met){
     return costheta;
 }
 
+ROOT::VecOps::RVec<TLorentzVector> build_p4(ROOT::VecOps::RVec<float> px, ROOT::VecOps::RVec<float> py, ROOT::VecOps::RVec<float> pz, ROOT::VecOps::RVec<float> e) {
+    ROOT::VecOps::RVec<TLorentzVector> p4;
+    for (size_t i = 0; i < px.size(); ++i) {  
+        TLorentzVector tlv;
+        tlv.SetPxPyPzE(px[i], py[i], pz[i], e[i]);
+        p4.push_back(tlv);
+    }
+    return p4;
+}
+
+ROOT::VecOps::RVec<TLorentzVector> build_p4_class(TLorentzVector v1, TLorentzVector v2) {
+    ROOT::VecOps::RVec<TLorentzVector> result;
+    result.push_back(v1);
+    result.push_back(v2);
+    return result;
+}
+
+ROOT::VecOps::RVec<float> get_p_tlv(ROOT::VecOps::RVec<TLorentzVector> vec) {
+    ROOT::VecOps::RVec<float> result;
+    for (size_t i = 0; i < vec.size(); ++i) {  
+        result.push_back(vec[i].P());
+    }
+    return result;
+}
+
+ROOT::VecOps::RVec<float> get_mass_tlv(ROOT::VecOps::RVec<TLorentzVector> vec) {
+    ROOT::VecOps::RVec<float> result;
+    for (size_t i = 0; i < vec.size(); ++i) {  
+        result.push_back(vec[i].M());
+    }
+    return result;
+}
+
+ROOT::VecOps::RVec<float> get_e_tlv(ROOT::VecOps::RVec<TLorentzVector> vec) {
+    ROOT::VecOps::RVec<float> result;
+    for (size_t i = 0; i < vec.size(); ++i) {  // Iterate over the indices
+        result.push_back(vec[i].E());
+    }
+    return result;
+}
+
+ROOT::VecOps::RVec<float> get_px_tlv(ROOT::VecOps::RVec<TLorentzVector> vec) {
+    ROOT::VecOps::RVec<float> result;
+    for (size_t i = 0; i < vec.size(); ++i) {  // Iterate over the indices
+        result.push_back(vec[i].Px());
+    }
+    return result;
+}
+
+ROOT::VecOps::RVec<float> get_py_tlv(ROOT::VecOps::RVec<TLorentzVector> vec) {
+    ROOT::VecOps::RVec<float> result;
+    for (size_t i = 0; i < vec.size(); ++i) {  // Iterate over the indices
+        result.push_back(vec[i].Py());
+    }
+    return result;
+}
+
+ROOT::VecOps::RVec<float> get_pz_tlv(ROOT::VecOps::RVec<TLorentzVector> vec) {
+    ROOT::VecOps::RVec<float> result;
+    for (size_t i = 0; i < vec.size(); ++i) {  // Iterate over the indices
+        result.push_back(vec[i].Pz());
+    }
+    return result;
+}
+
+ROOT::VecOps::RVec<float> get_pt_tlv(ROOT::VecOps::RVec<TLorentzVector> vec) {
+    ROOT::VecOps::RVec<float> result;
+    for (size_t i = 0; i < vec.size(); ++i) {  // Iterate over the indices
+        result.push_back(vec[i].Pt());
+    }
+    return result;
+}
+
+ROOT::VecOps::RVec<float> get_eta_tlv(ROOT::VecOps::RVec<TLorentzVector> vec) {
+    ROOT::VecOps::RVec<float> result;
+    for (size_t i = 0; i < vec.size(); ++i) {  // Iterate over the indices
+        result.push_back(vec[i].Eta());
+    }
+    return result;
+}
+
+ROOT::VecOps::RVec<float> get_phi_tlv(ROOT::VecOps::RVec<TLorentzVector> vec) {
+    ROOT::VecOps::RVec<float> result;
+    for (size_t i = 0; i < vec.size(); ++i) {  // Iterate over the indices
+        result.push_back(vec[i].Phi());
+    }
+    return result;
+}
+
+ROOT::VecOps::RVec<float> get_theta_tlv(ROOT::VecOps::RVec<TLorentzVector> vec) {
+    ROOT::VecOps::RVec<float> result;
+    for (size_t i = 0; i < vec.size(); ++i) {  // Iterate over the indices
+        result.push_back(vec[i].Theta());
+    }
+    return result;
+}
  
  
 

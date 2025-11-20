@@ -4,14 +4,18 @@ analysis/stage1_output/
 analysis/plots_output/
 
 # ----- sample files -----
-analysis/samples/
+samples/
 
-# ----- entire directory -----
-HTCondor/
+# ----- delphes files -----
+delphes/
+
+# ----- HTCondor -----
+HTCondor/*
+!HTCondor/
+!HTCondor/create_jobfile_stage1.py
 
 # ----- temporary files -----
 analysis/__pycache__/
-README.md
 
 # ----- Other potential Python-generated files -----
 *.pyc
