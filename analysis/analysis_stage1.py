@@ -4,8 +4,9 @@ import ROOT
 
 # signal processes
 processList = {
-		'mgp8_ee_eeH_HAlpAlp':		{},
-		'p8_ee_eeH_Hpsps_ecm240':	{},
+		'mgp8_ee_eeH_HAlpAlp_m1_ecm240':{},
+		'mgp8_ee_eeH_HAlpAlp_m3_ecm240':{},
+		'mgp8_ee_eeH_HAlpAlp_m6_ecm240':{},
 }
 
 # Production tag. This points to the yaml files for getting sample statistics
@@ -17,10 +18,10 @@ processList = {
 #Comment out when running over centrally produced events
 #Mandatory when running over privately produced events
 # For now, signal and background processes have different directories
-inputDir = "/ceph/salshamaily/h4k_FCCee/delphes"
+inputDir = "/ceph/salshamaily/haa4K_FCCee/delphes"
 
 # Output directory, default is local dir
-outputDir = "/ceph/salshamaily/h4k_FCCee/samples"
+outputDir = "/ceph/salshamaily/haa4K_FCCee/samples"
 
 #Additional/custom C++ functions
 includePaths = ["functions.h"]

@@ -1,0 +1,29 @@
+# import models and define multi particles
+import model ALP
+
+# not necessary unless you actually want to use multi particles to have all the possible combination of preduction generated
+define p = g u c d s u~ c~ d~ s~
+define j = g u c d s u~ c~ d~ s~
+define l+ = e+ mu+
+define l- = e- mu-
+define vl = ve vm vt
+define vl~ = ve~ vm~ vt~
+
+# define process and decays
+generate e+ e- > z h, z > e+ e-, h > ALP ALP
+
+# output with full or relative path of the directory to save the files into
+output samples/mg_ee_eeH_HAlpAlp_m1_ecm240
+launch samples/mg_ee_eeH_HAlpAlp_m1_ecm240
+
+# set collision parameter
+set ebeam1 120
+set ebeam2 120
+set no_parton_cuts
+
+# set alp paramters
+set malp 1.5
+set walp auto
+
+set nevents 500000
+done

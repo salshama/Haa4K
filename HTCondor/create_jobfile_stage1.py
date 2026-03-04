@@ -256,9 +256,9 @@ def save_failed_paths(output_dir: str, save_file: str):
     print(f"\nSaved {len(failed_paths)} failed path entries → {save_file}\n")
 
 inputDir		= '/ceph/sgiappic/HiggsCP/winter23/'
-output			= '/ceph/salshamaily/h4k_FCCee/HTCondor/' ##output directory of submission files, needs to be different to have unique submission files
-outputDir		= '/ceph/salshamaily/h4k_FCCee/samples/' ##output directory of stage1 samples
-localDir		= '/ceph/salshamaily/h4k_FCCee/analysis/'
+output			= '/ceph/salshamaily/haa4K_FCCee/HTCondor/' ##output directory of submission files, needs to be different to have unique submission files
+outputDir		= '/ceph/salshamaily/haa4K_FCCee/samples/' ##output directory of stage1 samples
+localDir		= '/ceph/salshamaily/haa4K_FCCee/analysis/'
 sourceDir		= '/ceph/sgiappic/FCCAnalyses/'
 Filename		= 'analysis_stage1.py'
 

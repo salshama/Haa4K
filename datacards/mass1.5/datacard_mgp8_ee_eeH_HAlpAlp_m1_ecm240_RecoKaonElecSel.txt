@@ -1,0 +1,27 @@
+# text2workspace.py  {datacard_file}.txt  -o ws.root
+# combine -M AsymptoticLimits ws.root -t -1 --expectSignal=1 > {}.txt
+
+imax	1 number of bins
+jmax	* number of processes minus 1
+kmax	* number of nuisance parameters
+--------------------------------------------------------------------------------
+shapes	data_obs 						*	/ceph/salshamaily/haa4K_FCCee/analysis/final_output/all_samples_mgp8sig_norwt_012026/wzp6_ee_tautauH_Htautau_ecm240_RecoKaonElecSel_histo.root	RecoHiggs_mass
+shapes	mgp8_ee_eeH_HAlpAlp_m1_ecm240	*	/ceph/salshamaily/haa4K_FCCee/analysis/final_output/all_samples_mgp8sig_norwt_012026/mgp8_ee_eeH_HAlpAlp_m1_ecm240_RecoKaonElecSel_histo.root	RecoHiggs_mass
+shapes	p8_ee_WW_ecm240					*	/ceph/salshamaily/haa4K_FCCee/analysis/final_output/all_samples_mgp8sig_norwt_012026/p8_ee_WW_ecm240_RecoKaonElecSel_histo.root					RecoHiggs_mass
+shapes	p8_ee_ZZ_ecm240					*	/ceph/salshamaily/haa4K_FCCee/analysis/final_output/all_samples_mgp8sig_norwt_012026/p8_ee_ZZ_ecm240_RecoKaonElecSel_histo.root					RecoHiggs_mass
+shapes	p8_ee_Zqq_ecm240				*	/ceph/salshamaily/haa4K_FCCee/analysis/final_output/all_samples_mgp8sig_norwt_012026/p8_ee_Zqq_ecm240_RecoKaonElecSel_histo.root				RecoHiggs_mass
+--------------------------------------------------------------------------------
+bin				bin1
+observation		-1
+--------------------------------------------------------------------------------
+bin			bin1							bin1				bin1				bin1
+process		mgp8_ee_eeH_HAlpAlp_m1_ecm240	p8_ee_WW_ecm240		p8_ee_ZZ_ecm240		p8_ee_Zqq_ecm240
+process		0								1					2					3
+rate		-1								-1					-1					-1
+--------------------------------------------------------------------------------
+lumi	lnN		1.01	1.01	1.01	1.01
+xs_WW	lnN		-		1.02	-		-
+xs_ZZ	lnN		-		-		1.05	-
+xs_Zqq	lnN		-		-		-		1.03
+
+* autoMCStats 1 1
