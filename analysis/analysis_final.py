@@ -2,10 +2,10 @@
 inputDir = "/ceph/salshamaily/haa4K_FCCee/samples"
 
 #Output directory where the files produced at the final-selection level are
-outputDir = "/ceph/salshamaily/haa4K_FCCee/analysis/final_output/all_samples_mgp8sig_norwt_012026"
+outputDir = "/ceph/salshamaily/haa4K_FCCee/analysis/final_output/only_bkg_mgp8sig_norwt_042026"
 
 #Integrated luminosity for scaling number of events (required only if setting doScale to true)
-intLumi = 10.8e6 #ab^-1
+intLumi = 10.8e6 #pb^-1
 
 #Scale event yields by intLumi and cross section (optional)
 # if scaling, both the number of events in the table and in the histograms will be scaled
@@ -19,9 +19,10 @@ doTree = False
 
 # list of processes
 processList = {
-	"mgp8_ee_eeH_HAlpAlp_m1_ecm240":	{},
-	"mgp8_ee_eeH_HAlpAlp_m3_ecm240":	{},
-	"mgp8_ee_eeH_HAlpAlp_m6_ecm240":	{},
+# 	"mgp8_ee_eeH_HAlpAlp_m1_ecm240":	{},
+# 	"mgp8_ee_eeH_HAlpAlp_m10_ecm240":	{},
+# 	"mgp8_ee_eeH_HAlpAlp_m30_ecm240":	{},
+# 	"mgp8_ee_eeH_HAlpAlp_m60_ecm240":	{},
 	
 	"p8_ee_WW_ecm240":	{},
 	"p8_ee_Zqq_ecm240":	{},
@@ -109,13 +110,92 @@ processList = {
 #Dictionary for prettier names of processes (optional)
 # change them if you want but they don't do anything
 processLabels = {
-	"mgp8_ee_eeH_HAlpAlp_m1_ecm240":	"H $/rightarrow$ AlpAlp [m_{alp}=1.5]",
-	"mgp8_ee_eeH_HAlpAlp_m3_ecm240":	"H $/rightarrow$ AlpAlp [m_{alp}=30]",
-	"mgp8_ee_eeH_HAlpAlp_m6_ecm240":	"H $/rightarrow$ AlpAlp [m_{alp}=60]",
+# 	"mgp8_ee_eeH_HAlpAlp_m1_ecm240":	"H $/rightarrow$ AlpAlp [m_{a}=1.5]",
+# 	"mgp8_ee_eeH_HAlpAlp_m10_ecm240":	"H $/rightarrow$ AlpAlp [m_{a}=10]",
+# 	"mgp8_ee_eeH_HAlpAlp_m30_ecm240":	"H $/rightarrow$ AlpAlp [m_{a}=30]",
+# 	"mgp8_ee_eeH_HAlpAlp_m60_ecm240":	"H $/rightarrow$ AlpAlp [m_{a}=60]",
 
 	"p8_ee_WW_ecm240":	"ee $\rightarrow$ WW",
 	"p8_ee_Zqq_ecm240":	"ee $\rightarrow$ Zqq",
 	"p8_ee_ZZ_ecm240":	"ee $\rightarrow$ ZZ",
+	
+	"wzp6_ee_tautau_ecm240":		"ee $\rightarrow$ $\tau$ $\tau$",
+	"wzp6_ee_mumu_ecm240":			"ee $\rightarrow$ $\mu$ $\mu$",
+	"wzp6_ee_ee_Mee_30_150_ecm240":	"ee $\rightarrow$ ee",
+
+	"wzp6_ee_tautauH_Htautau_ecm240":	"ee $\rightarrow$ $\tau$ $\tau$ H $\rightarrow$ $\tau$ $\tau$",
+	"wzp6_ee_tautauH_Hbb_ecm240":		"ee $\rightarrow$ $\tau$ $\tau$ H $\rightarrow$ bb",
+	"wzp6_ee_tautauH_Hcc_ecm240":		"ee $\rightarrow$ $\tau$ $\tau$ H $\rightarrow$ cc",
+	"wzp6_ee_tautauH_Hss_ecm240":		"ee $\rightarrow$ $\tau$ $\tau$ H $\rightarrow$ ss",
+	"wzp6_ee_tautauH_Hgg_ecm240":		"ee $\rightarrow$ $\tau$ $\tau$ H $\rightarrow$ gg",
+	"wzp6_ee_tautauH_HWW_ecm240":		"ee $\rightarrow$ $\tau$ $\tau$ H $\rightarrow$ WW",
+	"wzp6_ee_tautauH_HZZ_ecm240":		"ee $\rightarrow$ $\tau$ $\tau$ H $\rightarrow$ ZZ",
+	
+	"wzp6_egamma_eZ_Zmumu_ecm240":	"e $\gamma$ $\rightarrow$ eZ $\rightarrow$ Z $\mu$ $\mu$",
+	"wzp6_egamma_eZ_Zee_ecm240":	"e $\gamma$ $\rightarrow$ eZ $\rightarrow$ Zee",
+	"wzp6_gammae_eZ_Zmumu_ecm240":	"e $\gamma$ e $\rightarrow$ eZ $\rightarrow$ Z $\mu$ $\mu$",
+	"wzp6_gammae_eZ_Zee_ecm240":	"e $\gamma$ e $\rightarrow$ eZ $\rightarrow$ Zee",
+	
+	"wzp6_gaga_tautau_60_ecm240":	"gaga $\rightarrow$ $\tau$ $\tau$",
+	"wzp6_gaga_mumu_60_ecm240":		"gaga $\rightarrow$ $\mu$ $\mu$",
+	"wzp6_gaga_ee_60_ecm240":		"gaga $\rightarrow$ ee",
+	
+	"wzp6_ee_nuenueZ_ecm240":		"ee $\rightarrow$ $\nu$ $\nu$ eZ",
+	"wzp6_ee_nunuH_Htautau_ecm240":	"ee $\rightarrow$ $\nu$ $\nu$ H $\rightarrow$ $\tau$ $\tau$",
+	"wzp6_ee_nunuH_Hbb_ecm240":		"ee $\rightarrow$ $\nu$ $\nu$ H $\rightarrow$ bb",
+	"wzp6_ee_nunuH_Hcc_ecm240":		"ee $\rightarrow$ $\nu$ $\nu$ H $\rightarrow$ cc",
+	"wzp6_ee_nunuH_Hss_ecm240":		"ee $\rightarrow$ $\nu$ $\nu$ H $\rightarrow$ ss",
+	"wzp6_ee_nunuH_Hgg_ecm240":		"ee $\rightarrow$ $\nu$ $\nu$ H $\rightarrow$ gg",
+	"wzp6_ee_nunuH_HWW_ecm240":		"ee $\rightarrow$ $\nu$ $\nu$ H $\rightarrow$ WW",
+	"wzp6_ee_nunuH_HZZ_ecm240":		"ee $\rightarrow$ $\nu$ $\nu$ H $\rightarrow$ ZZ",
+	
+	"wzp6_ee_eeH_Htautau_ecm240":	"ee $\rightarrow$ eeH $\rightarrow$ $\tau$ $\tau$",
+	"wzp6_ee_eeH_Hbb_ecm240":		"ee $\rightarrow$ eeH $\rightarrow$ bb",
+	"wzp6_ee_eeH_Hcc_ecm240":		"ee $\rightarrow$ eeH $\rightarrow$ cc",
+	"wzp6_ee_eeH_Hss_ecm240":		"ee $\rightarrow$ eeH $\rightarrow$ ss",
+	"wzp6_ee_eeH_Hgg_ecm240":		"ee $\rightarrow$ eeH $\rightarrow$ gg",
+	"wzp6_ee_eeH_HWW_ecm240":		"ee $\rightarrow$ eeH $\rightarrow$ WW",
+	"wzp6_ee_eeH_HZZ_ecm240":		"ee $\rightarrow$ eeH $\rightarrow$ ZZ",
+	
+	"wzp6_ee_mumuH_Htautau_ecm240":	"ee $\rightarrow$ $\mu$ $\mu$ H $\rightarrow$ $\tau$ $\tau$",
+	"wzp6_ee_mumuH_Hbb_ecm240":		"ee $\rightarrow$ $\mu$ $\mu$ H $\rightarrow$ bb",
+	"wzp6_ee_mumuH_Hcc_ecm240":		"ee $\rightarrow$ $\mu$ $\mu$ H $\rightarrow$ cc",
+	"wzp6_ee_mumuH_Hss_ecm240":		"ee $\rightarrow$ $\mu$ $\mu$ H $\rightarrow$ ss",
+	"wzp6_ee_mumuH_Hgg_ecm240":		"ee $\rightarrow$ $\mu$ $\mu$ H $\rightarrow$ gg",
+	"wzp6_ee_mumuH_HWW_ecm240":		"ee $\rightarrow$ $\mu$ $\mu$ H $\rightarrow$ WW",
+	"wzp6_ee_mumuH_HZZ_ecm240":		"ee $\rightarrow$ $\mu$ $\mu$ H $\rightarrow$ ZZ",
+	
+	"wzp6_ee_bbH_Htautau_ecm240":	"ee $\rightarrow$ bbH $\rightarrow$ $\tau$ $\tau$",
+	"wzp6_ee_bbH_Hbb_ecm240":		"ee $\rightarrow$ bbH $\rightarrow$ bb",
+	"wzp6_ee_bbH_Hcc_ecm240":		"ee $\rightarrow$ bbH $\rightarrow$ cc",
+	"wzp6_ee_bbH_Hss_ecm240":		"ee $\rightarrow$ bbH $\rightarrow$ ss",
+	"wzp6_ee_bbH_Hgg_ecm240":		"ee $\rightarrow$ bbH $\rightarrow$ gg",
+	"wzp6_ee_bbH_HWW_ecm240":		"ee $\rightarrow$ bbH $\rightarrow$ WW",
+	"wzp6_ee_bbH_HZZ_ecm240":		"ee $\rightarrow$ bbH $\rightarrow$ ZZ",
+	
+	"wzp6_ee_ccH_Htautau_ecm240":	"ee $\rightarrow$ ccH $\rightarrow$ $\tau$ $\tau$",
+	"wzp6_ee_ccH_Hbb_ecm240":		"ee $\rightarrow$ ccH $\rightarrow$ bb",
+	"wzp6_ee_ccH_Hcc_ecm240":		"ee $\rightarrow$ ccH $\rightarrow$ cc",
+	"wzp6_ee_ccH_Hss_ecm240":		"ee $\rightarrow$ ccH $\rightarrow$ ss",
+	"wzp6_ee_ccH_Hgg_ecm240":		"ee $\rightarrow$ ccH $\rightarrow$ gg",
+	"wzp6_ee_ccH_HWW_ecm240":		"ee $\rightarrow$ ccH $\rightarrow$ WW",
+	"wzp6_ee_ccH_HZZ_ecm240":		"ee $\rightarrow$ ccH $\rightarrow$ ZZ",
+	
+	"wzp6_ee_ssH_Htautau_ecm240":	"ee $\rightarrow$ ssH $\rightarrow$ $\tau$ $\tau$",
+	"wzp6_ee_ssH_Hbb_ecm240":		"ee $\rightarrow$ ssH $\rightarrow$ bb",
+	"wzp6_ee_ssH_Hcc_ecm240":		"ee $\rightarrow$ ssH $\rightarrow$ cc",
+	"wzp6_ee_ssH_Hss_ecm240":		"ee $\rightarrow$ ssH $\rightarrow$ ss",
+	"wzp6_ee_ssH_Hgg_ecm240":		"ee $\rightarrow$ ssH $\rightarrow$ gg",
+	"wzp6_ee_ssH_HWW_ecm240":		"ee $\rightarrow$ ssH $\rightarrow$ WW",
+	"wzp6_ee_ssH_HZZ_ecm240":		"ee $\rightarrow$ ssH $\rightarrow$ ZZ",
+	
+	"wzp6_ee_qqH_Htautau_ecm240":	"ee $\rightarrow$ qqH $\rightarrow$ $\tau$ $\tau$",
+	"wzp6_ee_qqH_Hbb_ecm240":		"ee $\rightarrow$ qqH $\rightarrow$ bb",
+	"wzp6_ee_qqH_Hcc_ecm240":		"ee $\rightarrow$ qqH $\rightarrow$ cc",
+	"wzp6_ee_qqH_Hss_ecm240":		"ee $\rightarrow$ qqH $\rightarrow$ ss",
+	"wzp6_ee_qqH_Hgg_ecm240":		"ee $\rightarrow$ qqH $\rightarrow$ gg",
+	"wzp6_ee_qqH_HWW_ecm240":		"ee $\rightarrow$ qqH $\rightarrow$ WW",
+	"wzp6_ee_qqH_HZZ_ecm240":		"ee $\rightarrow$ qqH $\rightarrow$ ZZ",
 }
 
 #Link to the dictonary that contains all the cross section information, etc
@@ -124,8 +204,9 @@ procDict = "FCCee_procDict_winter2023_IDEA.json"
 #Add provate samples as it is not an offical process
 procDictAdd = {
 	"mgp8_ee_eeH_HAlpAlp_m1_ecm240":	{"numberOfEvents": 500000, "sumOfWeights": 500000, "crossSection": 0.0009558, "kfactor": 1.0, "matchingEfficiency": 1.0},
-	"mgp8_ee_eeH_HAlpAlp_m3_ecm240":	{"numberOfEvents": 500000, "sumOfWeights": 500000, "crossSection": 0.001129, "kfactor": 1.0, "matchingEfficiency": 1.0},
-	"mgp8_ee_eeH_HAlpAlp_m6_ecm240":	{"numberOfEvents": 500000, "sumOfWeights": 500000, "crossSection": 0.01174, "kfactor": 1.0, "matchingEfficiency": 1.0},
+	"mgp8_ee_eeH_HAlpAlp_m10_ecm240":	{"numberOfEvents": 500000, "sumOfWeights": 500000, "crossSection": 0.0009775, "kfactor": 1.0, "matchingEfficiency": 1.0},
+	"mgp8_ee_eeH_HAlpAlp_m30_ecm240":	{"numberOfEvents": 500000, "sumOfWeights": 500000, "crossSection": 0.001129, "kfactor": 1.0, "matchingEfficiency": 1.0},
+	"mgp8_ee_eeH_HAlpAlp_m60_ecm240":	{"numberOfEvents": 500000, "sumOfWeights": 500000, "crossSection": 0.01174, "kfactor": 1.0, "matchingEfficiency": 1.0},
 }
 	
 #Dictionary of the list of cuts. The key is the name of the selection that will be added to the output file
@@ -199,15 +280,15 @@ histoList = {
 	"FSGenMuon_charge":	{"name":"FSGenMuon_charge",	"title":"Charge of MC Muons",   "bin":50,	"xmin":0,	"xmax":2},
 	
 	# RECO k+
-	"n_RecoKplus":	  			{"name":"n_RecoKplus",	   	"title":"Number of Reco Kplus",		"bin":50,	"xmin":0,	"xmax":10},
-	"RecoKplus_e":	  			{"name":"RecoKplus_e",	   	"title":"Energy of Reco Kplus",		"bin":50,	"xmin":0,	"xmax":100},
-	"RecoKplus_mass":			{"name":"RecoKplus_mass",	"title":"Mass of Reco Kplus",		"bin":50,	"xmin":0,	"xmax":1},
-	"RecoKplus_p":	  			{"name":"RecoKplus_p",	   	"title":"Momentum of Reco Kplus",	"bin":50,	"xmin":0,	"xmax":100},
-	"RecoKplus_pt":	  			{"name":"RecoKplus_pt",	   	"title":"P_{t} of Reco Kplus",		"bin":50,	"xmin":0,	"xmax":100},
-	"RecoKplus_px":	  			{"name":"RecoKplus_px",	   	"title":"P_{x} of Reco Kplus",		"bin":50,	"xmin":0,	"xmax":100},
-	"RecoKplus_py":	  			{"name":"RecoKplus_py",	   	"title":"P_{y} of Reco Kplus",		"bin":50,	"xmin":0,	"xmax":100},
-	"RecoKplus_pz":	  			{"name":"RecoKplus_pz",	   	"title":"P_{z} of Reco Kplus",		"bin":50,	"xmin":0,	"xmax":100},
-	"RecoKplus_charge":			{"name":"RecoKplus_charge",	"title":"Charge of Reco Kplus",		"bin":50,	"xmin":0,	"xmax":2},
+	"n_RecoKplus":	  			{"name":"n_RecoKplus",	   		"title":"Number of Reco Kplus",		"bin":50,	"xmin":0,	"xmax":10},
+	"RecoKplus_e":	  			{"name":"RecoKplus_e",	   		"title":"Energy of Reco Kplus",		"bin":50,	"xmin":0,	"xmax":100},
+	"RecoKplus_mass":			{"name":"RecoKplus_mass",		"title":"Mass of Reco Kplus",		"bin":50,	"xmin":0,	"xmax":1},
+	"RecoKplus_p":	  			{"name":"RecoKplus_p",	   		"title":"Momentum of Reco Kplus",	"bin":50,	"xmin":0,	"xmax":100},
+	"RecoKplus_pt":	  			{"name":"RecoKplus_pt",	   		"title":"P_{t} of Reco Kplus",		"bin":50,	"xmin":0,	"xmax":100},
+	"RecoKplus_px":	  			{"name":"RecoKplus_px",	   		"title":"P_{x} of Reco Kplus",		"bin":50,	"xmin":0,	"xmax":100},
+	"RecoKplus_py":	  			{"name":"RecoKplus_py",	   		"title":"P_{y} of Reco Kplus",		"bin":50,	"xmin":0,	"xmax":100},
+	"RecoKplus_pz":	  			{"name":"RecoKplus_pz",	   		"title":"P_{z} of Reco Kplus",		"bin":50,	"xmin":0,	"xmax":100},
+	"RecoKplus_charge":			{"name":"RecoKplus_charge",		"title":"Charge of Reco Kplus",		"bin":50,	"xmin":0,	"xmax":2},
 	
 	# RECO gamma
 	"n_RecoPhotons":	{"name":"n_RecoPhotons",	"title":"Number of Reco Photons",	  "bin":50,	"xmin":0,	"xmax":10},
@@ -258,7 +339,7 @@ histoList = {
 	
 	# RECO H
 	"RecoHiggs_e":		{"name":"RecoHiggs_e",		"title":"Energy of Reco Higgs",		"bin":50,	"xmin":0,	"xmax":180},
-	"RecoHiggs_mass":	{"name":"RecoHiggs_mass",	"title":"Mass of Reco Higgs",		"bin":50,	"xmin":0,	"xmax":180},
+	"RecoHiggs_mass":	{"name":"RecoHiggs_mass",	"title":"Mass of Reco Higgs",		"bin":100,	"xmin":120,	"xmax":130}, # (xmax-xmin)/bins = bin width
 	"RecoHiggs_p":		{"name":"RecoHiggs_p",		"title":"Momentum of Reco Higgs",	"bin":50,	"xmin":0,	"xmax":90},
 	"RecoHiggs_pt":		{"name":"RecoHiggs_pt",		"title":"P_{t} of Reco Higgs",		"bin":50,	"xmin":0,	"xmax":90},
 	"RecoHiggs_px":		{"name":"RecoHiggs_px",		"title":"P_{x} of Reco Higgs",		"bin":50,	"xmin":0,	"xmax":90},
