@@ -38,7 +38,7 @@ bkg_nbins	= 180
 channel		= "RecoHiggs_mass"
 
 fit_func	= "expo" # could be pol3 or pol5 depending on bkg shape
-fit_xmin	= 100.0
+fit_xmin	= 50.0
 fit_xmax	= 180.0
 
 
@@ -219,8 +219,7 @@ def print_fit(fit_result, f1, h_density, fit_xmin, fit_xmax):
 		
 	legdag	= ROOT.TLegend(0.55, 0.75, 0.92, 0.92)
 	legdag.AddEntry(h_density, "Summed bkg", "lep")
-	legdag.AddEntry(f1, f"Fit: {fit_func} #chi^2{{2}}/ndf = {chi2:.2f}/{ndf}","1")
-	legdag.AddEntry(line_lo, "SR [120 - 130] GeV","1")
+	legdag.AddEntry(f1, f"Fit: \n {fit_func} \n #chi^{{2}}/ndf = {chi2/ndf:.2f}","1")
 	legdag.SetBorderSize(1)
 	legdag.SetFillColor(ROOT.kWhite)
 	legdag.Draw()
@@ -257,6 +256,7 @@ def make_plots(signal_hists, bkg_hist, plot_dir):
     	bkg_hist.SetTitle("")
     	bkg_hist.GetXaxis().SetTitle("RecoMass_{Higgs} [GeV]")
     	bkg_hist.GetYaxis().SetTitle("Events / 0.1 GeV")
+    	bkg_hist.SetMaximum()
     	bkg_hist.Draw("HIST")
     
     for i, proc_name in enumerate(proc_names):
@@ -353,10 +353,10 @@ def main():
         bkg_coarse_list.append(h)
         
     ### MERGING BACKGROUNDS ###
-    # do this step before using spline so there is a smooth curve
     print(f"Merging all backgrounds...")
     
     bkg_sum_hist	= None
+    
     if not bkg_coarse_list:
     	print(f"WARNING: no background histograms found!")
     else:
@@ -376,15 +376,7 @@ def main():
     bkg_sum_hist	= do_fit(h_sum_coarse, sig_nbins, sig_xmin, sig_xmax, "bkg_sum")
     out_file.cd()
     bkg_sum_hist.Write("bkg_sum", ROOT.TObject.kOverwrite)
-    
-#     ### EXTRAPOLATING SPLINE ###
-#     print(f"Fititng spline to summed background...")
-#     bkg_sum_hist	= spline_fit(h_sum_coarse, sig_nbins, sig_xmin, sig_xmax, "bkg_sum")
-#     
-#     print(f"bkg_sum integral in SR: {bkg_sum_hist.Integral():.2f}")
-#     out_file.cd()
-#     bkg_sum_hist.Write("bkg_sum", ROOT.TObject.kOverwrite)
-#     
+         
     ### SUMMARY ###
     print(f" Output file contents")
     out_file.ls()
@@ -397,7 +389,6 @@ def main():
         print(f"\n Creating plots...")
         make_plots(signal_hists_plots, bkg_sum_hist, plot_dir)
         print(f"\n Successful: plot saved to {plot_dir}")
-        
     else:
         print(f"\n WARNING: skipping plots - missing signal or background histograms")
         
