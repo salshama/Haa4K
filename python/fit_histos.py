@@ -32,15 +32,16 @@ sig_xmax	= 130.0
 sig_nbins	= 100
 
 bkg_xmin	= 0.0
-bkg_xmax	= 180.0
-bkg_nbins	= 180
+bkg_xmax	= 160.0
+bkg_nbins	= 32
 
 channel		= "RecoHiggs_mass"
 
-fit_func	= "expo" # could be pol3 or pol5 depending on bkg shape
+fit_func	= "pol5" # could be expo or pol^n depending on bkg shape
 fit_xmin	= 50.0
-fit_xmax	= 180.0
+fit_xmax	= 160.0
 
+mass_map	= {"m1": 1.5, "m10": 10, "m30": 30, "m60": 60}
 
 def process_name(filepath):
     """
@@ -172,7 +173,7 @@ def print_fit(fit_result, f1, h_density, fit_xmin, fit_xmax):
 	print(f"Fit results...")
 	
 	status	= int(fit_result.Status())
-	print(f"\n Fit status: {status} ({'Ok - converged' if status==0 else 'WARNING: - check convergence'})")
+	print(f"Fit status: {status} ({'Ok - converged' if status==0 else 'WARNING: - check convergence'})")
 	
 	chi2	= fit_result.Chi2()
 	ndf		= fit_result.Ndf()
@@ -182,7 +183,7 @@ def print_fit(fit_result, f1, h_density, fit_xmin, fit_xmax):
 		print(f"Chi2:		{chi2:.4f}")
 		print(f"ndf:		{ndf}")
 		print(f"chi2 / ndf:	{chi2/ndf:.4f} (ideal ~ 1.0)")
-		print(f"p-value:	{prob:.4f} ({'good (>0.05)' if prob>0.05 else 'poor - consider changing fit_func'})")
+		print(f"p-value:	{prob:.4f} ({'good >0.05' if prob>0.05 else 'poor - consider changing fit_func'})")
 	else:
 		print(f"chi2/ndf: NA (ndf=0, too few bins for this function)")
 	
@@ -198,7 +199,7 @@ def print_fit(fit_result, f1, h_density, fit_xmin, fit_xmax):
 	cdag.SetLogy()
 	h_density.SetStats(0)
 	h_density.SetTitle("Background fit diagnotics")
-	h_density.SetLineWidth(i)
+	h_density.SetLineWidth(2)
 	h_density.GetXaxis().SetTitle("RecoMass_{Higgs} [GeV]")
 	h_density.GetYaxis().SetTitle("Events / GeV")
 	h_density.Draw("E") # error bars
@@ -207,25 +208,26 @@ def print_fit(fit_result, f1, h_density, fit_xmin, fit_xmax):
 	f1.SetLineWidth(2)
 	f1.Draw("SAME")
 	
-	ylo		= h_density.GetMinimum(1e-12)
-	yhi		= h_density.GetMaximum() * 3.0
-	line_lo	= ROOT.TLine(120, ylo, 120, yhi)
-	line_hi	= ROOT.TLine(130, ylo, 130, yhi)
-	for line in [line_lo, line_hi]:
-		line.SetLineColor(ROOT.kBlue)
-		line.SetLineStyle(2)
-		line.SetLineWidth(2)
-		line.Draw()
+# 	ylo		= h_density.GetMinimum(1e-12)
+# 	yhi		= h_density.GetMaximum() * 3.0
+# 	line_lo	= ROOT.TLine(120, ylo, 120, yhi)
+# 	line_hi	= ROOT.TLine(130, ylo, 130, yhi)
+# 	for line in [line_lo, line_hi]:
+# 		line.SetLineColor(ROOT.kBlue)
+# 		line.SetLineStyle(2)
+# 		line.SetLineWidth(2)
+# 		line.Draw()
 		
 	legdag	= ROOT.TLegend(0.55, 0.75, 0.92, 0.92)
 	legdag.AddEntry(h_density, "Summed bkg", "lep")
-	legdag.AddEntry(f1, f"Fit: \n {fit_func} \n #chi^{{2}}/ndf = {chi2/ndf:.2f}","1")
-	legdag.SetBorderSize(1)
+	legdag.AddEntry(f1, f"Fit: {fit_func}")
+	legdag.AddEntry(f1, f"#chi^{{2}}/ndf = {chi2/ndf:.2f}","1")
+	legdag.SetTextSize(0.025)
 	legdag.SetFillColor(ROOT.kWhite)
 	legdag.Draw()
 	
 	os.makedirs(diag_dir, exist_ok=True)
-	cdag.SaveAs(os.path.join(diag_dir, "bkg_fit.pdf"))
+	cdag.SaveAs(os.path.join(diag_dir, f"bkg_fit_{fit_func}.pdf"))
 		    
 def make_plots(signal_hists, bkg_hist, plot_dir):
     """
@@ -240,14 +242,17 @@ def make_plots(signal_hists, bkg_hist, plot_dir):
     os.makedirs(plot_dir, exist_ok=True)
     
     # assign colors to each signal histogram
-    colors        = [ROOT.kRed, ROOT.kBlue, ROOT.kGreen, ROOT.kMagenta, ROOT.kCyan, ROOT.kYellow+2]
+    colors        = [ROOT.TColor.GetColor('#c51b7d'), ROOT.TColor.GetColor('#2b8cbe'), ROOT.TColor.GetColor('#fdae6b'), ROOT.TColor.GetColor('#762a83')]
     proc_names    = sorted(signal_hists.keys())
     
     for scale in ["lin","log"]:
     	c	= ROOT.TCanvas(f"c_{scale}",f"c_{scale}",800, 600)
+    	c.SetTicks(1, 1)
+    	c.SetLeftMargin(0.14)
+    	c.SetRightMargin(0.08)
     	if scale == 'log':
     		c.SetLogy()
-    		bkg_hist.SetMinimum(1e-6)
+    		bkg_hist.SetMinimum(1e-6 if scale=="log" else 0.0)
     	bkg_hist.SetLineColor(ROOT.kBlack)
     	bkg_hist.SetLineWidth(2)
     	bkg_hist.SetFillColor(ROOT.kGray)
@@ -256,21 +261,22 @@ def make_plots(signal_hists, bkg_hist, plot_dir):
     	bkg_hist.SetTitle("")
     	bkg_hist.GetXaxis().SetTitle("RecoMass_{Higgs} [GeV]")
     	bkg_hist.GetYaxis().SetTitle("Events / 0.1 GeV")
-    	bkg_hist.SetMaximum()
+    	bkg_hist.GetXaxis().SetTitleOffset(1.2)
+    	bkg_hist.SetMaximum(bkg_hist.GetMaximum() * 300)
     	bkg_hist.Draw("HIST")
     
     for i, proc_name in enumerate(proc_names):
         sig_hist    = signal_hists[proc_name]
         sig_hist.SetLineColor(colors[i%len(colors)])
-        sig_hist.SetLineWidth(2)
+        sig_hist.SetLineWidth(3)
         sig_hist.SetFillStyle(0) # no fill
         sig_hist.SetStats(0)
         sig_hist.SetTitle("")
         sig_hist.Draw("HIST SAME")
     
-    leg	= c.BuildLegend(0.60, 0.60, 0.95, 0.92)
-    leg.SetBorderSize(1)
-    leg.SetFillColor(ROOT.kWhite)
+    leg	= c.BuildLegend(0.65, 0.70, 0.92, 0.90)
+    leg.SetBorderSize(0)
+    leg.SetFillStyle(0)
     
     c.SaveAs(os.path.join(plot_dir, f"RecoHiggs_mass_RecoKaonElecSel_rebinned_{scale}.png"))
     c.SaveAs(os.path.join(plot_dir, f"RecoHiggs_mass_RecoKaonElecSel_rebinned_{scale}.pdf"))
