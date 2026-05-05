@@ -41,7 +41,23 @@ fit_func	= "pol5" # could be expo or pol^n depending on bkg shape
 fit_xmin	= 50.0
 fit_xmax	= 160.0
 
-mass_map	= {"m1": 1.5, "m10": 10, "m30": 30, "m60": 60}
+energy		= 240
+collider	= 'FCC-ee'
+intLumi		= 10.8 #ab^-1
+
+legend_labels	= {
+				"mgp8_ee_eeH_HAlpAlp_m1_ecm240":	"m_{a} = 1.5 GeV",
+				"mgp8_ee_eeH_HAlpAlp_m10_ecm240":	"m_{a} = 10 GeV",
+				"mgp8_ee_eeH_HAlpAlp_m30_ecm240":	"m_{a} = 30 GeV",
+				"mgp8_ee_eeH_HAlpAlp_m60_ecm240":	"m_{a} = 60 GeV",
+}
+
+sig_colors	= [
+			ROOT.TColor.GetColor('#c51b7d'),
+			ROOT.TColor.GetColor('#2b8cbe'),
+			ROOT.TColor.GetColor('#fdae6b'),
+			ROOT.TColor.GetColor('#762a83'),
+]
 
 def process_name(filepath):
     """
@@ -197,11 +213,12 @@ def print_fit(fit_result, f1, h_density, fit_xmin, fit_xmax):
 	# creating diagnostic plot
 	cdag	= ROOT.TCanvas("cdag","cdag", 900, 600)
 	cdag.SetLogy()
+	cdag.SetTicks(1, 1)
 	h_density.SetStats(0)
 	h_density.SetTitle("Background fit diagnotics")
 	h_density.SetLineWidth(2)
 	h_density.GetXaxis().SetTitle("RecoMass_{Higgs} [GeV]")
-	h_density.GetYaxis().SetTitle("Events / GeV")
+	h_density.GetYaxis().SetTitle("Events")
 	h_density.Draw("E") # error bars
 	
 	f1.SetLineColor(ROOT.kRed)
@@ -221,13 +238,17 @@ def print_fit(fit_result, f1, h_density, fit_xmin, fit_xmax):
 	legdag	= ROOT.TLegend(0.55, 0.75, 0.92, 0.92)
 	legdag.AddEntry(h_density, "Summed bkg", "lep")
 	legdag.AddEntry(f1, f"Fit: {fit_func}")
+	legdag.AddEntry(f1, f"#chi^{{2}} = {chi2:.2f}", "1")
+	legdag.AddEntry(f1, f"ndf = {ndf}", "1")
 	legdag.AddEntry(f1, f"#chi^{{2}}/ndf = {chi2/ndf:.2f}","1")
 	legdag.SetTextSize(0.025)
+	legdag.SetTextFont(42)
 	legdag.SetFillColor(ROOT.kWhite)
 	legdag.Draw()
 	
 	os.makedirs(diag_dir, exist_ok=True)
 	cdag.SaveAs(os.path.join(diag_dir, f"bkg_fit_{fit_func}.pdf"))
+	cdag.SaveAs(os.path.join(diag_dir, f"bkg_fit_{fit_func}.png"))
 		    
 def make_plots(signal_hists, bkg_hist, plot_dir):
     """
@@ -241,43 +262,83 @@ def make_plots(signal_hists, bkg_hist, plot_dir):
     """
     os.makedirs(plot_dir, exist_ok=True)
     
-    # assign colors to each signal histogram
-    colors        = [ROOT.TColor.GetColor('#c51b7d'), ROOT.TColor.GetColor('#2b8cbe'), ROOT.TColor.GetColor('#fdae6b'), ROOT.TColor.GetColor('#762a83')]
-    proc_names    = sorted(signal_hists.keys())
+    proc_names	= sorted(signal_hists.keys())
+    nsig		= len(proc_names)
     
     for scale in ["lin","log"]:
     	c	= ROOT.TCanvas(f"c_{scale}",f"c_{scale}",800, 600)
     	c.SetTicks(1, 1)
     	c.SetLeftMargin(0.14)
     	c.SetRightMargin(0.08)
-    	if scale == 'log':
-    		c.SetLogy()
-    		bkg_hist.SetMinimum(1e-6 if scale=="log" else 0.0)
+    	
+    	# signal legend attributes
+    	siglegsize	= 0.04 * nsig
+    	sigleg		= ROOT.TLegend(0.16, 0.70-siglegsize, 0.45, 0.70)
+    	sigleg.SetFillColor(0); sigleg.SetFillStyle(0); sigleg.SetLineColor(0)
+    	sigleg.SetShadowColor(0); sigleg.SetTextSize(0.025)
+    	sigleg.SetTextFont(42); sigleg.SetBorderSize(0)
+    	
+    	# background legend attributes
+    	bkgleg		= ROOT.TLegend(0.45, 0.66, 0.90, 0.70)
+    	bkgleg.SetFillColor(0); bkgleg.SetFillStyle(0); bkgleg.SetLineColor(0)
+    	bkgleg.SetShadowColor(0); bkgleg.SetTextSize(0.025)
+    	bkgleg.SetTextFont(42); bkgleg.SetBorderSize(0)
+    	
+    	# background histogram
     	bkg_hist.SetLineColor(ROOT.kBlack)
     	bkg_hist.SetLineWidth(2)
-    	bkg_hist.SetFillColor(ROOT.kGray)
-    	bkg_hist.SetFillStyle(3004) # hatched
+    	bkg_hist.SetFillStyle(1001)
     	bkg_hist.SetStats(0)
     	bkg_hist.SetTitle("")
     	bkg_hist.GetXaxis().SetTitle("RecoMass_{Higgs} [GeV]")
-    	bkg_hist.GetYaxis().SetTitle("Events / 0.1 GeV")
+    	bkg_hist.GetYaxis().SetTitle("Events")
     	bkg_hist.GetXaxis().SetTitleOffset(1.2)
-    	bkg_hist.SetMaximum(bkg_hist.GetMaximum() * 300)
+    	    	
+    	if scale == 'log':
+    		bkg_hist.SetMinimum(1e-6 if scale=="log" else 0.0)
+    		bkg_hist.SetMaximum(1e10)
+    	else:
+    		max_sig	= max((signal_hists[p].GetMaximum() for p in proc_names), default=1)
+    		bkg_hist.SetMinimum(0)
+    		bkg_hist.SetMaximum(max(bkg_hist.GetMaximum(), max_sig)*3)
+    		
     	bkg_hist.Draw("HIST")
+    	bkgleg.AddEntry(bkg_hist, "Sum bkg", "l")
     
+    # signal histograms
     for i, proc_name in enumerate(proc_names):
-        sig_hist    = signal_hists[proc_name]
-        sig_hist.SetLineColor(colors[i%len(colors)])
-        sig_hist.SetLineWidth(3)
-        sig_hist.SetFillStyle(0) # no fill
-        sig_hist.SetStats(0)
-        sig_hist.SetTitle("")
-        sig_hist.Draw("HIST SAME")
+    	h		= signal_hists[proc_name]
+    	h.SetLineColor(sig_colors[i%len(sig_colors)])
+    	h.SetLineWidth(2)
+    	h.SetFillStyle(0)
+    	h.SetStats(0)
+    	h.SetTitle("")
+    	h.Draw("HIST SAME")
+    	label	= legend_labels.get(proc_name, proc_name)
+    	sigleg.AddEntry(h, label, "l")
+    	
+    # latex legend text
+    leftText	= "FCCAnalyses: FCC-ee Simulation (Delphes)"
+    rightText	= f"#sqrt{{s}} = {energy} GeV, L = {intLumi} ab^{{-1}}"
     
-    leg	= c.BuildLegend(0.65, 0.70, 0.92, 0.90)
-    leg.SetBorderSize(0)
-    leg.SetFillStyle(0)
+    latex		= ROOT.TLatex()
+    latex.SetNDC()
+    latex.SetTextSize(0.03)
+    latex.DrawLatex(0.18, 0.84, f"#bf{{#it{{{rightText}}}}}")
+    latex.SetTextAlign(31)
+    latex.DrawLatex(0.92, 0.92, f"#it{{{leftText}}}")
     
+    sigleg.Draw()
+    bkgleg.Draw()
+    
+    if scale == "log":
+    	c.SetLogy()
+    
+    c.GetFrame().SetBorderSize(12)
+    c.RedrawAxis()
+    c.Modified()
+    c.Update()
+       
     c.SaveAs(os.path.join(plot_dir, f"RecoHiggs_mass_RecoKaonElecSel_rebinned_{scale}.png"))
     c.SaveAs(os.path.join(plot_dir, f"RecoHiggs_mass_RecoKaonElecSel_rebinned_{scale}.pdf"))
     print(f"    Saved {scale} PDF and PNG formats")
