@@ -5,6 +5,20 @@ Instead of producing a separate sample for every cah value, one sample is produc
 and MG reweights the events to all other cah values -> 12 mass x 3 channels = 36 jobs.
 Each LHE job file contains one event set + N reweighted weight columns
 
+Directory structure
+--------------------
+base_dir/
+1. generation/{tag} -> all cards (MG, Pythia, metadata)
+2. HTCondor/{tag} -> only HTCondor files (run, job config, logs)
+3. madgraph_3.6.6/{tag} -> MG output (LHE files, param_card, etc)
+4. delphes/{tag} -> Delphes .root output
+5. model/ -> local Bauer ALP UFO model (needs to be downloaded once)
+
+To download the model once:
+source setup_local.sh
+find <mg5_dir> -type d -name "ALP*" -> find where MG installed it
+cp -r <found_path> base_dir/model
+
 Workflow per job
 -----------------
 1. MG generates events + reweighted LHE
@@ -28,24 +42,24 @@ import itertools
 cah_ref		= 1.0
 cah_val		= 0.01
 alp_scan	= {
-			0.05:	[1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6],
-			0.1:	[1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6],
-			0.5:	[1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6],
-			1.0:	[1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6],
-			1.5:	[1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6],
-			5.0:	[1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6],
-			10.0:	[1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6],
-			20.0:	[1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6],
-			30.0:	[1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6],
-			40.0:	[1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6],
-			50.0:	[1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6],
-			60.0:	[1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6],
+            0.05:    [1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6],
+            0.1:    [1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6],
+            0.5:    [1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6],
+            1.0:    [1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6],
+            1.5:    [1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6],
+            5.0:    [1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6],
+            10.0:    [1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6],
+            20.0:    [1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6],
+            30.0:    [1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6],
+            40.0:    [1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6],
+            50.0:    [1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6],
+            60.0:    [1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6],
 }
 
-z_channels	= {
-			"ee":	"e+ e-",
-			"mumu": "mu+ mu-",
-			"qq":	"q q~",
+z_channels    = {
+            "ee":    "e+ e-",
+            "mumu": "mu+ mu-",
+            "qq":    "q q~",
 }
 
 ebeam		= 120.0
@@ -55,107 +69,108 @@ job_flavour	= "workday"
 nevents		= 500000
 
 ### PATHS ###
-base_dir	= "/ceph/salshamaily/haa4K_FCCee/"
-source_dir	= "/ceph/sgiappic/FCCAnalyses/"
-delphes_tcl	= "/ceph/sgiappic/card_IDEA.tcl"
-edm4hep_cfg	= base_dir + "edm4hep_output_config.tcl" # steers EDM4HEP output
-condor_dir	= base_dir + "HTCondor/" # HTCondor submission files & logs
-mg_dir		= base_dir + "madgraph_3.6.6/" # path for lhe files
-delphes_dir	= base_dir + "delphes/" # delphes .root output
-local_setup	= base_dir + "setup_local.sh" # local path for stack
-
+base_dir		= "/ceph/salshamaily/haa4K_FCCee/"
+source_dir		= "/ceph/sgiappic/FCCAnalyses/"
+delphes_tcl		= "/ceph/sgiappic/card_IDEA.tcl"
+edm4hep_cfg		= base_dir + "edm4hep_output_config.tcl" # steers EDM4HEP output
+condor_dir		= base_dir + "HTCondor/" # HTCondor submission files & logs
+mg_dir			= base_dir + "madgraph_3.6.6/" # path for lhe files
+delphes_dir		= base_dir + "delphes/" # delphes .root output
+local_setup		= base_dir + "setup_local.sh" # local path for stack
+alp_model		= base_dir + "model/" # Bauer alp model
+generation_dir	= base_dir + "generation/" # cards for all samples
 
 ### FUNCTIONS ###
 def make_dir(path: dir):
-	"""
-	- Creates directory if it does not exist then chmod +x
-	"""
-	os.makedirs(path, exist_ok=True)
-	os.system(f"chmod -R +x {path}")
-	
+    """
+    - Creates directory if it does not exist then chmod +x
+    """
+    os.makedirs(path, exist_ok=True)
+    os.system(f"chmod -R +x {path}")
+    
 def point_tag(channel: str, ma: float) -> str:
-	"""
-	- Filesystem-safe job label following FCC-ee naming conventions
-	- Returns:
-	specific naming convention like the process:
-	mgp8_ee_{z_channel}H_HAlpAlp_m1p5_ecm240 -> ma = 1.5
-	- Args:
-	channel: str, z channel
-	ma: float, alp mass
-	"""
-	m	= f"{ma}".replace(".", "p")
-	return f"mgp8_ee_{channel}H_HAlpAlp_m{m}_ecm240"
-	
+    """
+    - Job label following for one (channel, mass) point
+    - Returns:
+    specific naming convention like the process:
+    mgp8_ee_{z_channel}H_HAlpAlp_m1p5_ecm240 -> ma = 1.5
+    - Args:
+    channel: str, z channel
+    ma: float, alp mass
+    """
+    m    = f"{ma}".replace(".", "p")
+    return f"mgp8_ee_{channel}H_HAlpAlp_m{m}_ecm240"
+    
 def validation_tag(channel: str, ma: float, cah: float) -> str:
-	"""
-	- Creates tag for a generated sample at a fixed (channel, mass, cah)
-	- Returns:
-	string of tag
-	- Args:
-	channel: str, mode of Z boson decay
-	ma: float, mass point of ALP
-	cah: float, coupling of Higgs-Alp
-	"""
-	m	= f"{ma}".replace(".","p")
-	c	= f"{cah}".replace(".","p")
-	
-	return f'mgp8_ee_{channel}H_HAlpAlp_m{m}_cah{c}_ecm240'
-	
-def write_metadata(job_dir: str, channel: str, ma: float, cah_list: list):
-	"""
-	- Writes a human-readable metadata file for this (channel, mass) job to record the
-	generation and reweighting values. This is a table that you need to call when using
-	do_weighted(index) in FCCAnalysis where indices show the reweighting "cah" values in the
-	order they appear in alp_scan and MG reweighting block
-	- Returns:
-	txt file
-	- Args:
-	job_dir: directory where the job should be
-	channel: str, z channel
-	ma: float, alp mass
-	cah_list: list of cah targeted values
-	"""
-	lines	= '# ALP production metadata\n'
-    lines	+= f'# channel          : {channel}\n'
-    lines	+= f'# mass [GeV]       : {ma}\n'
-    lines	+= f'# cah_ref          : {cah_ref}  <- events generated at this coupling\n'
-    lines	+= f'# nevents          : {nevents:,}\n'
-    lines	+= f'# sqrt(s) [GeV]    : {2 * ebeam:.0f}\n'
-    lines	+= '#\n'
-    lines	+= '# Weight column index -> cah value\n'
-    lines	+= '# Use this when calling do_weighted(index) in FCCAnalysis\n'
-    lines	+= '# Index 0 = nominal weight at cah_ref\n'
-    lines	+= '# Indices 1..N = reweighted to the cah values listed below\n'
-    lines	+= '#\n'
-    lines	+= f'#   index 0  :  {cah_ref}  (nominal / cah_ref)\n'
+    """
+    - Creates tag for a generated sample at a fixed (channel, mass, cah)
+    - Returns:
+    string of tag
+    - Args:
+    channel: str, mode of Z boson decay
+    ma: float, mass point of ALP
+    cah: float, coupling of Higgs-Alp
+    """
+    m    = f"{ma}".replace(".","p")
+    c    = f"{cah}".replace(".","p")
+    
+    return f'mgp8_ee_{channel}H_HAlpAlp_m{m}_cah{c}_ecm240'
+    
+def write_metadata(gen_dir: str, channel: str, ma: float, cah_list: list):
+    """
+    - Writes a human-readable metadata file for this (channel, mass) job to record the
+    generation and reweighting values. This is a table that you need to call when using
+    do_weighted(index) in FCCAnalysis where indices show the reweighting "cah" values in the
+    order they appear in alp_scan and MG reweighting block
+    - Returns:
+    .txt file
+    - Args:
+    gen_dir: directory where the .txt file should be written to
+    channel: str, z channel
+    ma: float, alp mass
+    cah_list: list of cah targeted values
+    """
+    lines    =	'# ALP production metadata\n'
+    lines    +=	f'# channel          : {channel}\n'
+    lines    +=	f'# mass [GeV]       : {ma}\n'
+    lines    +=	f'# cah_ref          : {cah_ref}  <- events generated at this coupling\n'
+    lines    +=	f'# nevents          : {nevents:,}\n'
+    lines    +=	f'# sqrt(s) [GeV]    : {2 * ebeam:.0f}\n'
+    lines    +=	'#\n'
+    lines    +=	'# Weight column index -> cah value\n'
+    lines    +=	'# Use this when calling do_weighted(index) in FCCAnalysis\n'
+    lines    +=	'# Index 0 = nominal weight at cah_ref\n'
+    lines    +=	'# Indices 1..N = reweighted to the cah values listed below\n'
+    lines    +=	'#\n'
+    lines    +=	f'#   index 0  :  {cah_ref}  (nominal / cah_ref)\n'
     
     for i, cah_value in enumerate(cah_list):
-    	lines	+= f'#   index {i+1}  :  {cah_value}\n'
+        lines	+= f'#   index {i+1}  :  {cah_value}\n'
     
-    with open(job_dir + "metadata.txt", "w") as fh:
-    	fh.write(lines)
-	
-def write_mg_card(channel: str, ma: float, cah_list: list, job_dir: str, mg_out_dir: str) -> str:
-	"""
-	- Writes and modifies MadGraph card according to (channel, mass) point
-	- Returns:
-	path of modified MG card
-	- Args:
-	channel: Z channel (e, mu, or jets)
-	ma, cah: floats, mass and coupling points of alp
-	job_dir: directory where the card should be
-	mg_out_dir: directory where madgraph is
-	"""
-	fs		= z_channels[channel]
-	
-	content	=	'# import ALP model and define multi-particles\n'
-    content	+=	'import model ALP\n\n'
+    with open(gen_dir + "metadata.txt", "w") as fh:
+        fh.write(lines)
+    
+def write_mg_card(channel: str, ma: float, cah_list: list, gen_dir: str, mg_out_dir: str) -> str:
+    """
+    - Writes and modifies MadGraph card according to (channel, mass) point
+    - Returns:
+    path of modified MG card
+    - Args:
+    channel: Z channel (e, mu, or jets)
+    ma, cah: floats, mass and coupling points of alp
+    gen_dir: directory where the card should be
+    mg_out_dir: directory where madgraph is
+    """
+    fs		= z_channels[channel]
+    
+    content =	'# import ALP model and define multi-particles\n'
+    content +=	'import model {alp_model}\n\n'
     content +=	'define p = g u c d s u~ c~ d~ s~\n'
     content +=	'define j = g u c d s u~ c~ d~ s~\n'
     content +=	'define l+ = e+ mu+\n'
     content +=	'define l- = e- mu-\n'
-    content	+=	'define q = u d s c b\n\n'
-    content	+=	'define q~ = u~ d~ s~ c~ b~\n\n'
+    content +=	'define q = u d s c b\n'
+    content +=	'define q~ = u~ d~ s~ c~ b~\n'
     content +=	'define vl = ve vm vt\n'
     content +=	'define vl~ = ve~ vm~ vt~\n\n'
     content +=	f'generate e+ e- > z h, z > {fs}, h > ALP ALP\n\n'
@@ -166,48 +181,48 @@ def write_mg_card(channel: str, ma: float, cah_list: list, job_dir: str, mg_out_
     content +=	f'set ebeam2 {ebeam}   # beam 2 energy [GeV]\n'
     content +=	'set no_parton_cuts\n\n'
     content +=	'# ALP model parameters\n'
-    content +=	f'set malp {ma}		# ALP mass [GeV]\n'
-    content +=	f'set CAH  {cah_ref}	# Higgs-ALP coupling [GeV^-1]\n'
+    content +=	f'set malp {ma}        # ALP mass [GeV]\n'
+    content +=	f'set CAH  {cah_ref}    # Higgs-ALP coupling [GeV^-1]\n'
     content	+=	f'set param_card DECAY 9000005 Auto\n\n'
     content +=	f'set nevents {nevents}\n'
     content	+=	'reweight 1\n'
     
     for i, cah_value in enumerate(cah_list):
-    	content	+= f' # index {i+1}: CAH = {cah_value}\n'
-    	content	+= f' change param_card CAH {cah_value}\n'
+        content	+= f' # index {i+1}: CAH = {cah_value}\n'
+        content	+= f' change param_card CAH {cah_value}\n'
     
     content += 'done\n\n'
     content += 'done\n'
     
-	path	= job_dir + f"mg_param_m{ma}.txt"
-	
-	with open(path, "w") as f:
-		f.write(content)
-	
-	return path
-	
-def write_mg_validation_card(channel: str, ma: float, cah:float, job_dir: str, mg_out_dir: str) -> str:
-	"""
-	- Writes and modifies the MG card according to the channels, masses, and selected cah value
-	- Returns:
-	path of the MG card for validation of re-weighting
-	- Args:
-	channel: str, modes of the Z boson decays
-	ma: float, mass points of the ALP
-	cah: float, given cah value to validate
-	job_dir: str, path of the job submitted
-	mg_out_dir: str, output of the MG job
-	"""
-	fs		= z_channels[channel]
-	
-	content	=	'# import ALP model and define multi-particles\n'
+    path	= gen_dir + f"mg_param_m{ma}.txt"
+    
+    with open(path, "w") as f:
+        f.write(content)
+    
+    return path
+    
+def write_mg_validation_card(channel: str, ma: float, cah:float, gen_dir: str, mg_out_dir: str) -> str:
+    """
+    - Writes and modifies the MG card according to the channels, masses, and selected cah value
+    - Returns:
+    path of the MG card for validation of re-weighting
+    - Args:
+    channel: str, modes of the Z boson decays
+    ma: float, mass points of the ALP
+    cah: float, given cah value to validate
+    gen_dir: str, path of the generation directory
+    mg_out_dir: str, output of the MG job
+    """
+    fs		= z_channels[channel]
+    
+    content	=	'# import ALP model and define multi-particles\n'
     content	+=	'import model ALP\n\n'
     content +=	'define p = g u c d s u~ c~ d~ s~\n'
     content +=	'define j = g u c d s u~ c~ d~ s~\n'
     content +=	'define l+ = e+ mu+\n'
     content +=	'define l- = e- mu-\n'
-    content	+=	'define q = u d s c b\n\n'
-    content	+=	'define q~ = u~ d~ s~ c~ b~\n\n'
+    content	+=	'define q = u d s c b\n'
+    content	+=	'define q~ = u~ d~ s~ c~ b~\n'
     content +=	'define vl = ve vm vt\n'
     content +=	'define vl~ = ve~ vm~ vt~\n\n'
     content +=	f'generate e+ e- > z h, z > {fs}, h > ALP ALP\n\n'
@@ -218,30 +233,30 @@ def write_mg_validation_card(channel: str, ma: float, cah:float, job_dir: str, m
     content +=	f'set ebeam2 {ebeam}   # beam 2 energy [GeV]\n'
     content +=	'set no_parton_cuts\n\n'
     content +=	'# ALP model parameters\n'
-    content +=	f'set malp {ma}		# ALP mass [GeV]\n'
-    content +=	f'set CAH  {cah}	# Higgs-ALP coupling [GeV^-1]\n'
-    content	+=	f'set param_card DECAY 9000005 Auto\n\n'
-    content += 	f'set nevents {nevents}\n'
-    content	+= 	'done\n'
+    content +=	f'set malp {ma}        # ALP mass [GeV]\n'
+    content +=	f'set CAH  {cah}    # Higgs-ALP coupling [GeV^-1]\n'
+    content +=	f'set param_card DECAY 9000005 Auto\n\n'
+    content +=	f'set nevents {nevents}\n'
+    content	+=	'done\n'
     
-    path	= job_dir + f"mg_param_m{ma}_val.txt"
+    path    = gen_dir + f"mg_param_m{ma}_val.txt"
     
     with open(path, "w") as fh:
-    	fh.write(content)
+        fh.write(content)
     return path
-	
-def write_pythia_card(ma: float, job_dir: str, lhe_path: str, tag: str = '') -> str:
-	"""
-	- Writes and modifies the pythia card according to the mass point used
-	- Returns:
-	path of modified pythia8 card
-	- Args:
-	ma: float, alp mass
-	job_dir: str, directory of where the card should be
-	lhe_path: str, path of LHE file for pythia to read
-	tag: str, if tag is present then a validation tag will be attached to the path else empty
-	"""
-	content	=	'Random:setSeed = on\n'
+    
+def write_pythia_card(ma: float, gen_dir: str, lhe_path: str, tag: str = '') -> str:
+    """
+    - Writes and modifies the pythia card according to the mass point used
+    - Returns:
+    path of modified pythia8 card
+    - Args:
+    ma: float, alp mass
+    gen_dir: str, directory of where the card should be
+    lhe_path: str, path of LHE file for pythia to read
+    tag: str, if tag is present then a validation tag will be attached to the path else empty
+    """
+    content	=	'Random:setSeed = on\n'
     content	+=	'Main:timesAllowErrors = 10\n'
     content	+=	f'Main:numberOfEvents = {nevents}\n'
     content	+=	'\n'
@@ -268,118 +283,117 @@ def write_pythia_card(ma: float, job_dir: str, lhe_path: str, tag: str = '') -> 
     content	+=	'9000005:isResonance = on\n'
     content	+=	'9000005:onMode = off      ! turn off all channels first\n'
     content	+=	'9000005:onIfAny = 321     ! then re-enable channels with K+\n'
-    content	+=	'\n'
-    content	+=	'LesHouches:setLifetime = 2'
+    content +=	'\n'
+    content +=	'LesHouches:setLifetime = 2'
     
     suffix	= f"_{tag}" if tag else ""
+    path	= gen_dir + f"pythia_mg_m{ma}{suffix}.cmd"
     
-	path	= job_dir + f"pythia_mg_m{ma}{suffix}.cmd"
-	
-	with open(path, "w") as fh:
-		fh.write(content)
-		
-	return path
-	
-def write_job(job_dir: str, mg_card: str, mg_out_dir: str, pythia_card: str, delphes_out: str) -> str:
-	"""
-	- Writes bash script for HTCondor execution and follows: MG->P8->Delphes
-	- Returns:
-	path of bash script
-	- Args:
-	job_dir: str, directory of job submitted
-	mg_card, mg_out_dir: str, MG card and directory paths
-	pythia_card, pythia_dir: str, pythia card and directory paths
-	delphes_out_dir: str, path of the output from delphes 
-	"""
-	lhe_path		= mg_out_dir	+ "Events/run_01/unweighted_events.lhe"
-	lhe_gz_path		= lhe_path		+ ".gz"
-	param_card_path	= mg_out_dir	+ "Cards/param_card.dat"
-	script_path		= job_dir		+ "run_production.sh"
-	
-	scr	=	'#!/bin/bash\n\n'
-    scr +=	f'source {base_dir}setup_local.sh\n\n'
-    scr	+=	f'cd {base_dir}\n\n'
-    scr	+=	f'mg5_aMC {mg_card}\n\n'
-    scr	+=	f'PARAM_CARD="{param_card_path}"\n'
-    scr	+=	f'PYTHIA_CARD="{pythia_card}"\n'
-    scr	+=	'ALP_WIDTH=$(grep -i "^DECAY[[:space:]]*9000005" "$PARAM_CARD" | awk \'{print $3}\')\n'
-    scr	+=	'if [ -z "$ALP_WIDTH" ]; then\n'
-    scr	+=	'    echo "[ERROR] Could not find ALP width in $PARAM_CARD" >&2\n'
-    scr	+=	'    exit 1\n'
-    scr	+=	'fi\n'
-    scr	+=	'echo "  ALP width from MadGraph: $ALP_WIDTH GeV"\n'
-    scr	+=	'sed -i "s/__ALP_WIDTH__/${ALP_WIDTH}/" "$PYTHIA_CARD"\n\n'
-    scr +=	f'LHE="{lhe_path}"\n'
-    scr +=	f'LHE_GZ="{lhe_gz_path}"\n'
-    scr +=	'if [ -f "$LHE_GZ" ] && [ ! -f "$LHE" ]; then\n'
-    scr +=	'    echo "  Decompressing LHE file..."\n'
-    scr +=	'    gunzip "$LHE_GZ"\n'
-    scr +=	'fi\n\n'
-    scr +=	f'DelphesPythia8_EDM4HEP {delphes_tcl} {edm4hep_cfg} "$PYTHIA_CARD" {delphes_out}\n\n'
+    with open(path, "w") as fh:
+        fh.write(content)
+        
+    return path
+    
+def write_job(condor_job_dir: str, mg_card: str, mg_out_dir: str, pythia_card: str, delphes_out: str) -> str:
+    """
+    - Writes bash script for HTCondor execution and follows: MG->P8->Delphes
+    - Returns:
+    path of bash script
+    - Args:
+    condor_job_dir: str, directory of job submitted
+    mg_card, mg_out_dir: str, MG card and directory paths
+    pythia_card, pythia_dir: str, pythia card and directory paths
+    delphes_out_dir: str, path of the output from delphes 
+    """
+    lhe_path		= mg_out_dir		+ "Events/run_01/unweighted_events.lhe"
+    lhe_gz_path		= lhe_path			+ ".gz"
+    param_card_path	= mg_out_dir		+ "Cards/param_card.dat"
+    script_path		= condor_job_dir	+ "run_production.sh"
+    
+    scr	=	'#!/bin/bash\n\n'
+    scr	+=	f'source {local_setup}\n\n'
+    scr +=  f'cd {base_dir}\n\n'
+    scr +=  f'mg5_aMC {mg_card}\n\n'
+    scr +=  f'PARAM_CARD="{param_card_path}"\n'
+    scr +=  f'PYTHIA_CARD="{pythia_card}"\n'
+    scr +=  'ALP_WIDTH=$(grep -i "^DECAY[[:space:]]*9000005" "$PARAM_CARD" | awk \'{print $3}\')\n'
+    scr +=  'if [ -z "$ALP_WIDTH" ]; then\n'
+    scr +=  '    echo "[ERROR] Could not find ALP width in $PARAM_CARD" >&2\n'
+    scr +=  '    exit 1\n'
+    scr +=  'fi\n'
+    scr +=  'echo "  ALP width from MadGraph: $ALP_WIDTH GeV"\n'
+    scr +=  'sed -i "s/__ALP_WIDTH__/${ALP_WIDTH}/" "$PYTHIA_CARD"\n\n'
+    scr +=  f'LHE="{lhe_path}"\n'
+    scr +=  f'LHE_GZ="{lhe_gz_path}"\n'
+    scr +=  'if [ -f "$LHE_GZ" ] && [ ! -f "$LHE" ]; then\n'
+    scr +=  '    echo "  Decompressing LHE file..."\n'
+    scr +=  '    gunzip "$LHE_GZ"\n'
+    scr +=  'fi\n\n'
+    scr +=  f'DelphesPythia8_EDM4HEP {delphes_tcl} {edm4hep_cfg} "$PYTHIA_CARD" {delphes_out}\n\n'
     scr	+=	'echo "Production complete"\n'
     
     with open(script_path, "w") as fh:
-    	fh.write(scr)
+        fh.write(scr)
     os.system(f"chmod +x {script_path}")
     
     return script_path
     
-def write_job_validation(job_dir: str, mg_card: str, mg_out_dir: str, pythia_card: str, delphes_out: str) -> str:
-	"""
-	Identical to write_job except no re-weighting
-	"""
-	lhe_path		= mg_out_dir + "Events/run_01/unweighted_events.lhe"
-	lhe_gz_path		= lhe_path + ".gz"
-	param_card_path	= mg_out_dir + "Cards/param_card.dat"
-	script_path		= job_dir + "run_validation.sh"
-	
-	scr  = '#!/bin/bash\n'
-	scr += f'source {local_setup}\n\n'
-    scr += f'cd {base_dir}\n\n'
-    scr += 'echo "VALIDATION JOB"\n'
-    scr += 'echo "Using: $(which DelphesPythia8_EDM4HEP)"\n\n'
-    scr += f'mg5_aMC {mg_card}\n\n'
-    scr += f'PARAM_CARD="{param_card_path}"\n'
-    scr += f'PYTHIA_CARD="{pythia_card}"\n'
-    scr += 'ALP_WIDTH=$(grep -i "^DECAY[[:space:]]*9000005" "$PARAM_CARD" | awk \'{print $3}\')\n'
-    scr += 'if [ -z "$ALP_WIDTH" ]; then\n'
-    scr += '    echo "[ERROR] Could not find ALP width in $PARAM_CARD" >&2\n'
-    scr += '    exit 1\n'
-    scr += 'fi\n'
-    scr += 'echo "  ALP width: $ALP_WIDTH GeV"\n\n'
-    scr += 'sed -i "s/__ALP_WIDTH__/${ALP_WIDTH}/" "$PYTHIA_CARD"\n\n'
-    scr += f'LHE="{lhe_path}"\n'
-    scr += f'LHE_GZ="{lhe_gz_path}"\n'
-    scr += 'if [ -f "$LHE_GZ" ] && [ ! -f "$LHE" ]; then\n'
-    scr += '    gunzip "$LHE_GZ"\n'
-    scr += 'fi\n\n'
-    scr += f'DelphesPythia8_EDM4HEP {delphes_tcl} {edm4hep_cfg} "$PYTHIA_CARD" {delphes_out}\n\n'
-    scr += 'echo "Validation complete."\n'
+def write_job_validation(condor_job_dir: str, mg_card: str, mg_out_dir: str, pythia_card: str, delphes_out: str) -> str:
+    """
+    Identical to write_job except no re-weighting
+    """
+    lhe_path		= mg_out_dir + "Events/run_01/unweighted_events.lhe"
+    lhe_gz_path    	= lhe_path + ".gz"
+    param_card_path	= mg_out_dir + "Cards/param_card.dat"
+    script_path    	= condor_job_dir + "run_validation.sh"
+    
+    scr	=	'#!/bin/bash\n'
+    scr +=	f'source {local_setup}\n\n'
+    scr +=	f'cd {base_dir}\n\n'
+    scr +=	'echo "VALIDATION JOB"\n'
+    scr +=	'echo "Using: $(which DelphesPythia8_EDM4HEP)"\n\n'
+    scr +=	f'mg5_aMC {mg_card}\n\n'
+    scr +=	f'PARAM_CARD="{param_card_path}"\n'
+    scr +=	f'PYTHIA_CARD="{pythia_card}"\n'
+    scr +=	'ALP_WIDTH=$(grep -i "^DECAY[[:space:]]*9000005" "$PARAM_CARD" | awk \'{print $3}\')\n'
+    scr +=	'if [ -z "$ALP_WIDTH" ]; then\n'
+    scr +=	'    echo "[ERROR] Could not find ALP width in $PARAM_CARD" >&2\n'
+    scr +=	'    exit 1\n'
+    scr +=	'fi\n'
+    scr +=	'echo "  ALP width: $ALP_WIDTH GeV"\n\n'
+    scr +=	'sed -i "s/__ALP_WIDTH__/${ALP_WIDTH}/" "$PYTHIA_CARD"\n\n'
+    scr +=	f'LHE="{lhe_path}"\n'
+    scr +=	f'LHE_GZ="{lhe_gz_path}"\n'
+    scr +=	'if [ -f "$LHE_GZ" ] && [ ! -f "$LHE" ]; then\n'
+    scr +=	'    gunzip "$LHE_GZ"\n'
+    scr +=	'fi\n\n'
+    scr +=	f'DelphesPythia8_EDM4HEP {delphes_tcl} {edm4hep_cfg} "$PYTHIA_CARD" {delphes_out}\n\n'
+    scr += 	'echo "Validation complete"\n'
     
     with open(script_path, "w") as fh:
-    	fh.write(scr)
+        fh.write(scr)
     os.system(f"chmod +x {script_path}")
     
     return script_path
     
-def write_condor_config(job_dir: str, script_path: str) -> str:
-	"""
-	- Writes the condor .sub file matching existing submission format with one job
-	per (channel, mass, cah) point
-	- Returns:
-	cfg_path: path of configuration
-	- Args:
-	job_dir: str, directory of job submitted
-	script_path: str, directory of bash script
-	"""
-	cfg	=	'Universe					= docker\n'
-    cfg	+=	'docker_image				= cverstege/alma9-gridjob\n'
-    cfg	+=	'accounting_group			= cms.higgs\n'
-    cfg	+=	f'executable				= {script_path}\n'
-    cfg	+=	f'log						= {job_dir}condor.log\n'
-    cfg	+=	f'output					= {job_dir}condor.out\n'
-    cfg	+=	f'error						= {job_dir}condor.err\n'
-    cfg	+=	'max_retries				= 3\n'
+def write_condor_config(condor_job_dir: str, script_path: str) -> str:
+    """
+    - Writes the condor .sub file matching existing submission format with one job
+    per (channel, mass, cah) point
+    - Returns:
+    cfg_path: path of configuration
+    - Args:
+    condor_job_dir: str, directory of job submitted
+    script_path: str, directory of bash script
+    """
+    cfg	=	'Universe                   = docker\n'
+    cfg	+=	'docker_image               = cverstege/alma9-gridjob\n'
+    cfg	+=	'accounting_group           = cms.higgs\n'
+    cfg	+=	f'executable                = {script_path}\n'
+    cfg	+=	f'log						= {condor_job_dir}condor.log\n'
+    cfg	+=	f'output                    = {condor_job_dir}condor.out\n'
+    cfg	+=	f'error						= {condor_job_dir}condor.err\n'
+    cfg	+=	'max_retries                = 3\n'
     cfg	+=	f'+JobFlavour				= "{job_flavour}"\n'
     cfg	+=	f'request_memory			= {memory} MB\n'
     cfg	+=	f'request_cpus				= {ncpus}\n'
@@ -388,34 +402,40 @@ def write_condor_config(job_dir: str, script_path: str) -> str:
     cfg	+=	'when_to_transfer_output	= ON_EXIT\n'
     cfg	+=	'queue 1\n'
     
-    cfg_path = job_dir + "job_submit.cfg"
+    cfg_path = condor_job_dir + "job_submit.cfg"
     
     with open(cfg_path, "w") as fh:
-    	fh.write(cfg)
+        fh.write(cfg)
     
     return cfg_path
-    	    
+            
 def run(dry_run: bool=True, skip_existing: bool=True):
-	"""
-	- Loops over all (channel, mass, cah) combinations, writes cards and scripts
-	and optionally submits to HTCondor
-	- Returns:
-	submitted jobs (optional)
-	- Args:
-	dry_run: bool, if True then generate all files but do not call condor_submit
-	skip_existing: bool, if True then skip points whose job_submit.cfg already exists (useful for resubmitting only failed jobs)
-	"""
-	make_dir(condor_dir)
-	make_dir(mg_dir)
-	make_dir(delphes_dir)
-	
-	ntotal	= len(z_channels) * len(alp_scan)
+    """
+    - Loops over all (channel, mass) combinations, writes cards and scripts
+    and optionally submits to HTCondor
+    - Returns:
+    submitted jobs (optional)
+    - Args:
+    dry_run: bool, if True then generate all files but do not call condor_submit
+    skip_existing: bool, if True then skip points whose job_submit.cfg already exists (useful for resubmitting only failed jobs)
+    """
+    if not os.path.isdir(alp_model):
+    	print(f" [ERROR] ALP model not found locally at: {model}")
+    	print(f" Download it first - see docstring at top of this file\n")
+    	return
+    
+    make_dir(generation_dir)
+    make_dir(condor_dir)
+    make_dir(mg_dir)
+    make_dir(delphes_dir)
+    
+    ntotal		= len(z_channels) * len(alp_scan)
 
     print('  ALP production scan — FCC-ee @ sqrt(s) = 240 GeV\n')
-    print(f'  Z channels  : 	{list(z_channels.keys())}')
-    print(f'  Masses [GeV]: 	{list(alp_scan.keys())}')
-    print(f'  Reference CAH:	{cah_ref}')
-    print(f'  Reweight CAH: 	{list(list(alp_scan.values())[0])}')
+    print(f'  Z channels  :     {list(z_channels.keys())}')
+    print(f'  Masses [GeV]:     {list(alp_scan.keys())}')
+    print(f'  Reference CAH:    {cah_ref}')
+    print(f'  Reweight CAH:     {list(list(alp_scan.values())[0])}')
     print(f'  Events/job  :		{nevents:,}')
     print(f'  Dry run     :		{dry_run}\n')
     
@@ -423,10 +443,10 @@ def run(dry_run: bool=True, skip_existing: bool=True):
     nskipped	= 0
     
     for channel, (ma, cah_list) in itertools.product(z_channels.keys(), alp_scan.items()):
-    	
-    	tag      = point_tag(channel, ma)
-        job_dir  = condor_dir + tag + "/"
-        cfg_path = job_dir + "job_submit.cfg"
+        tag				= point_tag(channel, ma)
+        gen_job_dir		= generation_dir + tag + "/"
+        condor_job_dir  = condor_dir + tag + "/"
+        cfg_path 		= condor_job_dir + "job_submit.cfg"
  
         print(f"[{tag}]  ({len(cah_list)} reweight targets)")
         
@@ -438,7 +458,8 @@ def run(dry_run: bool=True, skip_existing: bool=True):
                 nsubmit += 1
             continue
  
-        make_dir(job_dir)
+        make_dir(gen_job_dir)
+        make_dir(condor_job_dir)
  
         # paths derived from the tag for this (channel, mass) point
         mg_out_dir  = mg_dir      + tag + "/"
@@ -448,25 +469,26 @@ def run(dry_run: bool=True, skip_existing: bool=True):
         make_dir(delphes_dir + tag + "/")
  
         # write metadata first so the index mapping is always present
-        write_metadata(job_dir, channel, ma, cah_list)
+        write_metadata(gen_job_dir, channel, ma, cah_list)
  
         # write all cards and the bash script
-        mg_card     = write_mg_card(channel, ma, cah_list, job_dir, mg_out_dir)
-        pythia_card = write_pythia_card(ma, job_dir, lhe_path)
-        script      = write_job(job_dir, mg_card, mg_out_dir, pythia_card, delphes_out)
-        cfg_path    = write_condor_config(job_dir, script)
+        mg_card     = write_mg_card(channel, ma, cah_list, gen_job_dir, mg_out_dir)
+        pythia_card = write_pythia_card(ma, gen_job_dir, lhe_path)
+        script      = write_job(condor_job_dir, mg_card, mg_out_dir, pythia_card, delphes_out)
+        cfg_path    = write_condor_config(condor_job_dir, script)
         
-        print(f"  Cards + metadata written")
-    		
-		if dry_run:
-			print(f" [DRY RUN]: would submit {cfg_path}")
-		else:
-			ret	= os.system(f"condor_submit {cfg_path}")
-			if ret==0:
-				print(f" Submission ok!")
-			else:
-				print(f" [ERROR] condor_submit returned {ret}")
-			nsubmit += 1
+        print(f"  Written: cards -> {gen_job_dir}")
+        print(f" Written: job -> {condor_job_dir}")
+            
+        if dry_run:
+            print(f" [DRY RUN]: would submit {cfg_path}")
+        else:
+            ret    = os.system(f"condor_submit {cfg_path}")
+            if ret==0:
+                print(f" Submission ok!")
+            else:
+                print(f" [ERROR] condor_submit returned {ret}")
+            nsubmit += 1
     
     print(f"\nSubmitted: {nsubmit} | Skipped: {nskipped}")
     
@@ -478,10 +500,11 @@ def run_validation(channel: str, ma: float, cah: float, dry_run: bool = True):
     channel: str, decay mode of Z boson
     ma: float, mass of ALP
     cah: float, Higgs-Alp coupling (must be in cah_list)
-    dry_run: if True, write files but do not submit
+    dry_run: if True, write files but does not submit
     """
-    tag     = validation_tag(channel, ma, cah)
-    job_dir = condor_dir + tag + "/"
+    tag     		= validation_tag(channel, ma, cah)
+    gen_job_dir 	= generation_dir + "/"
+    condor_job_dir	= condor_dir + tag + "/"
     
     print(" Validation job:")
     print(f" Channel: {channel} (Z -> {z_channels[channel]})")
@@ -490,40 +513,43 @@ def run_validation(channel: str, ma: float, cah: float, dry_run: bool = True):
     print(f" Tag: {tag}")
     print(f" Dry run: {dry_run}\n")
  
-    make_dir(job_dir)
-    make_dir(mg_dir)
-    make_dir(delphes_dir + tag + '/')
+    make_dir(gen_job_dir)
+    make_dir(condor_job_dir)
+    make_dir(delphes_dir + tag + "/")
  
     mg_out_dir  = mg_dir      + tag + "/"
     lhe_path    = mg_out_dir  + "Events/run_01/unweighted_events.lhe"
     delphes_out = delphes_dir + tag + "/events.root"
- 
-    mg_card     = write_mg_card_validation(channel, ma, cah, job_dir, mg_out_dir)
-    pythia_card = write_pythia_card(ma, job_dir, lhe_path, tag="val")
-    script      = write_job_validation(job_dir, mg_card, mg_out_dir, pythia_card, delphes_out)
-    cfg_path    = write_condor_config(job_dir, script)
+    mg_card     = write_mg_validation_card(channel, ma, cah, gen_job_dir, mg_out_dir)
+    pythia_card = write_pythia_card(ma, gen_job_dir, lhe_path, tag="val")
+    script      = write_job_validation(condor_job_dir, mg_card, mg_out_dir, pythia_card, delphes_out)
+    cfg_path    = write_condor_config(condor_job_dir, script)
     
-    print(f" Cards written to: {job_dir}")
+    print(f"[{tag}]")
+    print(f" Cards written to: {gen_job_dir}")
  
     # print index to this cah
-    prod_tag	= point_tag(channel, ma)
+    prod_tag    = point_tag(channel, ma)
     
     if ma in alp_scan and cah in alp_scan[ma]:
-        idx		= alp_scan[ma].index(cah) + 1   # +1 because index 0 = cah_ref
-        print(f" Production sample: {condor_dir}{prod_tag}/")
+        idx        = alp_scan[ma].index(cah) + 1   # +1 because index 0 = cah_ref
+        print(f" Production sample: {condor_job_dir}{prod_tag}/")
         print(f" Reweight index: {idx} (do_weighted({idx}) in FCCAnalysis)")
     else:
         print(f"  [NOTE] cah={cah} not in alp_scan for ma={ma} — check scan values")
     if dry_run:
         print(f"\n  [DRY RUN] Would submit: {cfg_path}")
     else:
-        ret		= os.system(f"condor_submit {cfg_path}")
+        ret        = os.system(f"condor_submit {cfg_path}")
         if ret == 0:
             print(f"  Validation job submitted OK")
         else:
             print(f"  [ERROR] condor_submit returned {ret}")
     
 if __name__ == "__main__":
-	run(dry_run=True, skip_existing=True)
-	for channel, ma in itertools.product(z_channels, alp_scan):
-		run_validation(channel, ma, cah_val, dry_run=True)
+    run(dry_run=False, skip_existing=True)
+    
+    for channel, (ma, cah_list) in itertools.product(z_channels.keys(), alp_scan.items()):
+    	if cah_val not in cah_list:
+    		continue
+    	run_validation(channel, ma, cah_val, dry_run=False)
