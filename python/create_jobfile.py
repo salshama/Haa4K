@@ -164,7 +164,7 @@ def write_mg_card(channel: str, ma: float, cah_list: list, gen_dir: str, mg_out_
     fs		= z_channels[channel]
     
     content =	'# import ALP model and define multi-particles\n'
-    content +=	'import model {alp_model}\n\n'
+    content +=	f'import model {alp_model}\n\n'
     content +=	'define p = g u c d s u~ c~ d~ s~\n'
     content +=	'define j = g u c d s u~ c~ d~ s~\n'
     content +=	'define l+ = e+ mu+\n'
@@ -179,7 +179,7 @@ def write_mg_card(channel: str, ma: float, cah_list: list, gen_dir: str, mg_out_
     content +=	'# Collision parameters\n'
     content +=	f'set ebeam1 {ebeam}   # beam 1 energy [GeV]\n'
     content +=	f'set ebeam2 {ebeam}   # beam 2 energy [GeV]\n'
-    content +=	'set no_parton_cuts\n\n'
+    content +=	'set no_parton_cuts True\n\n'
     content +=	'# ALP model parameters\n'
     content +=	f'set malp {ma}        # ALP mass [GeV]\n'
     content +=	f'set CAH  {cah_ref}    # Higgs-ALP coupling [GeV^-1]\n'
@@ -216,7 +216,7 @@ def write_mg_validation_card(channel: str, ma: float, cah:float, gen_dir: str, m
     fs		= z_channels[channel]
     
     content	=	'# import ALP model and define multi-particles\n'
-    content	+=	'import model ALP\n\n'
+    content	+=	f'import model {alp_model}\n\n'
     content +=	'define p = g u c d s u~ c~ d~ s~\n'
     content +=	'define j = g u c d s u~ c~ d~ s~\n'
     content +=	'define l+ = e+ mu+\n'
@@ -231,7 +231,7 @@ def write_mg_validation_card(channel: str, ma: float, cah:float, gen_dir: str, m
     content +=	'# Collision parameters\n'
     content +=	f'set ebeam1 {ebeam}   # beam 1 energy [GeV]\n'
     content +=	f'set ebeam2 {ebeam}   # beam 2 energy [GeV]\n'
-    content +=	'set no_parton_cuts\n\n'
+    content +=	'set no_parton_cuts True\n\n'
     content +=	'# ALP model parameters\n'
     content +=	f'set malp {ma}        # ALP mass [GeV]\n'
     content +=	f'set CAH  {cah}    # Higgs-ALP coupling [GeV^-1]\n'
@@ -314,6 +314,7 @@ def write_job(condor_job_dir: str, mg_card: str, mg_out_dir: str, pythia_card: s
     scr	+=	f'source {local_setup}\n\n'
     scr +=  f'cd {base_dir}\n\n'
     scr +=  f'mg5_aMC {mg_card}\n\n'
+    scr +=  f'mv {base_dir}MG5_debug {mg_out_dir} 2>/dev/null || true\n\n'
     scr +=  f'PARAM_CARD="{param_card_path}"\n'
     scr +=  f'PYTHIA_CARD="{pythia_card}"\n'
     scr +=  'ALP_WIDTH=$(grep -i "^DECAY[[:space:]]*9000005" "$PARAM_CARD" | awk \'{print $3}\')\n'
@@ -353,6 +354,7 @@ def write_job_validation(condor_job_dir: str, mg_card: str, mg_out_dir: str, pyt
     scr +=	'echo "VALIDATION JOB"\n'
     scr +=	'echo "Using: $(which DelphesPythia8_EDM4HEP)"\n\n'
     scr +=	f'mg5_aMC {mg_card}\n\n'
+    scr +=  f'mv {base_dir}MG5_debug {mg_out_dir} 2>/dev/null || true\n\n'
     scr +=	f'PARAM_CARD="{param_card_path}"\n'
     scr +=	f'PYTHIA_CARD="{pythia_card}"\n'
     scr +=	'ALP_WIDTH=$(grep -i "^DECAY[[:space:]]*9000005" "$PARAM_CARD" | awk \'{print $3}\')\n'
@@ -393,6 +395,7 @@ def write_condor_config(condor_job_dir: str, script_path: str) -> str:
     cfg	+=	f'log						= {condor_job_dir}condor.log\n'
     cfg	+=	f'output                    = {condor_job_dir}condor.out\n'
     cfg	+=	f'error						= {condor_job_dir}condor.err\n'
+    cfg +=	f'docker_stderror			= {condor_job_dir}docker_stderror\n'
     cfg	+=	'max_retries                = 3\n'
     cfg	+=	f'+JobFlavour				= "{job_flavour}"\n'
     cfg	+=	f'request_memory			= {memory} MB\n'
@@ -478,7 +481,7 @@ def run(dry_run: bool=True, skip_existing: bool=True):
         cfg_path    = write_condor_config(condor_job_dir, script)
         
         print(f"  Written: cards -> {gen_job_dir}")
-        print(f" Written: job -> {condor_job_dir}")
+        print(f" Written: jobs -> {condor_job_dir}")
             
         if dry_run:
             print(f" [DRY RUN]: would submit {cfg_path}")
@@ -503,8 +506,8 @@ def run_validation(channel: str, ma: float, cah: float, dry_run: bool = True):
     dry_run: if True, write files but does not submit
     """
     tag     		= validation_tag(channel, ma, cah)
-    gen_job_dir 	= generation_dir + "/"
-    condor_job_dir	= condor_dir + tag + "/"
+    gen_job_dir 	= generation_dir	+ tag + "/"
+    condor_job_dir	= condor_dir 		+ tag + "/"
     
     print(" Validation job:")
     print(f" Channel: {channel} (Z -> {z_channels[channel]})")
@@ -527,11 +530,9 @@ def run_validation(channel: str, ma: float, cah: float, dry_run: bool = True):
     
     print(f"[{tag}]")
     print(f" Cards written to: {gen_job_dir}")
- 
-    # print index to this cah
-    prod_tag    = point_tag(channel, ma)
     
     if ma in alp_scan and cah in alp_scan[ma]:
+        prod_tag    = point_tag(channel, ma)
         idx        = alp_scan[ma].index(cah) + 1   # +1 because index 0 = cah_ref
         print(f" Production sample: {condor_job_dir}{prod_tag}/")
         print(f" Reweight index: {idx} (do_weighted({idx}) in FCCAnalysis)")

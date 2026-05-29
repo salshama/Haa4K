@@ -4,22 +4,55 @@ import ROOT
 
 # signal processes
 processList = {
-		'mgp8_ee_eeH_HAlpAlp_m1_ecm240':{},
-		'mgp8_ee_eeH_HAlpAlp_m10_ecm240':{},
-		'mgp8_ee_eeH_HAlpAlp_m30_ecm240':{},
-		'mgp8_ee_eeH_HAlpAlp_m60_ecm240':{},
+		"mgp8_ee_eeH_HAlpAlp_m0p05_ecm240": {},
+		"mgp8_ee_eeH_HAlpAlp_m0p1_ecm240":	{},
+		"mgp8_ee_eeH_HAlpAlp_m0p5_ecm240":	{},
+		"mgp8_ee_eeH_HAlpAlp_m1p0_ecm240":	{},
+		"mgp8_ee_eeH_HAlpAlp_m1p5_ecm240":	{},
+		"mgp8_ee_eeH_HAlpAlp_m5p0_ecm240":	{},
+		"mgp8_ee_eeH_HAlpAlp_m10p0_ecm240": {},
+		"mgp8_ee_eeH_HAlpAlp_m20p0_ecm240": {},
+		"mgp8_ee_eeH_HAlpAlp_m30p0_ecm240": {},
+		"mgp8_ee_eeH_HAlpAlp_m40p0_ecm240": {},
+		"mgp8_ee_eeH_HAlpAlp_m50p0_ecm240": {},
+		"mgp8_ee_eeH_HAlpAlp_m60p0_ecm240": {},
+		
+		"mgp8_ee_mumuH_HAlpAlp_m0p05_ecm240":	{},
+		"mgp8_ee_mumuH_HAlpAlp_m0p1_ecm240":	{},
+		"mgp8_ee_mumuH_HAlpAlp_m0p5_ecm240":	{},
+		"mgp8_ee_mumuH_HAlpAlp_m1p0_ecm240":	{},
+		"mgp8_ee_mumuH_HAlpAlp_m1p5_ecm240":	{},
+		"mgp8_ee_mumuH_HAlpAlp_m5p0_ecm240":	{},
+		"mgp8_ee_mumuH_HAlpAlp_m10p0_ecm240":	{},
+		"mgp8_ee_mumuH_HAlpAlp_m20p0_ecm240":	{},
+		"mgp8_ee_mumuH_HAlpAlp_m30p0_ecm240":	{},
+		"mgp8_ee_mumuH_HAlpAlp_m40p0_ecm240":	{},
+		"mgp8_ee_mumuH_HAlpAlp_m50p0_ecm240":	{},
+		"mgp8_ee_mumuH_HAlpAlp_m60p0_ecm240":	{},
+		
+		"mgp8_ee_qqH_HAlpAlp_m0p05_ecm240": {},
+		"mgp8_ee_qqH_HAlpAlp_m0p1_ecm240":	{},
+		"mgp8_ee_qqH_HAlpAlp_m0p5_ecm240":	{},
+		"mgp8_ee_qqH_HAlpAlp_m1p0_ecm240":	{},
+		"mgp8_ee_qqH_HAlpAlp_m1p5_ecm240":	{},
+		"mgp8_ee_qqH_HAlpAlp_m5p0_ecm240":	{},
+		"mgp8_ee_qqH_HAlpAlp_m10p0_ecm240": {},
+		"mgp8_ee_qqH_HAlpAlp_m20p0_ecm240": {},
+		"mgp8_ee_qqH_HAlpAlp_m30p0_ecm240": {},
+		"mgp8_ee_qqH_HAlpAlp_m40p0_ecm240": {},
+		"mgp8_ee_qqH_HAlpAlp_m50p0_ecm240": {},
+		"mgp8_ee_qqH_HAlpAlp_m60p0_ecm240": {},
 }
 
 # Production tag. This points to the yaml files for getting sample statistics
 # Mandatory when running over EDM4Hep centrally produced events
-#Comment out when running over privately produced events
+# Comment out when running over privately produced events
 # prodTag	 = "FCCee/Delphes/IDEA"
 
 #Input directory
-#Comment out when running over centrally produced events
-#Mandatory when running over privately produced events
-# For now, signal and background processes have different directories
-inputDir = "/ceph/salshamaily/haa4K_FCCee/delphes"
+# Comment out when running over centrally produced events
+# Mandatory when running over privately produced events
+inputDir = "/ceph/salshamaily/haa4K_FCCee/delphes/"
 
 # Output directory, default is local dir
 outputDir = "/ceph/salshamaily/haa4K_FCCee/samples"
@@ -41,10 +74,30 @@ class RDFanalysis():
 	def analysers(df):
 		df2 = (df
 	   
-	   .Alias("Particle0",				"Particle#0.index")
-	   .Alias("Particle1",				"Particle#1.index")
-	   .Alias("MCRecoAssociations0",	"MCRecoAssociations#0.index")
-	   .Alias("MCRecoAssociations1",	"MCRecoAssociations#1.index")
+	   .Alias("Particle0",				"_Particle_parents.index")
+	   .Alias("Particle1",				"_Particle_daughters.index")
+	   .Alias("MCRecoAssociations0",	"_RecoMCLink_from.index")
+	   .Alias("MCRecoAssociations1",	"_RecoMCLink_to.index")
+	   
+	   ### REWEIGHTING ###
+	   
+	   # weights from EventHeader
+	   .Define("event_weight",	"EventHeader.weight")
+	   .Define("n_weights",		"(int)EventHeader.weight.size()")
+	   # ind(0) = cah_ref
+	   .Define("cah_ref",		"event_weight.size() > 0 ? (double)event_weight.at(0) : 1.0")
+	   # ind(1) = 0.1	
+	   .Define("cah_1em1",		"event_weight.size() > 1 ? (double)event_weight.at(1) : 1.0")
+	   # ind(2) = 0.01		
+	   .Define("cah_1em2",		"event_weight.size() > 2 ? (double)event_weight.at(2) : 1.0")
+	   # ind(3) = 0.001
+	   .Define("cah_1em3",		"event_weight.size() > 3 ? (double)event_weight.at(3) : 1.0")
+	   # ind(4) = 0.0001
+	   .Define("cah_1em4",		"event_weight.size() > 4 ? (double)event_weight.at(4) : 1.0")
+	   # ind(5) = 0.00001
+	   .Define("cah_1em5",		"event_weight.size() > 5 ? (double)event_weight.at(5) : 1.0")
+	   # ind(6) = 0.000001
+	   .Define("cah_1em6",		"event_weight.size() > 6 ? (double)event_weight.at(6) : 1.0")
 	   
 	   ### PARTICLES ###
 	   .Define("FSGenParticles",					"FCCAnalyses::MCParticle::sel_genStatus(1)(Particle)") #final state particles
@@ -62,7 +115,7 @@ class RDFanalysis():
 	   .Define("FSGenNonLepParticles_tlv_mass",		"FCCAnalyses::ZHfunctions::get_mass_tlv(FSGenNonLepParticles_tlv)")
 	   
 	   ### PHOTONS ###
-	   .Alias("Photon0", "Photon#0.index")
+	   .Alias("Photon0", "Photon_objIdx.index")
 	   
 	   #all final state gen photons
 	   .Define("GenPhoton_PID",			"FCCAnalyses::MCParticle::sel_pdgID(22, false)(Particle)")
@@ -93,7 +146,7 @@ class RDFanalysis():
 	   .Define("RecoPhoton_charge", "ReconstructedParticle::get_charge(RecoPhotons)")
 	   
 	   ### ELECTRONS ###
-	   .Alias("Electron0", "Electron#0.index")
+	   .Alias("Electron0", "Electron_objIdx.index")
 	   
 	   #all final state gen electrons and positrons
 	   .Define("GenElectron_PID",	"FCCAnalyses::MCParticle::sel_pdgID(11, true)(Particle)")
@@ -136,7 +189,7 @@ class RDFanalysis():
 	   .Define("RecoElectronTrack_Z0cov",		"ReconstructedParticle2Track::getRP2TRK_Z0_cov(RecoElectrons,EFlowTrack_1)")
 		
 		### MUONS ###
-		.Alias("Muon0", "Muon#0.index")
+		.Alias("Muon0", "Muon_objIdx.index")
 		
 		.Define("GenMuon_PID", "FCCAnalyses::MCParticle::sel_pdgID(13, true)(Particle)")
 		.Define("FSGenMuon",   "FCCAnalyses::MCParticle::sel_genStatus(1)(GenMuon_PID)") #gen status==1 means final state particle (FS)
@@ -252,7 +305,7 @@ class RDFanalysis():
 	   .Filter("RecoKplus_MassCut.size()==4 && (RecoKplus_charge.at(0)+RecoKplus_charge.at(1)+RecoKplus_charge.at(2)+RecoKplus_charge.at(3))==0")		
 	   
 	   ### VERTEX RECONSTRUCTION ###
-	   
+
 	   	# Primary IP (Primary IP) -> for leptons
 		.Define("RecoDecayVertexObjectLepton",	"VertexFitterSimple::VertexFitter_Tk(0, RecoLeptonTrack)")
 		.Define("RecoDecayVertexLepton",		"VertexingUtils::get_VertexData(RecoDecayVertexObjectLepton)")
@@ -443,6 +496,17 @@ class RDFanalysis():
 	def output():
 		branchList = [
 		
+				# reweighting
+				"event_weights",
+				"n_weights",
+				"cah_ref",
+				"cah_1em1",
+				"cah_1em2",
+				"cah_1em3",
+				"cah_1em4",
+				"cah_1em5",
+				"cah_1em6",
+				
 				# MC particles
 				"FSGenNonLepParticles_PID",
 				"FSGenNonLepParticles_mass",
