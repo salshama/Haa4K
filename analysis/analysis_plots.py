@@ -1,4 +1,5 @@
 import ROOT
+import colorsys
 
 # global parameters
 intLumi		= 10.8e6 #pb^-1
@@ -11,8 +12,8 @@ ana_tex			= "e^{+}e^{-} #rightarrow Z #rightarrow ZH, H #rightarrow aa"
 delphesVersion	= '3.4.2'
 energy			= 240
 collider 		= 'FCC-ee'
-inputDir 		= '/ceph/salshamaily/haa4K_FCCee/analysis/final_output/only_bkg_mgp8sig_norwt_042026/'
-outdir			= '/ceph/salshamaily/haa4K_FCCee/analysis/plots_output/only_bkg_mgp8sig_norwt_042026/'
+inputDir 		= '/ceph/salshamaily/haa4K_FCCee/analysis/final_output/only_signal_mgp8sig_norwt_062026/'
+outdir			= '/ceph/salshamaily/haa4K_FCCee/analysis/plots_output/only_signal_mgp8sig_norwt_062026/'
 formats			= ['png','pdf']
 yaxis			= ['log']
 stacksig		= ['nostack']
@@ -63,7 +64,7 @@ variables = [
 	"FSGenElectron_phi",
 	"FSGenElectron_charge",
 
-	#MC mu
+	# MC mu
 	"n_FSGenMuon",	  	
 	"FSGenMuon_e",		
 	"FSGenMuon_mass",	
@@ -119,6 +120,17 @@ variables = [
 	"RecoMuon_py",		
 	"RecoMuon_pz",		
 	"RecoMuon_charge",
+	
+	# RECO lepton
+	"n_RecoLeptons",
+	"RecoLepton_e",		
+	"RecoLepton_mass",	
+	"RecoLepton_p",		
+	"RecoLepton_pt",		
+	"RecoLepton_px",		
+	"RecoLepton_py",		
+	"RecoLepton_pz",		
+	"RecoLepton_charge",
 	
 	# JETS
 # 	"Jets_kt2_e",		
@@ -210,26 +222,26 @@ variables = [
 	"RecoZ_eta",
 	"RecoZ_phi",
 	
-	# RECO IND e-
-	"Electron_0_m",
-	"Electron_0_e",	
-	"Electron_0_p",
-	"Electron_0_pt",
-	"Electron_0_px",
-	"Electron_0_py",
-	"Electron_0_pz",
-	"Electron_0_eta",
-	"Electron_0_phi",
+	# RECO IND lepton
+	"Lepton_0_m",
+	"Lepton_0_e",	
+	"Lepton_0_p",
+	"Lepton_0_pt",
+	"Lepton_0_px",
+	"Lepton_0_py",
+	"Lepton_0_pz",
+	"Lepton_0_eta",
+	"Lepton_0_phi",
 	
-	"Electron_1_m",
-	"Electron_1_e",	
-	"Electron_1_p",
-	"Electron_1_pt",
-	"Electron_1_px",
-	"Electron_1_py",
-	"Electron_1_pz",
-	"Electron_1_eta",
-	"Electron_1_phi",
+	"Lepton_1_m",
+	"Lepton_1_e",	
+	"Lepton_1_p",
+	"Lepton_1_pt",
+	"Lepton_1_px",
+	"Lepton_1_py",
+	"Lepton_1_pz",
+	"Lepton_1_eta",
+	"Lepton_1_phi",
 	
 	"RecoEmiss_e",
 	"RecoEmiss_mass",
@@ -242,254 +254,138 @@ variables = [
 	"RecoIP_Lxyz",
 ]
 
-selections					= {}
-selections['HAlpAlp']		= ["RecoKaonElecSel", "RecoHiggsMassCut"]
+selections	= {}
+extralabel	= {}
+colors 		= {}
+legend 		= {}
+plots  		= {}
 
-extralabel						= {}
-extralabel['RecoKaonElecSel'] 	= "Reco kaon and electron selection"
+selections['HAlpAlp']			= ["RecoKaonElecSel", "RecoHiggsMassCut"]
+extralabel['RecoKaonElecSel']	= "Reco kaon and lepton selection"
 extralabel['RecoHiggsMassCut']	= "Higgs mass > 120 GeV"
+plots['HAlpAlp']				= {'signal': {}, 'backgrounds': {}}
 
-colors 					= {}
-# colors['HAlpAlp_m1']	= ROOT.TColor.GetColor('#c51b7d')
-# colors['HAlpAlp_m10']	= ROOT.TColor.GetColor('#2b8cbe')
-# colors['HAlpAlp_m30']	= ROOT.TColor.GetColor('#fdae6b')
-# colors['HAlpAlp_m60']	= ROOT.TColor.GetColor('#762a83')
- 
-colors['eeWW']			= ROOT.TColor.GetColor('#d9f0d3')
-colors['eeZqq']			= ROOT.TColor.GetColor('#1b7837')
-colors['eeZZ']			= ROOT.TColor.GetColor('#7fbf7b')
+###############
+# BACKGROUNDS #
+###############
+# bkg_proc = {
+# 	# key               : (sample name,                       color,             				legend text)
+# 	'eeWW':             ('p8_ee_WW_ecm240',                   ROOT.TColor.GetColor('#d9f0d3'), 'ee #rightarrow WW'),
+# 	'eeZqq':            ('p8_ee_Zqq_ecm240',                  ROOT.TColor.GetColor('#1b7837'), 'ee #rightarrow Z #rightarrow qq'),
+# 	'eeZZ':             ('p8_ee_ZZ_ecm240',                   ROOT.TColor.GetColor('#7fbf7b'), 'ee #rightarrow ZZ'),
+# 
+# 	'eetautau':         ('wzp6_ee_tautau_ecm240',              ROOT.kRed+1, 'ee #rightarrow #tau^{+}#tau^{-}'),
+# 	'eemumu':           ('wzp6_ee_mumu_ecm240',                ROOT.kRed+2, 'ee #rightarrow #mu^{+}#mu^{-}'),
+# 	'eeMee':            ('wzp6_ee_ee_Mee_30_150_ecm240',       ROOT.kRed+3, 'ee #rightarrow ee, 30<M_{ee}<150 GeV'),
+# 
+# 	'eeHtautau':        ('wzp6_ee_tautauH_Htautau_ecm240',     ROOT.kBlue+1, '#tau#tau H, H #rightarrow #tau#tau'),
+# 	'eeHbb':            ('wzp6_ee_tautauH_Hbb_ecm240',         ROOT.kBlue+2, '#tau#tau H, H #rightarrow b#bar{b}'),
+# 	'eeHcc':            ('wzp6_ee_tautauH_Hcc_ecm240',         ROOT.kBlue-1, '#tau#tau H, H #rightarrow c#bar{c}'),
+# 	'eeHss':            ('wzp6_ee_tautauH_Hss_ecm240',         ROOT.kBlue-2, '#tau#tau H, H #rightarrow s#bar{s}'),
+# 	'eeHgg':            ('wzp6_ee_tautauH_Hgg_ecm240',         ROOT.kBlue-3, '#tau#tau H, H #rightarrow gg'),
+# 	'eeHWW':            ('wzp6_ee_tautauH_HWW_ecm240',         ROOT.kBlue-4, '#tau#tau H, H #rightarrow WW'),
+# 	'eeHZZ':            ('wzp6_ee_tautauH_HZZ_ecm240',         ROOT.kBlue+3, '#tau#tau H, H #rightarrow ZZ'),
+# 
+# 	'egammaZmumu':      ('wzp6_egamma_eZ_Zmumu_ecm240',        ROOT.kGreen+1, 'e#gamma #rightarrow eZ, Z #rightarrow #mu#mu'),
+# 	'egammaZee':        ('wzp6_egamma_eZ_Zee_ecm240',          ROOT.kGreen+2, 'e#gamma #rightarrow eZ, Z #rightarrow ee'),
+# 	'gammaeZmumu':      ('wzp6_gammae_eZ_Zmumu_ecm240',        ROOT.kGreen+3, '#gamma e #rightarrow eZ, Z #rightarrow #mu#mu'),
+# 	'gammaeZee':        ('wzp6_gammae_eZ_Zee_ecm240',          ROOT.kGreen-2, '#gamma e #rightarrow eZ, Z #rightarrow ee'),
+# 
+# 	'gagatautau':       ('wzp6_gaga_tautau_60_ecm240',         ROOT.kSpring-7, '#gamma#gamma #rightarrow #tau#tau'),
+# 	'gagamumu':         ('wzp6_gaga_mumu_60_ecm240',           ROOT.kSpring+3, '#gamma#gamma #rightarrow #mu#mu'),
+# 	'gagaee':           ('wzp6_gaga_ee_60_ecm240',             ROOT.kSpring+9, '#gamma#gamma #rightarrow ee'),
+# 
+# 	'eenuenueZ':        ('wzp6_ee_nuenueZ_ecm240',             ROOT.kOrange+1, 'ee #rightarrow #nu_{e}#bar{#nu}_{e}Z'),
+# 	'eenunuHtautau':    ('wzp6_ee_nunuH_Htautau_ecm240',       ROOT.kOrange+2, '#nu#nu H, H #rightarrow #tau#tau'),
+# 	'eenunuHbb':        ('wzp6_ee_nunuH_Hbb_ecm240',           ROOT.kOrange-1, '#nu#nu H, H #rightarrow b#bar{b}'),
+# 	'eenunuHcc':        ('wzp6_ee_nunuH_Hcc_ecm240',           ROOT.kOrange-2, '#nu#nu H, H #rightarrow c#bar{c}'),
+# 	'eenunuHss':        ('wzp6_ee_nunuH_Hss_ecm240',           ROOT.kOrange-3, '#nu#nu H, H #rightarrow s#bar{s}'),
+# 	'eenunuHgg':        ('wzp6_ee_nunuH_Hgg_ecm240',           ROOT.kOrange-4, '#nu#nu H, H #rightarrow gg'),
+# 	'eenunuHWW':        ('wzp6_ee_nunuH_HWW_ecm240',           ROOT.kOrange+3, '#nu#nu H, H #rightarrow WW'),
+# 	'eenunuHZZ':        ('wzp6_ee_nunuH_HZZ_ecm240',           ROOT.kOrange-6, '#nu#nu H, H #rightarrow ZZ'),
+# 
+# 	'eemumuHtautau':    ('wzp6_ee_mumuH_Htautau_ecm240',       ROOT.kYellow+1, '#mu#mu H, H #rightarrow #tau#tau'),
+# 	'eemumuHbb':        ('wzp6_ee_mumuH_Hbb_ecm240',           ROOT.kYellow+2, '#mu#mu H, H #rightarrow b#bar{b}'),
+# 	'eemumuHcc':        ('wzp6_ee_mumuH_Hcc_ecm240',           ROOT.kYellow-1, '#mu#mu H, H #rightarrow c#bar{c}'),
+# 	'eemumuHss':        ('wzp6_ee_mumuH_Hss_ecm240',           ROOT.kYellow-2, '#mu#mu H, H #rightarrow s#bar{s}'),
+# 	'eemumuHgg':        ('wzp6_ee_mumuH_Hgg_ecm240',           ROOT.kYellow-7, '#mu#mu H, H #rightarrow gg'),
+# 	'eemumuHWW':        ('wzp6_ee_mumuH_HWW_ecm240',           ROOT.kYellow-9, '#mu#mu H, H #rightarrow WW'),
+# 	'eemumuHZZ':        ('wzp6_ee_mumuH_HZZ_ecm240',           ROOT.kYellow+3, '#mu#mu H, H #rightarrow ZZ'),
+# 
+# 	'eebbHtautau':      ('wzp6_ee_bbH_Htautau_ecm240',         ROOT.kMagenta+1, 'b#bar{b} H, H #rightarrow #tau#tau'),
+# 	'eebbHbb':          ('wzp6_ee_bbH_Hbb_ecm240',             ROOT.kMagenta+2, 'b#bar{b} H, H #rightarrow b#bar{b}'),
+# 	'eebbHcc':          ('wzp6_ee_bbH_Hcc_ecm240',             ROOT.kMagenta-1, 'b#bar{b} H, H #rightarrow c#bar{c}'),
+# 	'eebbHss':          ('wzp6_ee_bbH_Hss_ecm240',             ROOT.kMagenta-2, 'b#bar{b} H, H #rightarrow s#bar{s}'),
+# 	'eebbHgg':          ('wzp6_ee_bbH_Hgg_ecm240',             ROOT.kMagenta-3, 'b#bar{b} H, H #rightarrow gg'),
+# 	'eebbHWW':          ('wzp6_ee_bbH_HWW_ecm240',             ROOT.kMagenta-4, 'b#bar{b} H, H #rightarrow WW'),
+# 	'eebbHZZ':          ('wzp6_ee_bbH_HZZ_ecm240',             ROOT.kMagenta+3, 'b#bar{b} H, H #rightarrow ZZ'),
+# 
+# 	'eeccHtautau':      ('wzp6_ee_ccH_Htautau_ecm240',         ROOT.kViolet+1, 'c#bar{c} H, H #rightarrow #tau#tau'),
+# 	'eeccHbb':          ('wzp6_ee_ccH_Hbb_ecm240',             ROOT.kViolet+2, 'c#bar{c} H, H #rightarrow b#bar{b}'),
+# 	'eeccHcc':          ('wzp6_ee_ccH_Hcc_ecm240',             ROOT.kViolet-1, 'c#bar{c} H, H #rightarrow c#bar{c}'),
+# 	'eeccHss':          ('wzp6_ee_ccH_Hss_ecm240',             ROOT.kViolet-2, 'c#bar{c} H, H #rightarrow s#bar{s}'),
+# 	'eeccHgg':          ('wzp6_ee_ccH_Hgg_ecm240',             ROOT.kViolet-3, 'c#bar{c} H, H #rightarrow gg'),
+# 	'eeccHWW':          ('wzp6_ee_ccH_HWW_ecm240',             ROOT.kViolet-4, 'c#bar{c} H, H #rightarrow WW'),
+# 	'eeccHZZ':          ('wzp6_ee_ccH_HZZ_ecm240',             ROOT.kViolet+3, 'c#bar{c} H, H #rightarrow ZZ'),
+# 
+# 	'eessHtautau':      ('wzp6_ee_ssH_Htautau_ecm240',         ROOT.kCyan+1, 's#bar{s} H, H #rightarrow #tau#tau'),
+# 	'eessHbb':          ('wzp6_ee_ssH_Hbb_ecm240',             ROOT.kCyan+2, 's#bar{s} H, H #rightarrow b#bar{b}'),
+# 	'eessHcc':          ('wzp6_ee_ssH_Hcc_ecm240',             ROOT.kCyan-1, 's#bar{s} H, H #rightarrow c#bar{c}'),
+# 	'eessHss':          ('wzp6_ee_ssH_Hss_ecm240',             ROOT.kCyan-2, 's#bar{s} H, H #rightarrow s#bar{s}'),
+# 	'eessHgg':          ('wzp6_ee_ssH_Hgg_ecm240',             ROOT.kCyan-3, 's#bar{s} H, H #rightarrow gg'),
+# 	'eessHWW':          ('wzp6_ee_ssH_HWW_ecm240',             ROOT.kCyan-4, 's#bar{s} H, H #rightarrow WW'),
+# 	'eessHZZ':          ('wzp6_ee_ssH_HZZ_ecm240',             ROOT.kCyan+3, 's#bar{s} H, H #rightarrow ZZ'),
+# 
+# 	'eeqqHtautau':      ('wzp6_ee_qqH_Htautau_ecm240',         ROOT.kTeal+1, 'q#bar{q} H, H #rightarrow #tau#tau'),
+# 	'eeqqHbb':          ('wzp6_ee_qqH_Hbb_ecm240',             ROOT.kTeal+2, 'q#bar{q} H, H #rightarrow b#bar{b}'),
+# 	'eeqqHcc':          ('wzp6_ee_qqH_Hcc_ecm240',             ROOT.kTeal-1, 'q#bar{q} H, H #rightarrow c#bar{c}'),
+# 	'eeqqHss':          ('wzp6_ee_qqH_Hss_ecm240',             ROOT.kTeal-2, 'q#bar{q} H, H #rightarrow s#bar{s}'),
+# 	'eeqqHgg':          ('wzp6_ee_qqH_Hgg_ecm240',             ROOT.kTeal-3, 'q#bar{q} H, H #rightarrow gg'),
+# 	'eeqqHWW':          ('wzp6_ee_qqH_HWW_ecm240',             ROOT.kTeal-4, 'q#bar{q} H, H #rightarrow WW'),
+# 	'eeqqHZZ':          ('wzp6_ee_qqH_HZZ_ecm240',             ROOT.kTeal+3, 'q#bar{q} H, H #rightarrow ZZ'),
+# }
+# 
+# for key, (sample, color, leg) in bkg_proc.items():
+# 	plots['HAlpAlp']['backgrounds'][key] = [sample]
+# 	colors[key] = color
+# 	legend[key] = leg
 
-colors['eetautau']	= ROOT.kRed+1  
-colors['eemumu']	= ROOT.kRed+2    
-colors['eeMee']		= ROOT.kRed+3
-          
-colors['eeHtautau'] = ROOT.kBlue+1
-colors['eeHbb']		= ROOT.kBlue+2
-colors['eeHcc']		= ROOT.kBlue-1
-colors['eeHss']		= ROOT.kBlue-2
-colors['eeHgg']		= ROOT.kBlue-3
-colors['eeHWW']		= ROOT.kBlue-4
-colors['eeHZZ']		= ROOT.kBlue+3
+# placeholder so no empty bkg list
+plots['HAlpAlp']['backgrounds']['placeholder'] = ['mgp8_ee_eeH_HAlpAlp_m0p1_cah1em2_ecm240']
+colors['placeholder'] = ROOT.kGray
+legend['placeholder'] = 'placeholder'
 
-colors['egammaZmumu']	= ROOT.kGreen+1
-colors['egammaZee']		= ROOT.kGreen+2
-colors['gammaeZmumu']	= ROOT.kGreen+3
-colors['gammaeZee']		= ROOT.kGreen-2
+###########
+# SIGNALS #
+###########
+masses          = ['10p0']
+mass_labels     = {'0p05': '0.05', '0p1': '0.1', '0p5': '0.5', '1p0': '1', '1p5': '1.5', '5p0': '5', '10p0': '10', '20p0': '20', '30p0': '30'}
 
-colors['gagatautau']	= ROOT.kSpring-7
-colors['gagamumu']		= ROOT.kSpring+3
-colors['gagaee']		= ROOT.kSpring+9
+couplings       = ['cah1em1', 'cah1em2', 'cah1em3', 'cah1em4', 'cah1em5', 'cah1em6']
+coupling_labels = {c: f'10^{{-{i+1}}}' for i, c in enumerate(couplings)}
 
-colors['eenuenueZ']		= ROOT.kOrange+1
-colors['eenunuHtautau']	= ROOT.kOrange+2
-colors['eenunuHbb']		= ROOT.kOrange-1
-colors['eenunuHcc']		= ROOT.kOrange-2
-colors['eenunuHss']		= ROOT.kOrange-3
-colors['eenunuHgg']		= ROOT.kOrange-4
-colors['eenunuHWW']		= ROOT.kOrange+3
-colors['eenunuHZZ']		= ROOT.kOrange-6
+finalstates     		= {'ee': 'e^{+}e^{-}', 'mumu': '#mu^{+}#mu^{-}'}#, 'qq': 'q#bar{q}'}
+finalstate_basecolor	= {'ee': '#2b8cbe', 'mumu': '#fdae6b'}#, 'qq': '#762a83'
 
-colors['eemumuHtautau']	= ROOT.kYellow+1
-colors['eemumuHbb']		= ROOT.kYellow+2
-colors['eemumuHcc']		= ROOT.kYellow-1
-colors['eemumuHss']		= ROOT.kYellow-2
-colors['eemumuHgg']		= ROOT.kYellow-7
-colors['eemumuHWW']		= ROOT.kYellow-9
-colors['eemumuHZZ']		= ROOT.kYellow+3
+def _hex_to_rgb01(hexcode):
+	hexcode = hexcode.lstrip('#')
+	return tuple(int(hexcode[i:i+2], 16) / 255.0 for i in (0, 2, 4))
 
-colors['eebbHtautau']	= ROOT.kMagenta+1
-colors['eebbHbb']		= ROOT.kMagenta+2
-colors['eebbHcc']		= ROOT.kMagenta-1
-colors['eebbHss']		= ROOT.kMagenta-2
-colors['eebbHgg']		= ROOT.kMagenta-3
-colors['eebbHWW']		= ROOT.kMagenta-4
-colors['eebbHZZ']		= ROOT.kMagenta+3
+for fs, fs_tex in finalstates.items():
+	base_r, base_g, base_b = _hex_to_rgb01(finalstate_basecolor[fs])
+	base_h, base_s, base_v = colorsys.rgb_to_hsv(base_r, base_g, base_b)
 
-colors['eeccHtautau']	= ROOT.kViolet+1
-colors['eeccHbb']		= ROOT.kViolet+2
-colors['eeccHcc']		= ROOT.kViolet-1
-colors['eeccHss']		= ROOT.kViolet-2
-colors['eeccHgg']		= ROOT.kViolet-3
-colors['eeccHWW']		= ROOT.kViolet-4
-colors['eeccHZZ']		= ROOT.kViolet+3
+	for i, mass in enumerate(masses):
+		# small hue nudge per mass so overlapping mass points are distinguishable
+		hue = (base_h + 0.01 * i) % 1.0
 
-colors['eessHtautau']	= ROOT.kCyan+1
-colors['eessHbb']		= ROOT.kCyan+2
-colors['eessHcc']		= ROOT.kCyan-1
-colors['eessHss']		= ROOT.kCyan-2
-colors['eessHgg']		= ROOT.kCyan-3
-colors['eessHWW']		= ROOT.kCyan-4
-colors['eessHZZ']		= ROOT.kCyan+3
+		for n, cah in enumerate(couplings):
+			key    		= f"{fs}H_m{mass}_{cah}"
+			sample 		= f"mgp8_ee_{fs}H_HAlpAlp_m{mass}_{cah}_ecm240"
+			legend[key] = f"Z #rightarrow {fs_tex}, m_{{a}}={mass_labels[mass]} GeV, cah={coupling_labels[cah]}"
 
-colors['eeqqHtautau']	= ROOT.kTeal+1
-colors['eeqqHbb']		= ROOT.kTeal+2
-colors['eeqqHcc']		= ROOT.kTeal-1
-colors['eeqqHss']		= ROOT.kTeal-2
-colors['eeqqHgg']		= ROOT.kTeal-3
-colors['eeqqHWW']		= ROOT.kTeal-4
-colors['eeqqHZZ']		= ROOT.kTeal+3
-
-# 					'HAlpAlp_m1':['mgp8_ee_eeH_HAlpAlp_m1_ecm240'],
-# 					'HAlpAlp_m10':['mgp8_ee_eeH_HAlpAlp_m10_ecm240'],
-# 					'HAlpAlp_m30':['mgp8_ee_eeH_HAlpAlp_m30_ecm240'],
-# 					'HAlpAlp_m60':['mgp8_ee_eeH_HAlpAlp_m60_ecm240'],},
-
-plots 			 = {}
-plots['HAlpAlp'] = {'signal':{
-					'eeWW':['p8_ee_WW_ecm240'],},
-					
-					'backgrounds':{
-					'eeWW':['p8_ee_WW_ecm240'],
-					'eeZqq':['p8_ee_Zqq_ecm240'],
-					'eeZZ':['p8_ee_ZZ_ecm240'],
-					
-					'eetautau':['wzp6_ee_tautau_ecm240'],
-					'eemumu':['wzp6_ee_mumu_ecm240'],
-					'eeMee':['wzp6_ee_ee_Mee_30_150_ecm240'],
-					
-					'eeHtautau':['wzp6_ee_tautauH_Htautau_ecm240'],
-					'eeHbb':['wzp6_ee_tautauH_Hbb_ecm240'],
-					'eeHcc':['wzp6_ee_tautauH_Hcc_ecm240'],
-					'eeHss':['wzp6_ee_tautauH_Hss_ecm240'],
-					'eeHgg':['wzp6_ee_tautauH_Hgg_ecm240'],
-					'eeHWW':['wzp6_ee_tautauH_HWW_ecm240'],
-					'eeHZZ':['wzp6_ee_tautauH_HZZ_ecm240'],
-					
-					'egammaZmumu':['wzp6_egamma_eZ_Zmumu_ecm240'],
-					'egammaZee':['wzp6_egamma_eZ_Zee_ecm240'],
-					'gammaeZmumu':['wzp6_gammae_eZ_Zmumu_ecm240'],
-					'gammaeZee':['wzp6_gammae_eZ_Zee_ecm240'],
-					
-					'gagatautau':['wzp6_gaga_tautau_60_ecm240'],
-					'gagamumu':['wzp6_gaga_mumu_60_ecm240'],
-					'gagaee':['wzp6_gaga_ee_60_ecm240'],
-					
-					'eenuenueZ':['wzp6_ee_nuenueZ_ecm240'],
-					'eenunuHtautau':['wzp6_ee_nunuH_Htautau_ecm240'],
-					'eenunuHbb':['wzp6_ee_nunuH_Hbb_ecm240'],
-					'eenunuHcc':['wzp6_ee_nunuH_Hcc_ecm240'],
-					'eenunuHss':['wzp6_ee_nunuH_Hss_ecm240'],
-					'eenunuHgg':['wzp6_ee_nunuH_Hgg_ecm240'],
-					'eenunuHWW':['wzp6_ee_nunuH_HWW_ecm240'],
-					'eenunuHZZ':['wzp6_ee_nunuH_HZZ_ecm240'],
-					
-					'eemumuHtautau':['wzp6_ee_mumuH_Htautau_ecm240'],
-					'eemumuHbb':['wzp6_ee_mumuH_Hbb_ecm240'],
-					'eemumuHcc':['wzp6_ee_mumuH_Hcc_ecm240'],
-					'eemumuHss':['wzp6_ee_mumuH_Hss_ecm240'],
-					'eemumuHgg':['wzp6_ee_mumuH_Hgg_ecm240'],
-					'eemumuHWW':['wzp6_ee_mumuH_HWW_ecm240'],
-					'eemumuHZZ':['wzp6_ee_mumuH_HZZ_ecm240'],
-					
-					'eebbHtautau':['wzp6_ee_bbH_Htautau_ecm240'],
-					'eebbHbb':['wzp6_ee_bbH_Hbb_ecm240'],
-					'eebbHcc':['wzp6_ee_bbH_Hcc_ecm240'],
-					'eebbHss':['wzp6_ee_bbH_Hss_ecm240'],
-					'eebbHgg':['wzp6_ee_bbH_Hgg_ecm240'],
-					'eebbHWW':['wzp6_ee_bbH_HWW_ecm240'],
-					'eebbHZZ':['wzp6_ee_bbH_HZZ_ecm240'],
-					
-					'eeccHtautau':['wzp6_ee_ccH_Htautau_ecm240'],
-					'eeccHbb':['wzp6_ee_ccH_Hbb_ecm240'],
-					'eeccHcc':['wzp6_ee_ccH_Hcc_ecm240'],
-					'eeccHss':['wzp6_ee_ccH_Hss_ecm240'],
-					'eeccHgg':['wzp6_ee_ccH_Hgg_ecm240'],
-					'eeccHWW':['wzp6_ee_ccH_HWW_ecm240'],
-					'eeccHZZ':['wzp6_ee_ccH_HZZ_ecm240'],
-					
-					'eessHtautau':['wzp6_ee_ssH_Htautau_ecm240'],
-					'eessHbb':['wzp6_ee_ssH_Hbb_ecm240'],
-					'eessHcc':['wzp6_ee_ssH_Hcc_ecm240'],
-					'eessHss':['wzp6_ee_ssH_Hss_ecm240'],
-					'eessHgg':['wzp6_ee_ssH_Hgg_ecm240'],
-					'eessHWW':['wzp6_ee_ssH_HWW_ecm240'],
-					'eessHZZ':['wzp6_ee_ssH_HZZ_ecm240'],
-					
-					'eeqqHtautau':['wzp6_ee_qqH_Htautau_ecm240'],
-					'eeqqHbb':['wzp6_ee_qqH_Hbb_ecm240'],
-					'eeqqHcc':['wzp6_ee_qqH_Hcc_ecm240'],
-					'eeqqHss':['wzp6_ee_qqH_Hss_ecm240'],
-					'eeqqHgg':['wzp6_ee_qqH_Hgg_ecm240'],
-					'eeqqHWW':['wzp6_ee_qqH_HWW_ecm240'],
-					'eeqqHZZ':['wzp6_ee_qqH_HZZ_ecm240'],}
-					}
-
-legend 					= {}
-# legend['HAlpAlp_m1']	= 'm_{a} = 1.5 GeV'
-# legend['HAlpAlp_m10']	= 'm_{a} = 10 GeV'
-# legend['HAlpAlp_m30']	= 'm_{a} = 30 GeV'
-# legend['HAlpAlp_m60']	= 'm_{a} = 60 GeV'
-
-legend['eeWW'] 			= 'ee #rightarrow WW'
-legend['eeZZ'] 			= 'ee #rightarrow ZZ'
-legend['eeZqq'] 		= 'ee #rightarrow Z #rightarrow qq'
-
-legend['eetautau']  	= ''
-legend['eemumu']		= ''
-legend['eeMee']			= ''
-
-legend['eeHtautau'] 	= ''
-legend['eeHbb'] 		= ''
-legend['eeHcc'] 		= ''
-legend['eeHss'] 		= ''
-legend['eeHgg'] 		= ''
-legend['eeHWW'] 		= ''
-legend['eeHZZ'] 		= ''
-
-legend['egammaZmumu']	= ''
-legend['egammaZee'] 	= ''
-legend['gammaeZmumu'] 	= ''
-legend['gammaeZee'] 	= ''
-
-legend['gagatautau']	= ''
-legend['gagamumu']		= ''
-legend['gagaee']		= ''
-
-legend['eenuenueZ']		= ''
-legend['eenunuHtautau']	= ''
-legend['eenunuHbb']		= ''
-legend['eenunuHcc']		= ''
-legend['eenunuHss']		= ''
-legend['eenunuHgg']		= ''
-legend['eenunuHWW']		= ''
-legend['eenunuHZZ']		= ''
-
-legend['eemumuHtautau']	= ''
-legend['eemumuHbb']		= ''
-legend['eemumuHcc']		= ''
-legend['eemumuHss']		= ''
-legend['eemumuHgg']		= ''
-legend['eemumuHWW']		= ''
-legend['eemumuHZZ']		= ''
-
-legend['eebbHtautau']	= ''
-legend['eebbHbb']		= ''
-legend['eebbHcc']		= ''
-legend['eebbHss']		= ''
-legend['eebbHgg']		= ''
-legend['eebbHWW']		= ''
-legend['eebbHZZ']		= ''
-
-legend['eeccHtautau']	= ''
-legend['eeccHbb']		= ''
-legend['eeccHcc']		= ''
-legend['eeccHss']		= ''
-legend['eeccHgg']		= ''
-legend['eeccHWW']		= ''
-legend['eeccHZZ']		= ''
-
-legend['eessHtautau']	= ''
-legend['eessHbb']		= ''
-legend['eessHcc']		= ''
-legend['eessHss']		= ''
-legend['eessHgg']		= ''
-legend['eessHWW']		= ''
-legend['eessHZZ']		= ''
-
-legend['eeqqHtautau']	= ''
-legend['eeqqHbb']		= ''
-legend['eeqqHcc']		= ''
-legend['eeqqHss']		= ''
-legend['eeqqHgg']		= ''
-legend['eeqqHWW']		= ''
-legend['eeqqHZZ']		= ''
+			# coupling controls shade within the same hue
+			val 		= 0.35 + 0.55 * (n / (len(couplings) - 1))
+			r, g, b 	= colorsys.hsv_to_rgb(hue, base_s, val)
+			colors[key] = ROOT.TColor.GetColor(r, g, b)
+			plots['HAlpAlp']['signal'][key] = [sample]

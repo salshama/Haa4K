@@ -2,46 +2,240 @@ import ROOT
 
 # Mandatory: list of processes
 
-# signal processes
 processList = {
-		"mgp8_ee_eeH_HAlpAlp_m0p05_ecm240": {},
-		"mgp8_ee_eeH_HAlpAlp_m0p1_ecm240":	{},
-		"mgp8_ee_eeH_HAlpAlp_m0p5_ecm240":	{},
-		"mgp8_ee_eeH_HAlpAlp_m1p0_ecm240":	{},
-		"mgp8_ee_eeH_HAlpAlp_m1p5_ecm240":	{},
-		"mgp8_ee_eeH_HAlpAlp_m5p0_ecm240":	{},
-		"mgp8_ee_eeH_HAlpAlp_m10p0_ecm240": {},
-		"mgp8_ee_eeH_HAlpAlp_m20p0_ecm240": {},
-		"mgp8_ee_eeH_HAlpAlp_m30p0_ecm240": {},
-		"mgp8_ee_eeH_HAlpAlp_m40p0_ecm240": {},
-		"mgp8_ee_eeH_HAlpAlp_m50p0_ecm240": {},
-		"mgp8_ee_eeH_HAlpAlp_m60p0_ecm240": {},
-		
-		"mgp8_ee_mumuH_HAlpAlp_m0p05_ecm240":	{},
-		"mgp8_ee_mumuH_HAlpAlp_m0p1_ecm240":	{},
-		"mgp8_ee_mumuH_HAlpAlp_m0p5_ecm240":	{},
-		"mgp8_ee_mumuH_HAlpAlp_m1p0_ecm240":	{},
-		"mgp8_ee_mumuH_HAlpAlp_m1p5_ecm240":	{},
-		"mgp8_ee_mumuH_HAlpAlp_m5p0_ecm240":	{},
-		"mgp8_ee_mumuH_HAlpAlp_m10p0_ecm240":	{},
-		"mgp8_ee_mumuH_HAlpAlp_m20p0_ecm240":	{},
-		"mgp8_ee_mumuH_HAlpAlp_m30p0_ecm240":	{},
-		"mgp8_ee_mumuH_HAlpAlp_m40p0_ecm240":	{},
-		"mgp8_ee_mumuH_HAlpAlp_m50p0_ecm240":	{},
-		"mgp8_ee_mumuH_HAlpAlp_m60p0_ecm240":	{},
-		
-		"mgp8_ee_qqH_HAlpAlp_m0p05_ecm240": {},
-		"mgp8_ee_qqH_HAlpAlp_m0p1_ecm240":	{},
-		"mgp8_ee_qqH_HAlpAlp_m0p5_ecm240":	{},
-		"mgp8_ee_qqH_HAlpAlp_m1p0_ecm240":	{},
-		"mgp8_ee_qqH_HAlpAlp_m1p5_ecm240":	{},
-		"mgp8_ee_qqH_HAlpAlp_m5p0_ecm240":	{},
-		"mgp8_ee_qqH_HAlpAlp_m10p0_ecm240": {},
-		"mgp8_ee_qqH_HAlpAlp_m20p0_ecm240": {},
-		"mgp8_ee_qqH_HAlpAlp_m30p0_ecm240": {},
-		"mgp8_ee_qqH_HAlpAlp_m40p0_ecm240": {},
-		"mgp8_ee_qqH_HAlpAlp_m50p0_ecm240": {},
-		"mgp8_ee_qqH_HAlpAlp_m60p0_ecm240": {},
+# 	"p8_ee_WW_ecm240":					{},
+# 	"p8_ee_ZZ_ecm240":					{},
+# 	"p8_ee_Zqq_ecm240": 				{},
+# 	"wzp6_ee_bbH_HWW_ecm240":			{},
+# 	"wzp6_ee_bbH_HZZ_ecm240":			{},
+# 	"wzp6_ee_bbH_Hbb_ecm240":			{},
+# 	"wzp6_ee_bbH_Hcc_ecm240":			{},
+# 	"wzp6_ee_bbH_Hgg_ecm240":			{},
+# 	"wzp6_ee_bbH_Hss_ecm240":			{},
+# 	"wzp6_ee_bbH_Htautau_ecm240":		{},
+# 	"wzp6_ee_ccH_HWW_ecm240":			{},
+# 	"wzp6_ee_ccH_HZZ_ecm240":			{},
+# 	"wzp6_ee_ccH_Hbb_ecm240":			{},
+# 	"wzp6_ee_ccH_Hcc_ecm240":			{},
+# 	"wzp6_ee_ccH_Hgg_ecm240":			{},
+# 	"wzp6_ee_ccH_Hss_ecm240":			{},
+# 	"wzp6_ee_ccH_Htautau_ecm240":		{},
+# 	"wzp6_ee_eeH_HWW_ecm240":			{},
+# 	"wzp6_ee_eeH_HZZ_ecm240":			{},
+# 	"wzp6_ee_eeH_Hbb_ecm240":			{},
+# 	"wzp6_ee_eeH_Hcc_ecm240":			{},
+# 	"wzp6_ee_eeH_Hgg_ecm240":			{},
+# 	"wzp6_ee_eeH_Hss_ecm240":			{},
+# 	"wzp6_ee_eeH_Htautau_ecm240":		{},
+# 	"wzp6_ee_ee_Mee_30_150_ecm240":		{},
+# 	"wzp6_ee_mumuH_HWW_ecm240":			{},
+# 	"wzp6_ee_mumuH_HZZ_ecm240":			{},
+# 	"wzp6_ee_mumuH_Hbb_ecm240":			{},
+# 	"wzp6_ee_mumuH_Hcc_ecm240":			{},
+# 	"wzp6_ee_mumuH_Hgg_ecm240":			{},
+# 	"wzp6_ee_mumuH_Hss_ecm240":			{},
+# 	"wzp6_ee_mumuH_Htautau_ecm240":		{},
+# 	"wzp6_ee_mumu_ecm240":				{},
+# 	"wzp6_ee_nuenueZ_ecm240":			{},
+# 	"wzp6_ee_nunuH_HWW_ecm240":			{},
+# 	"wzp6_ee_nunuH_HZZ_ecm240":			{},
+# 	"wzp6_ee_nunuH_Hbb_ecm240":			{},
+# 	"wzp6_ee_nunuH_Hcc_ecm240":			{},
+# 	"wzp6_ee_nunuH_Hgg_ecm240":			{},
+# 	"wzp6_ee_nunuH_Hss_ecm240":			{},
+# 	"wzp6_ee_nunuH_Htautau_ecm240": 	{},
+# 	"wzp6_ee_qqH_HWW_ecm240":			{},
+# 	"wzp6_ee_qqH_HZZ_ecm240":			{},
+# 	"wzp6_ee_qqH_Hbb_ecm240":			{},
+# 	"wzp6_ee_qqH_Hcc_ecm240":			{},
+# 	"wzp6_ee_qqH_Hgg_ecm240":			{},
+# 	"wzp6_ee_qqH_Hss_ecm240":			{},
+# 	"wzp6_ee_qqH_Htautau_ecm240":		{},
+# 	"wzp6_ee_ssH_HWW_ecm240":			{},
+# 	"wzp6_ee_ssH_HZZ_ecm240":			{},
+# 	"wzp6_ee_ssH_Hbb_ecm240":			{},
+# 	"wzp6_ee_ssH_Hcc_ecm240":			{},
+# 	"wzp6_ee_ssH_Hgg_ecm240":			{},
+# 	"wzp6_ee_ssH_Hss_ecm240":			{},
+# 	"wzp6_ee_ssH_Htautau_ecm240":		{},
+# 	"wzp6_ee_tautauH_HWW_ecm240":		{},
+# 	"wzp6_ee_tautauH_HZZ_ecm240":		{},
+# 	"wzp6_ee_tautauH_Hbb_ecm240":		{},
+# 	"wzp6_ee_tautauH_Hcc_ecm240":		{},
+# 	"wzp6_ee_tautauH_Hgg_ecm240":		{},
+# 	"wzp6_ee_tautauH_Hss_ecm240":		{},
+# 	"wzp6_ee_tautauH_Htautau_ecm240":	{},
+# 	"wzp6_ee_tautau_ecm240":			{},
+# 	"wzp6_egamma_eZ_Zee_ecm240":		{},
+# 	"wzp6_egamma_eZ_Zmumu_ecm240":		{},
+# 	"wzp6_gaga_ee_60_ecm240":			{},
+# 	"wzp6_gaga_mumu_60_ecm240":			{},
+# 	"wzp6_gaga_tautau_60_ecm240":		{},
+# 	"wzp6_gammae_eZ_Zee_ecm240":		{},
+# 	"wzp6_gammae_eZ_Zmumu_ecm240":		{},
+	
+	"mgp8_ee_eeH_HAlpAlp_m0p05_cah1em1_ecm240": {},
+	"mgp8_ee_eeH_HAlpAlp_m0p05_cah1em2_ecm240": {},
+	"mgp8_ee_eeH_HAlpAlp_m0p05_cah1em3_ecm240": {},
+	"mgp8_ee_eeH_HAlpAlp_m0p05_cah1em4_ecm240": {},
+	"mgp8_ee_eeH_HAlpAlp_m0p05_cah1em5_ecm240": {},
+	"mgp8_ee_eeH_HAlpAlp_m0p05_cah1em6_ecm240": {},
+	"mgp8_ee_eeH_HAlpAlp_m0p1_cah1em1_ecm240": {},
+	"mgp8_ee_eeH_HAlpAlp_m0p1_cah1em2_ecm240": {},
+	"mgp8_ee_eeH_HAlpAlp_m0p1_cah1em3_ecm240": {},
+	"mgp8_ee_eeH_HAlpAlp_m0p1_cah1em4_ecm240": {},
+	"mgp8_ee_eeH_HAlpAlp_m0p1_cah1em5_ecm240": {},
+	"mgp8_ee_eeH_HAlpAlp_m0p1_cah1em6_ecm240": {},
+	"mgp8_ee_eeH_HAlpAlp_m0p5_cah1em1_ecm240": {},
+	"mgp8_ee_eeH_HAlpAlp_m0p5_cah1em2_ecm240": {},
+	"mgp8_ee_eeH_HAlpAlp_m0p5_cah1em3_ecm240": {},
+	"mgp8_ee_eeH_HAlpAlp_m0p5_cah1em4_ecm240": {},
+	"mgp8_ee_eeH_HAlpAlp_m0p5_cah1em5_ecm240": {},
+	"mgp8_ee_eeH_HAlpAlp_m0p5_cah1em6_ecm240": {},
+	"mgp8_ee_eeH_HAlpAlp_m10p0_cah1em1_ecm240": {},
+	"mgp8_ee_eeH_HAlpAlp_m10p0_cah1em2_ecm240": {},
+	"mgp8_ee_eeH_HAlpAlp_m10p0_cah1em3_ecm240": {},
+	"mgp8_ee_eeH_HAlpAlp_m10p0_cah1em4_ecm240": {},
+	"mgp8_ee_eeH_HAlpAlp_m10p0_cah1em5_ecm240": {},
+	"mgp8_ee_eeH_HAlpAlp_m10p0_cah1em6_ecm240": {},
+	"mgp8_ee_eeH_HAlpAlp_m1p0_cah1em1_ecm240": {},
+	"mgp8_ee_eeH_HAlpAlp_m1p0_cah1em2_ecm240": {},
+	"mgp8_ee_eeH_HAlpAlp_m1p0_cah1em3_ecm240": {},
+	"mgp8_ee_eeH_HAlpAlp_m1p0_cah1em4_ecm240": {},
+	"mgp8_ee_eeH_HAlpAlp_m1p0_cah1em5_ecm240": {},
+	"mgp8_ee_eeH_HAlpAlp_m1p0_cah1em6_ecm240": {},
+	"mgp8_ee_eeH_HAlpAlp_m1p5_cah1em1_ecm240": {},
+	"mgp8_ee_eeH_HAlpAlp_m1p5_cah1em2_ecm240": {},
+	"mgp8_ee_eeH_HAlpAlp_m1p5_cah1em3_ecm240": {},
+	"mgp8_ee_eeH_HAlpAlp_m1p5_cah1em4_ecm240": {},
+	"mgp8_ee_eeH_HAlpAlp_m1p5_cah1em5_ecm240": {},
+	"mgp8_ee_eeH_HAlpAlp_m1p5_cah1em6_ecm240": {},
+	"mgp8_ee_eeH_HAlpAlp_m20p0_cah1em1_ecm240": {},
+	"mgp8_ee_eeH_HAlpAlp_m20p0_cah1em2_ecm240": {},
+	"mgp8_ee_eeH_HAlpAlp_m20p0_cah1em3_ecm240": {},
+	"mgp8_ee_eeH_HAlpAlp_m20p0_cah1em4_ecm240": {},
+	"mgp8_ee_eeH_HAlpAlp_m20p0_cah1em5_ecm240": {},
+	"mgp8_ee_eeH_HAlpAlp_m20p0_cah1em6_ecm240": {},
+	"mgp8_ee_eeH_HAlpAlp_m30p0_cah1em1_ecm240": {},
+	"mgp8_ee_eeH_HAlpAlp_m30p0_cah1em2_ecm240": {},
+	"mgp8_ee_eeH_HAlpAlp_m30p0_cah1em3_ecm240": {},
+	"mgp8_ee_eeH_HAlpAlp_m30p0_cah1em4_ecm240": {},
+	"mgp8_ee_eeH_HAlpAlp_m30p0_cah1em5_ecm240": {},
+	"mgp8_ee_eeH_HAlpAlp_m30p0_cah1em6_ecm240": {},
+	"mgp8_ee_eeH_HAlpAlp_m5p0_cah1em1_ecm240": {},
+	"mgp8_ee_eeH_HAlpAlp_m5p0_cah1em2_ecm240": {},
+	"mgp8_ee_eeH_HAlpAlp_m5p0_cah1em3_ecm240": {},
+	"mgp8_ee_eeH_HAlpAlp_m5p0_cah1em4_ecm240": {},
+	"mgp8_ee_eeH_HAlpAlp_m5p0_cah1em5_ecm240": {},
+	"mgp8_ee_eeH_HAlpAlp_m5p0_cah1em6_ecm240": {},
+	"mgp8_ee_mumuH_HAlpAlp_m0p05_cah1em1_ecm240": {},
+	"mgp8_ee_mumuH_HAlpAlp_m0p05_cah1em2_ecm240": {},
+	"mgp8_ee_mumuH_HAlpAlp_m0p05_cah1em3_ecm240": {},
+	"mgp8_ee_mumuH_HAlpAlp_m0p05_cah1em4_ecm240": {},
+	"mgp8_ee_mumuH_HAlpAlp_m0p05_cah1em5_ecm240": {},
+	"mgp8_ee_mumuH_HAlpAlp_m0p05_cah1em6_ecm240": {},
+	"mgp8_ee_mumuH_HAlpAlp_m0p1_cah1em1_ecm240": {},
+	"mgp8_ee_mumuH_HAlpAlp_m0p1_cah1em2_ecm240": {},
+	"mgp8_ee_mumuH_HAlpAlp_m0p1_cah1em3_ecm240": {},
+	"mgp8_ee_mumuH_HAlpAlp_m0p1_cah1em4_ecm240": {},
+	"mgp8_ee_mumuH_HAlpAlp_m0p1_cah1em5_ecm240": {},
+	"mgp8_ee_mumuH_HAlpAlp_m0p1_cah1em6_ecm240": {},
+	"mgp8_ee_mumuH_HAlpAlp_m0p5_cah1em1_ecm240": {},
+	"mgp8_ee_mumuH_HAlpAlp_m0p5_cah1em2_ecm240": {},
+	"mgp8_ee_mumuH_HAlpAlp_m0p5_cah1em3_ecm240": {},
+	"mgp8_ee_mumuH_HAlpAlp_m0p5_cah1em4_ecm240": {},
+	"mgp8_ee_mumuH_HAlpAlp_m0p5_cah1em5_ecm240": {},
+	"mgp8_ee_mumuH_HAlpAlp_m0p5_cah1em6_ecm240": {},
+	"mgp8_ee_mumuH_HAlpAlp_m10p0_cah1em1_ecm240": {},
+	"mgp8_ee_mumuH_HAlpAlp_m10p0_cah1em2_ecm240": {},
+	"mgp8_ee_mumuH_HAlpAlp_m10p0_cah1em3_ecm240": {},
+	"mgp8_ee_mumuH_HAlpAlp_m10p0_cah1em4_ecm240": {},
+	"mgp8_ee_mumuH_HAlpAlp_m10p0_cah1em5_ecm240": {},
+	"mgp8_ee_mumuH_HAlpAlp_m10p0_cah1em6_ecm240": {},
+	"mgp8_ee_mumuH_HAlpAlp_m1p0_cah1em1_ecm240": {},
+	"mgp8_ee_mumuH_HAlpAlp_m1p0_cah1em2_ecm240": {},
+	"mgp8_ee_mumuH_HAlpAlp_m1p0_cah1em3_ecm240": {},
+	"mgp8_ee_mumuH_HAlpAlp_m1p0_cah1em4_ecm240": {},
+	"mgp8_ee_mumuH_HAlpAlp_m1p0_cah1em5_ecm240": {},
+	"mgp8_ee_mumuH_HAlpAlp_m1p0_cah1em6_ecm240": {},
+	"mgp8_ee_mumuH_HAlpAlp_m1p5_cah1em1_ecm240": {},
+	"mgp8_ee_mumuH_HAlpAlp_m1p5_cah1em2_ecm240": {},
+	"mgp8_ee_mumuH_HAlpAlp_m1p5_cah1em3_ecm240": {},
+	"mgp8_ee_mumuH_HAlpAlp_m1p5_cah1em4_ecm240": {},
+	"mgp8_ee_mumuH_HAlpAlp_m1p5_cah1em5_ecm240": {},
+	"mgp8_ee_mumuH_HAlpAlp_m1p5_cah1em6_ecm240": {},
+	"mgp8_ee_mumuH_HAlpAlp_m20p0_cah1em1_ecm240": {},
+	"mgp8_ee_mumuH_HAlpAlp_m20p0_cah1em2_ecm240": {},
+	"mgp8_ee_mumuH_HAlpAlp_m20p0_cah1em3_ecm240": {},
+	"mgp8_ee_mumuH_HAlpAlp_m20p0_cah1em4_ecm240": {},
+	"mgp8_ee_mumuH_HAlpAlp_m20p0_cah1em5_ecm240": {},
+	"mgp8_ee_mumuH_HAlpAlp_m20p0_cah1em6_ecm240": {},
+	"mgp8_ee_mumuH_HAlpAlp_m30p0_cah1em1_ecm240": {},
+	"mgp8_ee_mumuH_HAlpAlp_m30p0_cah1em2_ecm240": {},
+	"mgp8_ee_mumuH_HAlpAlp_m30p0_cah1em3_ecm240": {},
+	"mgp8_ee_mumuH_HAlpAlp_m30p0_cah1em4_ecm240": {},
+	"mgp8_ee_mumuH_HAlpAlp_m30p0_cah1em5_ecm240": {},
+	"mgp8_ee_mumuH_HAlpAlp_m30p0_cah1em6_ecm240": {},
+	"mgp8_ee_mumuH_HAlpAlp_m5p0_cah1em1_ecm240": {},
+	"mgp8_ee_mumuH_HAlpAlp_m5p0_cah1em2_ecm240": {},
+	"mgp8_ee_mumuH_HAlpAlp_m5p0_cah1em3_ecm240": {},
+	"mgp8_ee_mumuH_HAlpAlp_m5p0_cah1em4_ecm240": {},
+	"mgp8_ee_mumuH_HAlpAlp_m5p0_cah1em5_ecm240": {},
+	"mgp8_ee_mumuH_HAlpAlp_m5p0_cah1em6_ecm240": {},
+	"mgp8_ee_qqH_HAlpAlp_m0p05_cah1em1_ecm240": {},
+	"mgp8_ee_qqH_HAlpAlp_m0p05_cah1em2_ecm240": {},
+	"mgp8_ee_qqH_HAlpAlp_m0p05_cah1em3_ecm240": {},
+	"mgp8_ee_qqH_HAlpAlp_m0p05_cah1em4_ecm240": {},
+	"mgp8_ee_qqH_HAlpAlp_m0p05_cah1em5_ecm240": {},
+	"mgp8_ee_qqH_HAlpAlp_m0p05_cah1em6_ecm240": {},
+	"mgp8_ee_qqH_HAlpAlp_m0p1_cah1em1_ecm240": {},
+	"mgp8_ee_qqH_HAlpAlp_m0p1_cah1em2_ecm240": {},
+	"mgp8_ee_qqH_HAlpAlp_m0p1_cah1em3_ecm240": {},
+	"mgp8_ee_qqH_HAlpAlp_m0p1_cah1em4_ecm240": {},
+	"mgp8_ee_qqH_HAlpAlp_m0p1_cah1em5_ecm240": {},
+	"mgp8_ee_qqH_HAlpAlp_m0p1_cah1em6_ecm240": {},
+	"mgp8_ee_qqH_HAlpAlp_m0p5_cah1em1_ecm240": {},
+	"mgp8_ee_qqH_HAlpAlp_m0p5_cah1em2_ecm240": {},
+	"mgp8_ee_qqH_HAlpAlp_m0p5_cah1em3_ecm240": {},
+	"mgp8_ee_qqH_HAlpAlp_m0p5_cah1em4_ecm240": {},
+	"mgp8_ee_qqH_HAlpAlp_m0p5_cah1em5_ecm240": {},
+	"mgp8_ee_qqH_HAlpAlp_m0p5_cah1em6_ecm240": {},
+	"mgp8_ee_qqH_HAlpAlp_m10p0_cah1em1_ecm240": {},
+	"mgp8_ee_qqH_HAlpAlp_m10p0_cah1em2_ecm240": {},
+	"mgp8_ee_qqH_HAlpAlp_m10p0_cah1em3_ecm240": {},
+	"mgp8_ee_qqH_HAlpAlp_m10p0_cah1em4_ecm240": {},
+	"mgp8_ee_qqH_HAlpAlp_m10p0_cah1em5_ecm240": {},
+	"mgp8_ee_qqH_HAlpAlp_m10p0_cah1em6_ecm240": {},
+	"mgp8_ee_qqH_HAlpAlp_m1p0_cah1em1_ecm240": {},
+	"mgp8_ee_qqH_HAlpAlp_m1p0_cah1em2_ecm240": {},
+	"mgp8_ee_qqH_HAlpAlp_m1p0_cah1em3_ecm240": {},
+	"mgp8_ee_qqH_HAlpAlp_m1p0_cah1em4_ecm240": {},
+	"mgp8_ee_qqH_HAlpAlp_m1p0_cah1em5_ecm240": {},
+	"mgp8_ee_qqH_HAlpAlp_m1p0_cah1em6_ecm240": {},
+	"mgp8_ee_qqH_HAlpAlp_m1p5_cah1em1_ecm240": {},
+	"mgp8_ee_qqH_HAlpAlp_m1p5_cah1em2_ecm240": {},
+	"mgp8_ee_qqH_HAlpAlp_m1p5_cah1em3_ecm240": {},
+	"mgp8_ee_qqH_HAlpAlp_m1p5_cah1em4_ecm240": {},
+	"mgp8_ee_qqH_HAlpAlp_m1p5_cah1em5_ecm240": {},
+	"mgp8_ee_qqH_HAlpAlp_m1p5_cah1em6_ecm240": {},
+	"mgp8_ee_qqH_HAlpAlp_m20p0_cah1em1_ecm240": {},
+	"mgp8_ee_qqH_HAlpAlp_m20p0_cah1em2_ecm240": {},
+	"mgp8_ee_qqH_HAlpAlp_m20p0_cah1em3_ecm240": {},
+	"mgp8_ee_qqH_HAlpAlp_m20p0_cah1em4_ecm240": {},
+	"mgp8_ee_qqH_HAlpAlp_m20p0_cah1em5_ecm240": {},
+	"mgp8_ee_qqH_HAlpAlp_m20p0_cah1em6_ecm240": {},
+	"mgp8_ee_qqH_HAlpAlp_m30p0_cah1em1_ecm240": {},
+	"mgp8_ee_qqH_HAlpAlp_m30p0_cah1em2_ecm240": {},
+	"mgp8_ee_qqH_HAlpAlp_m30p0_cah1em3_ecm240": {},
+	"mgp8_ee_qqH_HAlpAlp_m30p0_cah1em4_ecm240": {},
+	"mgp8_ee_qqH_HAlpAlp_m30p0_cah1em5_ecm240": {},
+	"mgp8_ee_qqH_HAlpAlp_m30p0_cah1em6_ecm240": {},
+	"mgp8_ee_qqH_HAlpAlp_m5p0_cah1em1_ecm240": {},
+	"mgp8_ee_qqH_HAlpAlp_m5p0_cah1em2_ecm240": {},
+	"mgp8_ee_qqH_HAlpAlp_m5p0_cah1em3_ecm240": {},
+	"mgp8_ee_qqH_HAlpAlp_m5p0_cah1em4_ecm240": {},
+	"mgp8_ee_qqH_HAlpAlp_m5p0_cah1em5_ecm240": {},
+	"mgp8_ee_qqH_HAlpAlp_m5p0_cah1em6_ecm240": {},
 }
 
 # Production tag. This points to the yaml files for getting sample statistics
@@ -52,10 +246,10 @@ processList = {
 #Input directory
 # Comment out when running over centrally produced events
 # Mandatory when running over privately produced events
-inputDir = "/ceph/salshamaily/haa4K_FCCee/delphes/"
+inputDir = "/ceph/salshamaily/haa4K_FCCee/delphes"
 
 # Output directory, default is local dir
-outputDir = "/ceph/salshamaily/haa4K_FCCee/samples"
+outputDir = "/ceph/salshamaily/haa4K_FCCee/samples/"
 
 #Additional/custom C++ functions
 includePaths = ["functions.h"]
@@ -76,28 +270,13 @@ class RDFanalysis():
 	   
 	   .Alias("Particle0",				"_Particle_parents.index")
 	   .Alias("Particle1",				"_Particle_daughters.index")
+	   
 	   .Alias("MCRecoAssociations0",	"_RecoMCLink_from.index")
 	   .Alias("MCRecoAssociations1",	"_RecoMCLink_to.index")
 	   
-	   ### REWEIGHTING ###
-	   
-	   # weights from EventHeader
-	   .Define("event_weight",	"EventHeader.weight")
-	   .Define("n_weights",		"(int)EventHeader.weight.size()")
-	   # ind(0) = cah_ref
-	   .Define("cah_ref",		"event_weight.size() > 0 ? (double)event_weight.at(0) : 1.0")
-	   # ind(1) = 0.1	
-	   .Define("cah_1em1",		"event_weight.size() > 1 ? (double)event_weight.at(1) : 1.0")
-	   # ind(2) = 0.01		
-	   .Define("cah_1em2",		"event_weight.size() > 2 ? (double)event_weight.at(2) : 1.0")
-	   # ind(3) = 0.001
-	   .Define("cah_1em3",		"event_weight.size() > 3 ? (double)event_weight.at(3) : 1.0")
-	   # ind(4) = 0.0001
-	   .Define("cah_1em4",		"event_weight.size() > 4 ? (double)event_weight.at(4) : 1.0")
-	   # ind(5) = 0.00001
-	   .Define("cah_1em5",		"event_weight.size() > 5 ? (double)event_weight.at(5) : 1.0")
-	   # ind(6) = 0.000001
-	   .Define("cah_1em6",		"event_weight.size() > 6 ? (double)event_weight.at(6) : 1.0")
+	   .Alias("Photon0",				"Photon_objIdx.index")
+	   .Alias("Electron0",				"Electron_objIdx.index")
+	   .Alias("Muon0",					"Muon_objIdx.index")
 	   
 	   ### PARTICLES ###
 	   .Define("FSGenParticles",					"FCCAnalyses::MCParticle::sel_genStatus(1)(Particle)") #final state particles
@@ -115,8 +294,6 @@ class RDFanalysis():
 	   .Define("FSGenNonLepParticles_tlv_mass",		"FCCAnalyses::ZHfunctions::get_mass_tlv(FSGenNonLepParticles_tlv)")
 	   
 	   ### PHOTONS ###
-	   .Alias("Photon0", "Photon_objIdx.index")
-	   
 	   #all final state gen photons
 	   .Define("GenPhoton_PID",			"FCCAnalyses::MCParticle::sel_pdgID(22, false)(Particle)")
 	   .Define("FSGenPhoton",			"FCCAnalyses::MCParticle::sel_genStatus(1)(GenPhoton_PID)") #gen status==1 means final state particle (FS)
@@ -146,9 +323,7 @@ class RDFanalysis():
 	   .Define("RecoPhoton_charge", "ReconstructedParticle::get_charge(RecoPhotons)")
 	   
 	   ### ELECTRONS ###
-	   .Alias("Electron0", "Electron_objIdx.index")
-	   
-	   #all final state gen electrons and positrons
+	   # all final state gen electrons and positrons
 	   .Define("GenElectron_PID",	"FCCAnalyses::MCParticle::sel_pdgID(11, true)(Particle)")
 	   .Define("FSGenElectron",		"FCCAnalyses::MCParticle::sel_genStatus(1)(GenElectron_PID)") #genstatus==1 means final state particle (FS)
 	   .Define("n_FSGenElectron",	"FCCAnalyses::MCParticle::get_n(FSGenElectron)")
@@ -181,16 +356,15 @@ class RDFanalysis():
 	   .Define("RecoElectron_theta",  	"ReconstructedParticle::get_theta(RecoElectrons)")
 	   .Define("RecoElectron_phi",	  	"ReconstructedParticle::get_phi(RecoElectrons)") #polar angle in the transverse plane phi
 	   .Define("RecoElectron_charge", 	"ReconstructedParticle::get_charge(RecoElectrons)")
-	   .Define("RecoElectronTrack_absD0",		"return abs(ReconstructedParticle2Track::getRP2TRK_D0(RecoElectrons,EFlowTrack_1))")
-	   .Define("RecoElectronTrack_absZ0", 		"return abs(ReconstructedParticle2Track::getRP2TRK_Z0(RecoElectrons,EFlowTrack_1))")
-	   .Define("RecoElectronTrack_absD0sig",	"return abs(ReconstructedParticle2Track::getRP2TRK_D0_sig(RecoElectrons,EFlowTrack_1))") #significance
-	   .Define("RecoElectronTrack_absZ0sig",	"return abs(ReconstructedParticle2Track::getRP2TRK_Z0_sig(RecoElectrons,EFlowTrack_1))")
-	   .Define("RecoElectronTrack_D0cov",		"ReconstructedParticle2Track::getRP2TRK_D0_cov(RecoElectrons,EFlowTrack_1)") #variance (not sigma)
-	   .Define("RecoElectronTrack_Z0cov",		"ReconstructedParticle2Track::getRP2TRK_Z0_cov(RecoElectrons,EFlowTrack_1)")
+	   .Define("RecoElectronTrack_absD0",		"return abs(ReconstructedParticle2Track::getRP2TRK_D0(RecoElectrons,_EFlowTrack_trackStates))")
+	   .Define("RecoElectronTrack_absZ0", 		"return abs(ReconstructedParticle2Track::getRP2TRK_Z0(RecoElectrons,_EFlowTrack_trackStates))")
+	   .Define("RecoElectronTrack_absD0sig",	"return abs(ReconstructedParticle2Track::getRP2TRK_D0_sig(RecoElectrons,_EFlowTrack_trackStates))") #significance
+	   .Define("RecoElectronTrack_absZ0sig",	"return abs(ReconstructedParticle2Track::getRP2TRK_Z0_sig(RecoElectrons,_EFlowTrack_trackStates))")
+	   .Define("RecoElectronTrack_D0cov",		"ReconstructedParticle2Track::getRP2TRK_D0_cov(RecoElectrons,_EFlowTrack_trackStates)") #variance (not sigma)
+	   .Define("RecoElectronTrack_Z0cov",		"ReconstructedParticle2Track::getRP2TRK_Z0_cov(RecoElectrons,_EFlowTrack_trackStates)")
 		
 		### MUONS ###
-		.Alias("Muon0", "Muon_objIdx.index")
-		
+		# all final state gen muons and antimuons
 		.Define("GenMuon_PID", "FCCAnalyses::MCParticle::sel_pdgID(13, true)(Particle)")
 		.Define("FSGenMuon",   "FCCAnalyses::MCParticle::sel_genStatus(1)(GenMuon_PID)") #gen status==1 means final state particle (FS)
 		.Define("n_FSGenMuon", "FCCAnalyses::MCParticle::get_n(FSGenMuon)")
@@ -223,16 +397,17 @@ class RDFanalysis():
 		.Define("RecoMuon_theta",	"ReconstructedParticle::get_theta(RecoMuons)")
 		.Define("RecoMuon_phi",	 	"ReconstructedParticle::get_phi(RecoMuons)") #polar angle in the transverse plane phi
 		.Define("RecoMuon_charge",	"ReconstructedParticle::get_charge(RecoMuons)")
-		.Define("RecoMuonTrack_absD0",	  "return abs(ReconstructedParticle2Track::getRP2TRK_D0(RecoMuons,EFlowTrack_1))")
-		.Define("RecoMuonTrack_absZ0",	  "return abs(ReconstructedParticle2Track::getRP2TRK_Z0(RecoMuons,EFlowTrack_1))")
-		.Define("RecoMuonTrack_absD0sig", "return abs(ReconstructedParticle2Track::getRP2TRK_D0_sig(RecoMuons,EFlowTrack_1))") #significance
-		.Define("RecoMuonTrack_absZ0sig", "return abs(ReconstructedParticle2Track::getRP2TRK_Z0_sig(RecoMuons,EFlowTrack_1))")
-		.Define("RecoMuonTrack_D0cov",	  "ReconstructedParticle2Track::getRP2TRK_D0_cov(RecoMuons,EFlowTrack_1)") #variance (not sigma)
-		.Define("RecoMuonTrack_Z0cov",	  "ReconstructedParticle2Track::getRP2TRK_Z0_cov(RecoMuons,EFlowTrack_1)")
+		.Define("RecoMuonTrack_absD0",	  "return abs(ReconstructedParticle2Track::getRP2TRK_D0(RecoMuons,_EFlowTrack_trackStates))")
+		.Define("RecoMuonTrack_absZ0",	  "return abs(ReconstructedParticle2Track::getRP2TRK_Z0(RecoMuons,_EFlowTrack_trackStates))")
+		.Define("RecoMuonTrack_absD0sig", "return abs(ReconstructedParticle2Track::getRP2TRK_D0_sig(RecoMuons,_EFlowTrack_trackStates))") #significance
+		.Define("RecoMuonTrack_absZ0sig", "return abs(ReconstructedParticle2Track::getRP2TRK_Z0_sig(RecoMuons,_EFlowTrack_trackStates))")
+		.Define("RecoMuonTrack_D0cov",	  "ReconstructedParticle2Track::getRP2TRK_D0_cov(RecoMuons,_EFlowTrack_trackStates)") #variance (not sigma)
+		.Define("RecoMuonTrack_Z0cov",	  "ReconstructedParticle2Track::getRP2TRK_Z0_cov(RecoMuons,_EFlowTrack_trackStates)")
 		
 		### LEPTONS ###
 		.Define("RecoLeptons",			"ReconstructedParticle::merge(RecoElectrons, RecoMuons)")
         .Define("n_RecoLeptons",  		"ReconstructedParticle::get_n(RecoLeptons)") 
+        .Define("RecoLepton_mass",		"ReconstructedParticle::get_mass(RecoLeptons)")
         .Define("RecoLepton_e",      	"ReconstructedParticle::get_e(RecoLeptons)")
         .Define("RecoLepton_p",      	"ReconstructedParticle::get_p(RecoLeptons)")
         .Define("RecoLepton_pt",      	"ReconstructedParticle::get_pt(RecoLeptons)")
@@ -243,13 +418,13 @@ class RDFanalysis():
         .Define("RecoLepton_theta",   	"ReconstructedParticle::get_theta(RecoLeptons)")
         .Define("RecoLepton_phi",     	"ReconstructedParticle::get_phi(RecoLeptons)") #polar angle in the transverse plane phi
         .Define("RecoLepton_charge",  	"ReconstructedParticle::get_charge(RecoLeptons)")
-        .Define("RecoLeptonTrack",		"ReconstructedParticle2Track::getRP2TRK(RecoLeptons, EFlowTrack_1)")
-        .Define("RecoLeptonTrack_absD0", 	"return abs(ReconstructedParticle2Track::getRP2TRK_D0(RecoLeptons,EFlowTrack_1))")
-        .Define("RecoLeptonTrack_absZ0", 	"return abs(ReconstructedParticle2Track::getRP2TRK_Z0(RecoLeptons,EFlowTrack_1))")
-        .Define("RecoLeptonTrack_absD0sig",	"return abs(ReconstructedParticle2Track::getRP2TRK_D0_sig(RecoLeptons,EFlowTrack_1))") #significance
-        .Define("RecoLeptonTrack_absZ0sig", "return abs(ReconstructedParticle2Track::getRP2TRK_Z0_sig(RecoLeptons,EFlowTrack_1))")
-        .Define("RecoLeptonTrack_D0cov", 	"ReconstructedParticle2Track::getRP2TRK_D0_cov(RecoLeptons,EFlowTrack_1)") #variance (not sigma)
-        .Define("RecoLeptonTrack_Z0cov", 	"ReconstructedParticle2Track::getRP2TRK_Z0_cov(RecoLeptons,EFlowTrack_1)")
+        .Define("RecoLeptonTrack",		"ReconstructedParticle2Track::getRP2TRK(RecoLeptons, _EFlowTrack_trackStates)")
+        .Define("RecoLeptonTrack_absD0", 	"return abs(ReconstructedParticle2Track::getRP2TRK_D0(RecoLeptons,_EFlowTrack_trackStates))")
+        .Define("RecoLeptonTrack_absZ0", 	"return abs(ReconstructedParticle2Track::getRP2TRK_Z0(RecoLeptons,_EFlowTrack_trackStates))")
+        .Define("RecoLeptonTrack_absD0sig",	"return abs(ReconstructedParticle2Track::getRP2TRK_D0_sig(RecoLeptons,_EFlowTrack_trackStates))") #significance
+        .Define("RecoLeptonTrack_absZ0sig", "return abs(ReconstructedParticle2Track::getRP2TRK_Z0_sig(RecoLeptons,_EFlowTrack_trackStates))")
+        .Define("RecoLeptonTrack_D0cov", 	"ReconstructedParticle2Track::getRP2TRK_D0_cov(RecoLeptons,_EFlowTrack_trackStates)") #variance (not sigma)
+        .Define("RecoLeptonTrack_Z0cov", 	"ReconstructedParticle2Track::getRP2TRK_Z0_cov(RecoLeptons,_EFlowTrack_trackStates)")
 		
 		### KAONS ###
 	   .Define("GenKplus",			"FCCAnalyses::MCParticle::sel_genStatus(1)(FCCAnalyses::MCParticle::sel_pdgID(321, true)(Particle))")
@@ -293,104 +468,103 @@ class RDFanalysis():
 	   .Define("RecoKplus_MassCut",		"RecoKplus_tlv[RecoKplus_tlv_mass>0.2 && RecoKplus_tlv_mass<0.7]")
 	   # tracks
 	   .Define("RecoKplus_TrackSel",		"RecoKplus[RecoKplus_tlv_mass>0.2 && RecoKplus_tlv_mass<0.7]")
-	   .Define("RecoKplusTrack",			"ReconstructedParticle2Track::getRP2TRK(RecoKplus_TrackSel, EFlowTrack_1)")
-	   .Define("RecoKplusTrack_absD0",		"return abs(ReconstructedParticle2Track::getRP2TRK_D0(RecoKplus_TrackSel,EFlowTrack_1))")
-	   .Define("RecoKplusTrack_absZ0", 		"return abs(ReconstructedParticle2Track::getRP2TRK_Z0(RecoKplus_TrackSel,EFlowTrack_1))")
-	   .Define("RecoKplusTrack_absD0sig",	"return abs(ReconstructedParticle2Track::getRP2TRK_D0_sig(RecoKplus_TrackSel,EFlowTrack_1))") #significance
-	   .Define("RecoKplusTrack_absZ0sig",	"return abs(ReconstructedParticle2Track::getRP2TRK_Z0_sig(RecoKplus_TrackSel,EFlowTrack_1))")
-	   .Define("RecoKplusTrack_D0cov",		"ReconstructedParticle2Track::getRP2TRK_D0_cov(RecoKplus_TrackSel,EFlowTrack_1)") #variance (not sigma)
-	   .Define("RecoKplusTrack_Z0cov",		"ReconstructedParticle2Track::getRP2TRK_Z0_cov(RecoKplus_TrackSel,EFlowTrack_1)")
+	   .Define("RecoKplusTrack",			"ReconstructedParticle2Track::getRP2TRK(RecoKplus_TrackSel, _EFlowTrack_trackStates)")
+	   .Define("RecoKplusTrack_absD0",		"return abs(ReconstructedParticle2Track::getRP2TRK_D0(RecoKplus_TrackSel,_EFlowTrack_trackStates))")
+	   .Define("RecoKplusTrack_absZ0", 		"return abs(ReconstructedParticle2Track::getRP2TRK_Z0(RecoKplus_TrackSel,_EFlowTrack_trackStates))")
+	   .Define("RecoKplusTrack_absD0sig",	"return abs(ReconstructedParticle2Track::getRP2TRK_D0_sig(RecoKplus_TrackSel,_EFlowTrack_trackStates))") #significance
+	   .Define("RecoKplusTrack_absZ0sig",	"return abs(ReconstructedParticle2Track::getRP2TRK_Z0_sig(RecoKplus_TrackSel,_EFlowTrack_trackStates))")
+	   .Define("RecoKplusTrack_D0cov",		"ReconstructedParticle2Track::getRP2TRK_D0_cov(RecoKplus_TrackSel,_EFlowTrack_trackStates)") #variance (not sigma)
+	   .Define("RecoKplusTrack_Z0cov",		"ReconstructedParticle2Track::getRP2TRK_Z0_cov(RecoKplus_TrackSel,_EFlowTrack_trackStates)")
 	   
 	   ### KAON SELECTION ###
 	   .Filter("RecoKplus_MassCut.size()==4 && (RecoKplus_charge.at(0)+RecoKplus_charge.at(1)+RecoKplus_charge.at(2)+RecoKplus_charge.at(3))==0")		
 	   
 	   ### VERTEX RECONSTRUCTION ###
 
-	   	# Primary IP (Primary IP) -> for leptons
-		.Define("RecoDecayVertexObjectLepton",	"VertexFitterSimple::VertexFitter_Tk(0, RecoLeptonTrack)")
-		.Define("RecoDecayVertexLepton",		"VertexingUtils::get_VertexData(RecoDecayVertexObjectLepton)")
-		.Define("RecoLeptonIP_p4",				"TLorentzVector(RecoDecayVertexLepton.position.x, RecoDecayVertexLepton.position.y, RecoDecayVertexLepton.position.z, 0.)")
-		.Define("RecoLeptonIP_px",				"RecoLeptonIP_p4.Px()")
-		.Define("RecoLeptonIP_py",				"RecoLeptonIP_p4.Py()")
-		.Define("RecoLeptonIP_pz",				"RecoLeptonIP_p4.Pz()")
-		
-		# Secondary IP or Displaced Vertex (Secondary IP or DV) -> for kaons
-		.Define("RecoDecayVertexObjectKplus",	"VertexFitterSimple::VertexFitter_Tk(0, RecoKplusTrack)")
-		.Define("RecoDecayVertexKplus",			"VertexingUtils::get_VertexData(RecoDecayVertexObjectKplus)")
-		.Define("RecoKplusIP_p4",				"TLorentzVector(RecoDecayVertexKplus.position.x, RecoDecayVertexKplus.position.y, RecoDecayVertexKplus.position.z, 0.)")
-		.Define("RecoKplusIP_px",				"RecoKplusIP_p4.Px()")
-		.Define("RecoKplusIP_py",				"RecoKplusIP_p4.Py()")
-		.Define("RecoKplusIP_pz",				"RecoKplusIP_p4.Pz()")
-		
-		# Displacement between the two vertices
-		.Define("RecoIP_Lxyz",	"(RecoKplusIP_p4.Vect() - RecoLeptonIP_p4.Vect()).Mag()")
-		
-		.Define("Kplus_0",	"RecoKplus_MassCut.at(0)")
-		.Define("Kplus_1",	"RecoKplus_MassCut.at(1)")
-		.Define("Kplus_2",	"RecoKplus_MassCut.at(2)")
-		.Define("Kplus_3",	"RecoKplus_MassCut.at(3)")
-
-		# accessing the individual 4 kaon properties
-		.Define("Kplus_0_m",	"Kplus_0.M()")
-		.Define("Kplus_0_e",	"Kplus_0.E()")
-		.Define("Kplus_0_p",	"Kplus_0.P()")
-		.Define("Kplus_0_pt",	"Kplus_0.Pt()")
-		.Define("Kplus_0_px",	"Kplus_0.Px()")
-		.Define("Kplus_0_py",	"Kplus_0.Py()")
-		.Define("Kplus_0_pz",	"Kplus_0.Pz()")
-		.Define("Kplus_0_eta",	"Kplus_0.Eta()")
-		.Define("Kplus_0_phi",	"Kplus_0.Phi()")
-		
-		.Define("Kplus_1_m",	"Kplus_1.M()")
-		.Define("Kplus_1_e",	"Kplus_1.E()")
-		.Define("Kplus_1_p",	"Kplus_1.P()")
-		.Define("Kplus_1_pt",	"Kplus_1.Pt()")
-		.Define("Kplus_1_px",	"Kplus_1.Px()")
-		.Define("Kplus_1_py", 	"Kplus_1.Py()")
-		.Define("Kplus_1_pz",	"Kplus_1.Pz()")
-		.Define("Kplus_1_eta",	"Kplus_1.Eta()")
-		.Define("Kplus_1_phi",	"Kplus_1.Phi()")
-		
-		.Define("Kplus_2_m",	"Kplus_2.M()")
-		.Define("Kplus_2_e",	"Kplus_2.E()")
-		.Define("Kplus_2_p",	"Kplus_2.P()")
-		.Define("Kplus_2_pt",	"Kplus_2.Pt()")
-		.Define("Kplus_2_px",	"Kplus_2.Px()")
-		.Define("Kplus_2_py",	"Kplus_2.Py()")
-		.Define("Kplus_2_pz",	"Kplus_2.Pz()")
-		.Define("Kplus_2_eta",	"Kplus_2.Eta()")
-		.Define("Kplus_2_phi",	"Kplus_2.Phi()")
-		
-		.Define("Kplus_3_m",	"Kplus_3.M()")
-		.Define("Kplus_3_e",	"Kplus_3.E()")
-		.Define("Kplus_3_p",	"Kplus_3.P()")
-		.Define("Kplus_3_pt",	"Kplus_3.Pt()")
-		.Define("Kplus_3_px",	"Kplus_3.Px()")
-		.Define("Kplus_3_py",	"Kplus_3.Py()")
-		.Define("Kplus_3_pz",	"Kplus_3.Pz()")
-		.Define("Kplus_3_eta",	"Kplus_3.Eta()")
-		.Define("Kplus_3_phi",	"Kplus_3.Phi()")
-		
-		### ALP CANDIDATES ###
-		.Define("a1_12", "Kplus_0 + Kplus_1")
-		.Define("a2_12", "Kplus_2 + Kplus_3")
-		.Define("a1_13", "Kplus_0 + Kplus_2")
-		.Define("a2_13", "Kplus_1 + Kplus_3")
-		.Define("a1_14", "Kplus_0 + Kplus_3")
-		.Define("a2_14", "Kplus_1 + Kplus_2")
-		
-		.Define("dm_12", "abs(a1_12.M() - a2_12.M())")
-		.Define("dm_13", "abs(a1_13.M() - a2_13.M())")
-		.Define("dm_14", "abs(a1_14.M() - a2_14.M())")
-		
-		.Define("mass_diff_min", "std::min({dm_12, dm_13, dm_14})")
-		
-		.Define("alp_0",	"mass_diff_min == dm_12 ? a1_12 : (mass_diff_min == dm_13 ? a1_13 : a1_14)")
-		.Define("alp_1",	"mass_diff_min == dm_12 ? a2_12 : (mass_diff_min == dm_13 ? a2_13 : a2_14)")
-		
-		### HIGGS RECONSTRUCTION ###
-		.Define("RecoHiggs",	"Kplus_0 + Kplus_1 + Kplus_2 + Kplus_3")
-		.Define("RecoHiggs_a",	"alp_0 + alp_1")
+	   # Primary IP (Primary IP) -> for leptons
+	   .Define("RecoDecayVertexObjectLepton",	"VertexFitterSimple::VertexFitter_Tk(0, RecoLeptonTrack)")
+	   .Define("RecoDecayVertexLepton",			"VertexingUtils::get_VertexData(RecoDecayVertexObjectLepton)")
+	   .Define("RecoLeptonIP_p4",				"TLorentzVector(RecoDecayVertexLepton.position.x, RecoDecayVertexLepton.position.y, RecoDecayVertexLepton.position.z, 0.)")
+	   .Define("RecoLeptonIP_px",				"RecoLeptonIP_p4.Px()")
+	   .Define("RecoLeptonIP_py",				"RecoLeptonIP_p4.Py()")
+	   .Define("RecoLeptonIP_pz",				"RecoLeptonIP_p4.Pz()")
+	   
+	   # Secondary IP or Displaced Vertex (Secondary IP or DV) -> for kaons
+	   .Define("RecoDecayVertexObjectKplus",	"VertexFitterSimple::VertexFitter_Tk(0, RecoKplusTrack)")
+	   .Define("RecoDecayVertexKplus",			"VertexingUtils::get_VertexData(RecoDecayVertexObjectKplus)")
+	   .Define("RecoKplusIP_p4",				"TLorentzVector(RecoDecayVertexKplus.position.x, RecoDecayVertexKplus.position.y, RecoDecayVertexKplus.position.z, 0.)")
+	   .Define("RecoKplusIP_px",				"RecoKplusIP_p4.Px()")
+	   .Define("RecoKplusIP_py",				"RecoKplusIP_p4.Py()")
+	   .Define("RecoKplusIP_pz",				"RecoKplusIP_p4.Pz()")
+	   
+	   # Displacement between the two vertices
+	   .Define("RecoIP_Lxyz",	"(RecoKplusIP_p4.Vect() - RecoLeptonIP_p4.Vect()).Mag()")
+	   
+	   .Define("Kplus_0",	"RecoKplus_MassCut.at(0)")
+	   .Define("Kplus_1",	"RecoKplus_MassCut.at(1)")
+	   .Define("Kplus_2",	"RecoKplus_MassCut.at(2)")
+	   .Define("Kplus_3",	"RecoKplus_MassCut.at(3)")
+	   
+	   # accessing the individual 4 kaon properties
+	   .Define("Kplus_0_m",		"Kplus_0.M()")
+	   .Define("Kplus_0_e",		"Kplus_0.E()")
+	   .Define("Kplus_0_p",		"Kplus_0.P()")
+	   .Define("Kplus_0_pt",	"Kplus_0.Pt()")
+	   .Define("Kplus_0_px",	"Kplus_0.Px()")
+	   .Define("Kplus_0_py",	"Kplus_0.Py()")
+	   .Define("Kplus_0_pz",	"Kplus_0.Pz()")
+	   .Define("Kplus_0_eta",	"Kplus_0.Eta()")
+	   .Define("Kplus_0_phi",	"Kplus_0.Phi()")
+	   
+	   .Define("Kplus_1_m",		"Kplus_1.M()")
+	   .Define("Kplus_1_e",		"Kplus_1.E()")
+	   .Define("Kplus_1_p",		"Kplus_1.P()")
+	   .Define("Kplus_1_pt",	"Kplus_1.Pt()")
+	   .Define("Kplus_1_px",	"Kplus_1.Px()")
+	   .Define("Kplus_1_py", 	"Kplus_1.Py()")
+	   .Define("Kplus_1_pz",	"Kplus_1.Pz()")
+	   .Define("Kplus_1_eta",	"Kplus_1.Eta()")
+	   .Define("Kplus_1_phi",	"Kplus_1.Phi()")
+	   
+	   .Define("Kplus_2_m",		"Kplus_2.M()")
+	   .Define("Kplus_2_e",		"Kplus_2.E()")
+	   .Define("Kplus_2_p",		"Kplus_2.P()")
+	   .Define("Kplus_2_pt",	"Kplus_2.Pt()")
+	   .Define("Kplus_2_px",	"Kplus_2.Px()")
+	   .Define("Kplus_2_py",	"Kplus_2.Py()")
+	   .Define("Kplus_2_pz",	"Kplus_2.Pz()")
+	   .Define("Kplus_2_eta",	"Kplus_2.Eta()")
+	   .Define("Kplus_2_phi",	"Kplus_2.Phi()")
+	   
+	   .Define("Kplus_3_m",		"Kplus_3.M()")
+	   .Define("Kplus_3_e",		"Kplus_3.E()")
+	   .Define("Kplus_3_p",		"Kplus_3.P()")
+	   .Define("Kplus_3_pt",	"Kplus_3.Pt()")
+	   .Define("Kplus_3_px",	"Kplus_3.Px()")
+	   .Define("Kplus_3_py",	"Kplus_3.Py()")
+	   .Define("Kplus_3_pz",	"Kplus_3.Pz()")
+	   .Define("Kplus_3_eta",	"Kplus_3.Eta()")
+	   .Define("Kplus_3_phi",	"Kplus_3.Phi()")
+	   
+	   ### ALP CANDIDATES ###
+	   .Define("a1_12", "Kplus_0 + Kplus_1")
+	   .Define("a2_12", "Kplus_2 + Kplus_3")
+	   .Define("a1_13", "Kplus_0 + Kplus_2")
+	   .Define("a2_13", "Kplus_1 + Kplus_3")
+	   .Define("a1_14", "Kplus_0 + Kplus_3")
+	   .Define("a2_14", "Kplus_1 + Kplus_2")
+	   
+	   .Define("dm_12", "abs(a1_12.M() - a2_12.M())")
+	   .Define("dm_13", "abs(a1_13.M() - a2_13.M())")
+	   .Define("dm_14", "abs(a1_14.M() - a2_14.M())")
+	   
+	   .Define("mass_diff_min", "std::min({dm_12, dm_13, dm_14})")
+	   
+	   .Define("alp_0",	"mass_diff_min == dm_12 ? a1_12 : (mass_diff_min == dm_13 ? a1_13 : a1_14)")
+	   .Define("alp_1",	"mass_diff_min == dm_12 ? a2_12 : (mass_diff_min == dm_13 ? a2_13 : a2_14)")
+	   
+	   ### HIGGS RECONSTRUCTION ###
+	   .Define("RecoHiggs",			"Kplus_0 + Kplus_1 + Kplus_2 + Kplus_3")
 		
 		# getting RecoHiggs_k and RecoHiggs_a properties
 		.Define("RecoHiggs_mass",	"RecoHiggs.M()")
@@ -403,38 +577,41 @@ class RDFanalysis():
 		.Define("RecoHiggs_eta",	"RecoHiggs.Eta()")
 		.Define("RecoHiggs_phi",	"RecoHiggs.Phi()")
 		
-		### ELECTRON SELECTION ###
-		.Filter("n_RecoElectrons==2 && (RecoElectron_charge.at(0)+RecoElectron_charge.at(1))==0")
+		### LEPTON SELECTION ###
+		.Filter("""( (n_RecoElectrons==2 && n_RecoMuons==0 && (RecoElectron_charge.at(0)+RecoElectron_charge.at(1))==0) || (n_RecoMuons==2 && n_RecoElectrons==0 && (RecoMuon_charge.at(0)+RecoMuon_charge.at(1))==0) )""")
 		
 		### Z RECONSTRUCTION ###
 		
-		# starting with the first two electrons
-		.Define("Electron_0",	"TLorentzVector(RecoElectron_px.at(0), RecoElectron_py.at(0), RecoElectron_pz.at(0), RecoElectron_e.at(0))")
-		.Define("Electron_1",	"TLorentzVector(RecoElectron_px.at(1), RecoElectron_py.at(1), RecoElectron_pz.at(1), RecoElectron_e.at(1))")
+		# starting with the two leptons
+		.Define("Lepton_0",	"TLorentzVector(RecoLepton_px.at(0), RecoLepton_py.at(0), RecoLepton_pz.at(0), RecoLepton_e.at(0))")
+		.Define("Lepton_1",	"TLorentzVector(RecoLepton_px.at(1), RecoLepton_py.at(1), RecoLepton_pz.at(1), RecoLepton_e.at(1))")
 		
-		# accessing individual 2 electron masses
-		.Define("Electron_0_m",		"Electron_0.M()")
-		.Define("Electron_0_e",		"Electron_0.E()")
-		.Define("Electron_0_p",		"Electron_0.P()")
-		.Define("Electron_0_pt",	"Electron_0.Pt()")
-		.Define("Electron_0_px",	"Electron_0.Px()")
-		.Define("Electron_0_py",	"Electron_0.Py()")
-		.Define("Electron_0_pz",	"Electron_0.Pz()")
-		.Define("Electron_0_eta",	"Electron_0.Eta()")
-		.Define("Electron_0_phi",	"Electron_0.Phi()")
+		# accessing individual 2 Lepton masses
+		.Define("Lepton_0_m",	"Lepton_0.M()")
+		.Define("Lepton_0_e",	"Lepton_0.E()")
+		.Define("Lepton_0_p",	"Lepton_0.P()")
+		.Define("Lepton_0_pt",	"Lepton_0.Pt()")
+		.Define("Lepton_0_px",	"Lepton_0.Px()")
+		.Define("Lepton_0_py",	"Lepton_0.Py()")
+		.Define("Lepton_0_pz",	"Lepton_0.Pz()")
+		.Define("Lepton_0_eta",	"Lepton_0.Eta()")
+		.Define("Lepton_0_phi",	"Lepton_0.Phi()")
 		
-		.Define("Electron_1_m",		"Electron_1.M()")
-		.Define("Electron_1_e",		"Electron_1.E()")
-		.Define("Electron_1_p",		"Electron_1.P()")
-		.Define("Electron_1_pt",	"Electron_1.Pt()")
-		.Define("Electron_1_px",	"Electron_1.Px()")
-		.Define("Electron_1_py",	"Electron_1.Py()")
-		.Define("Electron_1_pz",	"Electron_1.Pz()")
-		.Define("Electron_1_eta",	"Electron_1.Eta()")
-		.Define("Electron_1_phi",	"Electron_1.Phi()")
+		.Define("Lepton_1_m",	"Lepton_1.M()")
+		.Define("Lepton_1_e",	"Lepton_1.E()")
+		.Define("Lepton_1_p",	"Lepton_1.P()")
+		.Define("Lepton_1_pt",	"Lepton_1.Pt()")
+		.Define("Lepton_1_px",	"Lepton_1.Px()")
+		.Define("Lepton_1_py",	"Lepton_1.Py()")
+		.Define("Lepton_1_pz",	"Lepton_1.Pz()")
+		.Define("Lepton_1_eta",	"Lepton_1.Eta()")
+		.Define("Lepton_1_phi",	"Lepton_1.Phi()")
 		
-		# summing these electrons together to get reconstructed Z
-		.Define("RecoZ",	"Electron_0 + Electron_1")
+		# useful to see which flavour Z was built from
+		.Define("RecoZ_leptonFlavor",	"n_RecoElectrons==2 ? 0:1")
+		
+		# summing these leptons together to get reconstructed Z
+		.Define("RecoZ",	"Lepton_0 + Lepton_1")
 		
 		# getting Z properties
 		.Define("RecoZ_mass",	"RecoZ.M()")
@@ -458,8 +635,7 @@ class RDFanalysis():
         .Define("RecoEmiss_mass",	"RecoEmiss[0].mass")
         
         ### JETS ###
-
-		# Jet clustering with different algorithm, only on non leptons #
+		# jet clustering with different algorithm, only on non leptons #
 		#.Define("RP_px",	"ReconstructedParticle::get_px(RecoKplus) ")
 		#.Define("RP_py",	"ReconstructedParticle::get_py(RecoKplus) ")
 		#.Define("RP_pz",	"ReconstructedParticle::get_pz(RecoKplus) ")
@@ -495,17 +671,6 @@ class RDFanalysis():
 	#Mandatory: output function, please make sure you return the branchlist as a python list
 	def output():
 		branchList = [
-		
-				# reweighting
-				"event_weights",
-				"n_weights",
-				"cah_ref",
-				"cah_1em1",
-				"cah_1em2",
-				"cah_1em3",
-				"cah_1em4",
-				"cah_1em5",
-				"cah_1em6",
 				
 				# MC particles
 				"FSGenNonLepParticles_PID",
@@ -607,6 +772,26 @@ class RDFanalysis():
 				"RecoPhoton_theta",
 				"RecoPhoton_phi",
 				"RecoPhoton_charge",
+				
+				# RECO leptons
+				"n_RecoLeptons",
+				"RecoLepton_e",
+				"RecoLepton_mass",
+				"RecoLepton_p",
+				"RecoLepton_pt",
+				"RecoLepton_px",
+				"RecoLepton_py",
+				"RecoLepton_pz",
+				"RecoLepton_eta",
+				"RecoLepton_theta",
+				"RecoLepton_phi",
+				"RecoLepton_charge",
+				"RecoLeptonTrack_absD0",
+				"RecoLeptonTrack_absZ0",
+				"RecoLeptonTrack_absD0sig",
+				"RecoLeptonTrack_absZ0sig",
+				"RecoLeptonTrack_D0cov",
+				"RecoLeptonTrack_Z0cov",
 				
 				# RECO e-
 				"n_RecoElectrons",
@@ -710,27 +895,28 @@ class RDFanalysis():
 				"RecoZ_pz",
 				"RecoZ_eta",
 				"RecoZ_phi",
+				"RecoZ_leptonFlavor",
 				
-				# RECO IND e-
-				"Electron_0_m",	
-				"Electron_0_e",	
-				"Electron_0_p",	
-				"Electron_0_pt",
-				"Electron_0_px",
-				"Electron_0_py",
-				"Electron_0_pz",
-				"Electron_0_eta",
-				"Electron_0_phi",
+				# RECO IND leptons
+				"Lepton_0_m",	
+				"Lepton_0_e",	
+				"Lepton_0_p",	
+				"Lepton_0_pt",
+				"Lepton_0_px",
+				"Lepton_0_py",
+				"Lepton_0_pz",
+				"Lepton_0_eta",
+				"Lepton_0_phi",
 				
-				"Electron_1_m",	
-				"Electron_1_e",	
-				"Electron_1_p",	
-				"Electron_1_pt",
-				"Electron_1_px",
-				"Electron_1_py",
-				"Electron_1_pz",
-				"Electron_1_eta",
-				"Electron_1_phi",
+				"Lepton_1_m",	
+				"Lepton_1_e",	
+				"Lepton_1_p",	
+				"Lepton_1_pt",
+				"Lepton_1_px",
+				"Lepton_1_py",
+				"Lepton_1_pz",
+				"Lepton_1_eta",
+				"Lepton_1_phi",
 				
 				# RECO VERTEX
 				"RecoLeptonIP_p4",
