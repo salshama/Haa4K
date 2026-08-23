@@ -1,119 +1,97 @@
 import ROOT
 
 # Mandatory: list of processes
-
 processList = {
-	"mgp8_ee_eeH_HAlpAlp_m0p05_ecm240_ctau1mm": {},
-	"mgp8_ee_eeH_HAlpAlp_m0p05_ecm240_ctau10mm": {},
-	"mgp8_ee_eeH_HAlpAlp_m0p05_ecm240_ctau1m": {},
-	"mgp8_ee_eeH_HAlpAlp_m0p05_ecm240_ctau2m": {},
-	"mgp8_ee_eeH_HAlpAlp_m0p1_ecm240_ctau1mm": {},
-	"mgp8_ee_eeH_HAlpAlp_m0p1_ecm240_ctau10mm": {},
-	"mgp8_ee_eeH_HAlpAlp_m0p1_ecm240_ctau1m": {},
-	"mgp8_ee_eeH_HAlpAlp_m0p1_ecm240_ctau2m": {},
-	"mgp8_ee_eeH_HAlpAlp_m0p5_ecm240_ctau1mm": {},
-	"mgp8_ee_eeH_HAlpAlp_m0p5_ecm240_ctau10mm": {},
-	"mgp8_ee_eeH_HAlpAlp_m0p5_ecm240_ctau1m": {},
-	"mgp8_ee_eeH_HAlpAlp_m0p5_ecm240_ctau2m": {},
-	"mgp8_ee_eeH_HAlpAlp_m1p0_ecm240_ctau1mm": {},
-	"mgp8_ee_eeH_HAlpAlp_m1p0_ecm240_ctau10mm": {},
-	"mgp8_ee_eeH_HAlpAlp_m1p0_ecm240_ctau1m": {},
-	"mgp8_ee_eeH_HAlpAlp_m1p0_ecm240_ctau2m": {},
-	"mgp8_ee_eeH_HAlpAlp_m1p5_ecm240_ctau1mm": {},
-	"mgp8_ee_eeH_HAlpAlp_m1p5_ecm240_ctau10mm": {},
-	"mgp8_ee_eeH_HAlpAlp_m1p5_ecm240_ctau1m": {},
-	"mgp8_ee_eeH_HAlpAlp_m1p5_ecm240_ctau2m": {},
-	"mgp8_ee_eeH_HAlpAlp_m5p0_ecm240_ctau1mm": {},
-	"mgp8_ee_eeH_HAlpAlp_m5p0_ecm240_ctau10mm": {},
-	"mgp8_ee_eeH_HAlpAlp_m5p0_ecm240_ctau1m": {},
-	"mgp8_ee_eeH_HAlpAlp_m5p0_ecm240_ctau2m": {},
-	"mgp8_ee_eeH_HAlpAlp_m10p0_ecm240_ctau1mm": {},
-	"mgp8_ee_eeH_HAlpAlp_m10p0_ecm240_ctau10mm": {},
-	"mgp8_ee_eeH_HAlpAlp_m10p0_ecm240_ctau1m": {},
-	"mgp8_ee_eeH_HAlpAlp_m10p0_ecm240_ctau2m": {},
-	"mgp8_ee_eeH_HAlpAlp_m20p0_ecm240_ctau1mm": {},
-	"mgp8_ee_eeH_HAlpAlp_m20p0_ecm240_ctau10mm": {},
-	"mgp8_ee_eeH_HAlpAlp_m20p0_ecm240_ctau1m": {},
-	"mgp8_ee_eeH_HAlpAlp_m20p0_ecm240_ctau2m": {},
-	"mgp8_ee_eeH_HAlpAlp_m30p0_ecm240_ctau1mm": {},
-	"mgp8_ee_eeH_HAlpAlp_m30p0_ecm240_ctau10mm": {},
-	"mgp8_ee_eeH_HAlpAlp_m30p0_ecm240_ctau1m": {},
-	"mgp8_ee_eeH_HAlpAlp_m30p0_ecm240_ctau2m": {},
-	"mgp8_ee_eeH_HAlpAlp_m40p0_ecm240_ctau1mm": {},
-	"mgp8_ee_eeH_HAlpAlp_m40p0_ecm240_ctau10mm": {},
-	"mgp8_ee_eeH_HAlpAlp_m40p0_ecm240_ctau1m": {},
-	"mgp8_ee_eeH_HAlpAlp_m40p0_ecm240_ctau2m": {},
-	"mgp8_ee_eeH_HAlpAlp_m50p0_ecm240_ctau1mm": {},
-	"mgp8_ee_eeH_HAlpAlp_m50p0_ecm240_ctau10mm": {},
-	"mgp8_ee_eeH_HAlpAlp_m50p0_ecm240_ctau1m": {},
-	"mgp8_ee_eeH_HAlpAlp_m50p0_ecm240_ctau2m": {},
-	"mgp8_ee_eeH_HAlpAlp_m60p0_ecm240_ctau1mm": {},
-	"mgp8_ee_eeH_HAlpAlp_m60p0_ecm240_ctau10mm": {},
-	"mgp8_ee_eeH_HAlpAlp_m60p0_ecm240_ctau1m": {},
-	"mgp8_ee_eeH_HAlpAlp_m60p0_ecm240_ctau2m": {},
+	"p8_ee_WW_ecm240":	{},
+	"p8_ee_Zqq_ecm240":	{},
+	"p8_ee_ZZ_ecm240":	{},
 	
-	"mgp8_ee_mumuH_HAlpAlp_m0p05_ecm240_ctau1mm": {},
-	"mgp8_ee_mumuH_HAlpAlp_m0p05_ecm240_ctau10mm": {},
-	"mgp8_ee_mumuH_HAlpAlp_m0p05_ecm240_ctau1m": {},
-	"mgp8_ee_mumuH_HAlpAlp_m0p05_ecm240_ctau2m": {},
-	"mgp8_ee_mumuH_HAlpAlp_m0p1_ecm240_ctau1mm": {},
-	"mgp8_ee_mumuH_HAlpAlp_m0p1_ecm240_ctau10mm": {},
-	"mgp8_ee_mumuH_HAlpAlp_m0p1_ecm240_ctau1m": {},
-	"mgp8_ee_mumuH_HAlpAlp_m0p1_ecm240_ctau2m": {},
-	"mgp8_ee_mumuH_HAlpAlp_m0p5_ecm240_ctau1mm": {},
-	"mgp8_ee_mumuH_HAlpAlp_m0p5_ecm240_ctau10mm": {},
-	"mgp8_ee_mumuH_HAlpAlp_m0p5_ecm240_ctau1m": {},
-	"mgp8_ee_mumuH_HAlpAlp_m0p5_ecm240_ctau2m": {},
-	"mgp8_ee_mumuH_HAlpAlp_m1p0_ecm240_ctau1mm": {},
-	"mgp8_ee_mumuH_HAlpAlp_m1p0_ecm240_ctau10mm": {},
-	"mgp8_ee_mumuH_HAlpAlp_m1p0_ecm240_ctau1m": {},
-	"mgp8_ee_mumuH_HAlpAlp_m1p0_ecm240_ctau2m": {},
-	"mgp8_ee_mumuH_HAlpAlp_m1p5_ecm240_ctau1mm": {},
-	"mgp8_ee_mumuH_HAlpAlp_m1p5_ecm240_ctau10mm": {},
-	"mgp8_ee_mumuH_HAlpAlp_m1p5_ecm240_ctau1m": {},
-	"mgp8_ee_mumuH_HAlpAlp_m1p5_ecm240_ctau2m": {},
-	"mgp8_ee_mumuH_HAlpAlp_m5p0_ecm240_ctau1mm": {},
-	"mgp8_ee_mumuH_HAlpAlp_m5p0_ecm240_ctau10mm": {},
-	"mgp8_ee_mumuH_HAlpAlp_m5p0_ecm240_ctau1m": {},
-	"mgp8_ee_mumuH_HAlpAlp_m5p0_ecm240_ctau2m": {},
-	"mgp8_ee_mumuH_HAlpAlp_m10p0_ecm240_ctau1mm": {},
-	"mgp8_ee_mumuH_HAlpAlp_m10p0_ecm240_ctau10mm": {},
-	"mgp8_ee_mumuH_HAlpAlp_m10p0_ecm240_ctau1m": {},
-	"mgp8_ee_mumuH_HAlpAlp_m10p0_ecm240_ctau2m": {},
-	"mgp8_ee_mumuH_HAlpAlp_m20p0_ecm240_ctau1mm": {},
-	"mgp8_ee_mumuH_HAlpAlp_m20p0_ecm240_ctau10mm": {},
-	"mgp8_ee_mumuH_HAlpAlp_m20p0_ecm240_ctau1m": {},
-	"mgp8_ee_mumuH_HAlpAlp_m20p0_ecm240_ctau2m": {},
-	"mgp8_ee_mumuH_HAlpAlp_m30p0_ecm240_ctau1mm": {},
-	"mgp8_ee_mumuH_HAlpAlp_m30p0_ecm240_ctau10mm": {},
-	"mgp8_ee_mumuH_HAlpAlp_m30p0_ecm240_ctau1m": {},
-	"mgp8_ee_mumuH_HAlpAlp_m30p0_ecm240_ctau2m": {},
-	"mgp8_ee_mumuH_HAlpAlp_m40p0_ecm240_ctau1mm": {},
-	"mgp8_ee_mumuH_HAlpAlp_m40p0_ecm240_ctau10mm": {},
-	"mgp8_ee_mumuH_HAlpAlp_m40p0_ecm240_ctau1m": {},
-	"mgp8_ee_mumuH_HAlpAlp_m40p0_ecm240_ctau2m": {},
-	"mgp8_ee_mumuH_HAlpAlp_m50p0_ecm240_ctau1mm": {},
-	"mgp8_ee_mumuH_HAlpAlp_m50p0_ecm240_ctau10mm": {},
-	"mgp8_ee_mumuH_HAlpAlp_m50p0_ecm240_ctau1m": {},
-	"mgp8_ee_mumuH_HAlpAlp_m50p0_ecm240_ctau2m": {},
-	"mgp8_ee_mumuH_HAlpAlp_m60p0_ecm240_ctau1mm": {},
-	"mgp8_ee_mumuH_HAlpAlp_m60p0_ecm240_ctau10mm": {},
-	"mgp8_ee_mumuH_HAlpAlp_m60p0_ecm240_ctau1m": {},
-	"mgp8_ee_mumuH_HAlpAlp_m60p0_ecm240_ctau2m": {},
-}
+	"wzp6_ee_tautau_ecm240":		{},
+	"wzp6_ee_mumu_ecm240":			{},
+	"wzp6_ee_ee_Mee_30_150_ecm240":	{},
 
-# Production tag. This points to the yaml files for getting sample statistics
-# Mandatory when running over EDM4Hep centrally produced events
-# Comment out when running over privately produced events
-# prodTag	 = "FCCee/Delphes/IDEA"
+    "wzp6_ee_tautauH_Htautau_ecm240":	{},
+    "wzp6_ee_tautauH_Hbb_ecm240":		{},
+    "wzp6_ee_tautauH_Hcc_ecm240":		{},
+    "wzp6_ee_tautauH_Hss_ecm240":		{},
+    "wzp6_ee_tautauH_Hgg_ecm240":		{},
+    "wzp6_ee_tautauH_HWW_ecm240":		{},
+    "wzp6_ee_tautauH_HZZ_ecm240":		{},
+
+    "wzp6_egamma_eZ_Zmumu_ecm240":	{},
+    "wzp6_egamma_eZ_Zee_ecm240":	{},
+    "wzp6_gammae_eZ_Zmumu_ecm240":	{},
+    "wzp6_gammae_eZ_Zee_ecm240":	{},
+
+    "wzp6_gaga_tautau_60_ecm240":	{},
+    "wzp6_gaga_mumu_60_ecm240":		{},
+    "wzp6_gaga_ee_60_ecm240":		{},
+
+    "wzp6_ee_nuenueZ_ecm240":		{},
+    "wzp6_ee_nunuH_Htautau_ecm240":	{},
+    "wzp6_ee_nunuH_Hbb_ecm240":		{},
+    "wzp6_ee_nunuH_Hcc_ecm240":		{},
+    "wzp6_ee_nunuH_Hss_ecm240":		{},
+    "wzp6_ee_nunuH_Hgg_ecm240":		{},
+    "wzp6_ee_nunuH_HWW_ecm240":		{},
+    "wzp6_ee_nunuH_HZZ_ecm240":		{},
+
+    "wzp6_ee_eeH_Htautau_ecm240":	{},
+    "wzp6_ee_eeH_Hbb_ecm240":		{},
+    "wzp6_ee_eeH_Hcc_ecm240":		{},
+    "wzp6_ee_eeH_Hss_ecm240":		{},
+    "wzp6_ee_eeH_Hgg_ecm240":		{},
+    "wzp6_ee_eeH_HWW_ecm240":		{},
+    "wzp6_ee_eeH_HZZ_ecm240":		{},
+
+    "wzp6_ee_mumuH_Htautau_ecm240":	{},
+    "wzp6_ee_mumuH_Hbb_ecm240":		{},
+    "wzp6_ee_mumuH_Hcc_ecm240":		{},
+    "wzp6_ee_mumuH_Hss_ecm240":		{},
+    "wzp6_ee_mumuH_Hgg_ecm240":		{},
+    "wzp6_ee_mumuH_HWW_ecm240":		{},
+    "wzp6_ee_mumuH_HZZ_ecm240":		{},
+
+    "wzp6_ee_bbH_Htautau_ecm240":	{},
+    "wzp6_ee_bbH_Hbb_ecm240":		{},
+    "wzp6_ee_bbH_Hcc_ecm240":		{},
+    "wzp6_ee_bbH_Hss_ecm240":		{},
+    "wzp6_ee_bbH_Hgg_ecm240":		{},
+    "wzp6_ee_bbH_HWW_ecm240":		{},
+    "wzp6_ee_bbH_HZZ_ecm240":		{},
+
+    "wzp6_ee_ccH_Htautau_ecm240":	{},
+    "wzp6_ee_ccH_Hbb_ecm240":		{},
+    "wzp6_ee_ccH_Hcc_ecm240":		{},
+    "wzp6_ee_ccH_Hss_ecm240":		{},
+    "wzp6_ee_ccH_Hgg_ecm240":		{},
+    "wzp6_ee_ccH_HWW_ecm240":		{},
+    "wzp6_ee_ccH_HZZ_ecm240":		{},
+
+    "wzp6_ee_ssH_Htautau_ecm240":	{},
+    "wzp6_ee_ssH_Hbb_ecm240":		{},
+    "wzp6_ee_ssH_Hcc_ecm240":		{},
+    "wzp6_ee_ssH_Hss_ecm240":		{},
+    "wzp6_ee_ssH_Hgg_ecm240":		{},
+    "wzp6_ee_ssH_HWW_ecm240":		{},
+    "wzp6_ee_ssH_HZZ_ecm240":		{},
+
+    "wzp6_ee_qqH_Htautau_ecm240":	{},
+    "wzp6_ee_qqH_Hbb_ecm240":		{},
+    "wzp6_ee_qqH_Hcc_ecm240":		{},
+    "wzp6_ee_qqH_Hss_ecm240":		{},
+    "wzp6_ee_qqH_Hgg_ecm240":		{},
+    "wzp6_ee_qqH_HWW_ecm240":		{},
+    "wzp6_ee_qqH_HZZ_ecm240":		{},
+}
 
 #Input directory
 # Comment out when running over centrally produced events
 # Mandatory when running over privately produced events
-inputDir = "/ceph/salshamaily/haa4K_FCCee/sig_samples/"
+inputDir = "/ceph/sgiappic/HiggsCP/winter23/"
 
 # Output directory, default is local dir
-outputDir = "/ceph/salshamaily/haa4K_FCCee/all_samples/"
+outputDir = "/ceph/salshamaily/haa4K_FCCee/all_samples"
 
 #Additional/custom C++ functions
 includePaths = ["functions.h"]
@@ -133,15 +111,15 @@ class RDFanalysis():
 	def analysers(df):
 		df2 = (df
 	   
-	   	.Alias("Particle0",				"_Particle_parents.index")
-	   	.Alias("Particle1",				"_Particle_daughters.index")
+	   	.Alias("Particle0", "Particle#0.index")
+	   	.Alias("Particle1", "Particle#1.index")
 	   	
-	   	.Alias("MCRecoAssociations0",	"_RecoMCLink_from.index")
-	   	.Alias("MCRecoAssociations1",	"_RecoMCLink_to.index")
+	   	.Alias("MCRecoAssociations0",	"MCRecoAssociations#0.index")
+	   	.Alias("MCRecoAssociations1",	"MCRecoAssociations#1.index")
 	   	
-	   	.Alias("Photon0",				"Photon_objIdx.index")
-	   	.Alias("Electron0",				"Electron_objIdx.index")
-	   	.Alias("Muon0",					"Muon_objIdx.index")
+	   	.Alias("Photon0",	"Photon#0.index")
+	   	.Alias("Electron0",	"Electron#0.index")
+	   	.Alias("Muon0",		"Muon#0.index")
 	   	
 	   	### PARTICLES ###
 	   	.Define("FSGenParticles",					"FCCAnalyses::MCParticle::sel_genStatus(1)(Particle)") #final state particles
@@ -221,12 +199,12 @@ class RDFanalysis():
 	   	.Define("RecoElectron_theta",  	"ReconstructedParticle::get_theta(RecoElectrons)")
 	   	.Define("RecoElectron_phi",	  	"ReconstructedParticle::get_phi(RecoElectrons)") #polar angle in the transverse plane phi
 	   	.Define("RecoElectron_charge", 	"ReconstructedParticle::get_charge(RecoElectrons)")
-	   	.Define("RecoElectronTrack_absD0",		"return abs(ReconstructedParticle2Track::getRP2TRK_D0(RecoElectrons,_EFlowTrack_trackStates))")
-	   	.Define("RecoElectronTrack_absZ0", 		"return abs(ReconstructedParticle2Track::getRP2TRK_Z0(RecoElectrons,_EFlowTrack_trackStates))")
-	   	.Define("RecoElectronTrack_absD0sig",	"return abs(ReconstructedParticle2Track::getRP2TRK_D0_sig(RecoElectrons,_EFlowTrack_trackStates))") #significance
-	   	.Define("RecoElectronTrack_absZ0sig",	"return abs(ReconstructedParticle2Track::getRP2TRK_Z0_sig(RecoElectrons,_EFlowTrack_trackStates))")
-	   	.Define("RecoElectronTrack_D0cov",		"ReconstructedParticle2Track::getRP2TRK_D0_cov(RecoElectrons,_EFlowTrack_trackStates)") #variance (not sigma)
-	   	.Define("RecoElectronTrack_Z0cov",		"ReconstructedParticle2Track::getRP2TRK_Z0_cov(RecoElectrons,_EFlowTrack_trackStates)")
+	   	.Define("RecoElectronTrack_absD0",		"return abs(ReconstructedParticle2Track::getRP2TRK_D0(RecoElectrons,EFlowTrack_1))")
+	   	.Define("RecoElectronTrack_absZ0", 		"return abs(ReconstructedParticle2Track::getRP2TRK_Z0(RecoElectrons,EFlowTrack_1))")
+	   	.Define("RecoElectronTrack_absD0sig",	"return abs(ReconstructedParticle2Track::getRP2TRK_D0_sig(RecoElectrons,EFlowTrack_1))") #significance
+	   	.Define("RecoElectronTrack_absZ0sig",	"return abs(ReconstructedParticle2Track::getRP2TRK_Z0_sig(RecoElectrons,EFlowTrack_1))")
+	   	.Define("RecoElectronTrack_D0cov",		"ReconstructedParticle2Track::getRP2TRK_D0_cov(RecoElectrons,EFlowTrack_1)") #variance (not sigma)
+	   	.Define("RecoElectronTrack_Z0cov",		"ReconstructedParticle2Track::getRP2TRK_Z0_cov(RecoElectrons,EFlowTrack_1)")
 		
 		### MUONS ###
 		# all final state gen muons and antimuons
@@ -262,12 +240,12 @@ class RDFanalysis():
 		.Define("RecoMuon_theta",	"ReconstructedParticle::get_theta(RecoMuons)")
 		.Define("RecoMuon_phi",	 	"ReconstructedParticle::get_phi(RecoMuons)") #polar angle in the transverse plane phi
 		.Define("RecoMuon_charge",	"ReconstructedParticle::get_charge(RecoMuons)")
-		.Define("RecoMuonTrack_absD0",	  "return abs(ReconstructedParticle2Track::getRP2TRK_D0(RecoMuons,_EFlowTrack_trackStates))")
-		.Define("RecoMuonTrack_absZ0",	  "return abs(ReconstructedParticle2Track::getRP2TRK_Z0(RecoMuons,_EFlowTrack_trackStates))")
-		.Define("RecoMuonTrack_absD0sig", "return abs(ReconstructedParticle2Track::getRP2TRK_D0_sig(RecoMuons,_EFlowTrack_trackStates))") #significance
-		.Define("RecoMuonTrack_absZ0sig", "return abs(ReconstructedParticle2Track::getRP2TRK_Z0_sig(RecoMuons,_EFlowTrack_trackStates))")
-		.Define("RecoMuonTrack_D0cov",	  "ReconstructedParticle2Track::getRP2TRK_D0_cov(RecoMuons,_EFlowTrack_trackStates)") #variance (not sigma)
-		.Define("RecoMuonTrack_Z0cov",	  "ReconstructedParticle2Track::getRP2TRK_Z0_cov(RecoMuons,_EFlowTrack_trackStates)")
+		.Define("RecoMuonTrack_absD0",	  "return abs(ReconstructedParticle2Track::getRP2TRK_D0(RecoMuons,EFlowTrack_1))")
+		.Define("RecoMuonTrack_absZ0",	  "return abs(ReconstructedParticle2Track::getRP2TRK_Z0(RecoMuons,EFlowTrack_1))")
+		.Define("RecoMuonTrack_absD0sig", "return abs(ReconstructedParticle2Track::getRP2TRK_D0_sig(RecoMuons,EFlowTrack_1))") #significance
+		.Define("RecoMuonTrack_absZ0sig", "return abs(ReconstructedParticle2Track::getRP2TRK_Z0_sig(RecoMuons,EFlowTrack_1))")
+		.Define("RecoMuonTrack_D0cov",	  "ReconstructedParticle2Track::getRP2TRK_D0_cov(RecoMuons,EFlowTrack_1)") #variance (not sigma)
+		.Define("RecoMuonTrack_Z0cov",	  "ReconstructedParticle2Track::getRP2TRK_Z0_cov(RecoMuons,EFlowTrack_1)")
 		
 		### LEPTONS ###
 		.Define("RecoLeptons",			"ReconstructedParticle::merge(RecoElectrons, RecoMuons)")
@@ -283,13 +261,13 @@ class RDFanalysis():
         .Define("RecoLepton_theta",   	"ReconstructedParticle::get_theta(RecoLeptons)")
         .Define("RecoLepton_phi",     	"ReconstructedParticle::get_phi(RecoLeptons)") #polar angle in the transverse plane phi
         .Define("RecoLepton_charge",  	"ReconstructedParticle::get_charge(RecoLeptons)")
-        .Define("RecoLeptonTrack",		"ReconstructedParticle2Track::getRP2TRK(RecoLeptons, _EFlowTrack_trackStates)")
-        .Define("RecoLeptonTrack_absD0", 	"return abs(ReconstructedParticle2Track::getRP2TRK_D0(RecoLeptons,_EFlowTrack_trackStates))")
-        .Define("RecoLeptonTrack_absZ0", 	"return abs(ReconstructedParticle2Track::getRP2TRK_Z0(RecoLeptons,_EFlowTrack_trackStates))")
-        .Define("RecoLeptonTrack_absD0sig",	"return abs(ReconstructedParticle2Track::getRP2TRK_D0_sig(RecoLeptons,_EFlowTrack_trackStates))") #significance
-        .Define("RecoLeptonTrack_absZ0sig", "return abs(ReconstructedParticle2Track::getRP2TRK_Z0_sig(RecoLeptons,_EFlowTrack_trackStates))")
-        .Define("RecoLeptonTrack_D0cov", 	"ReconstructedParticle2Track::getRP2TRK_D0_cov(RecoLeptons,_EFlowTrack_trackStates)") #variance (not sigma)
-        .Define("RecoLeptonTrack_Z0cov", 	"ReconstructedParticle2Track::getRP2TRK_Z0_cov(RecoLeptons,_EFlowTrack_trackStates)")
+        .Define("RecoLeptonTrack",		"ReconstructedParticle2Track::getRP2TRK(RecoLeptons, EFlowTrack_1)")
+        .Define("RecoLeptonTrack_absD0", 	"return abs(ReconstructedParticle2Track::getRP2TRK_D0(RecoLeptons,EFlowTrack_1))")
+        .Define("RecoLeptonTrack_absZ0", 	"return abs(ReconstructedParticle2Track::getRP2TRK_Z0(RecoLeptons,EFlowTrack_1))")
+        .Define("RecoLeptonTrack_absD0sig",	"return abs(ReconstructedParticle2Track::getRP2TRK_D0_sig(RecoLeptons,EFlowTrack_1))") #significance
+        .Define("RecoLeptonTrack_absZ0sig", "return abs(ReconstructedParticle2Track::getRP2TRK_Z0_sig(RecoLeptons,EFlowTrack_1))")
+        .Define("RecoLeptonTrack_D0cov", 	"ReconstructedParticle2Track::getRP2TRK_D0_cov(RecoLeptons,EFlowTrack_1)") #variance (not sigma)
+        .Define("RecoLeptonTrack_Z0cov", 	"ReconstructedParticle2Track::getRP2TRK_Z0_cov(RecoLeptons,EFlowTrack_1)")
 		
 		### KAONS ###
 	   	.Define("GenKplus",			"FCCAnalyses::MCParticle::sel_genStatus(1)(FCCAnalyses::MCParticle::sel_pdgID(321, true)(Particle))")
@@ -334,13 +312,13 @@ class RDFanalysis():
 	   	.Define("RecoKplus_MassCut_pt", "FCCAnalyses::ZHfunctions::get_pt_tlv(RecoKplus_MassCut)")
 	   	# tracks
 	   	.Define("RecoKplus_TrackSel",		"RecoKplus[RecoKplus_tlv_mass>0.4 && RecoKplus_tlv_mass<0.6]")
-	   	.Define("RecoKplusTrack",			"ReconstructedParticle2Track::getRP2TRK(RecoKplus_TrackSel, _EFlowTrack_trackStates)")
-	   	.Define("RecoKplusTrack_absD0",		"return abs(ReconstructedParticle2Track::getRP2TRK_D0(RecoKplus_TrackSel,_EFlowTrack_trackStates))")
-	   	.Define("RecoKplusTrack_absZ0",		"return abs(ReconstructedParticle2Track::getRP2TRK_Z0(RecoKplus_TrackSel,_EFlowTrack_trackStates))")
-	   	.Define("RecoKplusTrack_absD0sig",	"return abs(ReconstructedParticle2Track::getRP2TRK_D0_sig(RecoKplus_TrackSel,_EFlowTrack_trackStates))") #significance
-	   	.Define("RecoKplusTrack_absZ0sig",	"return abs(ReconstructedParticle2Track::getRP2TRK_Z0_sig(RecoKplus_TrackSel,_EFlowTrack_trackStates))")
-	   	.Define("RecoKplusTrack_D0cov",		"ReconstructedParticle2Track::getRP2TRK_D0_cov(RecoKplus_TrackSel,_EFlowTrack_trackStates)") #variance (not sigma)
-	   	.Define("RecoKplusTrack_Z0cov",		"ReconstructedParticle2Track::getRP2TRK_Z0_cov(RecoKplus_TrackSel,_EFlowTrack_trackStates)")
+	   	.Define("RecoKplusTrack",			"ReconstructedParticle2Track::getRP2TRK(RecoKplus_TrackSel, EFlowTrack_1)")
+	   	.Define("RecoKplusTrack_absD0",		"return abs(ReconstructedParticle2Track::getRP2TRK_D0(RecoKplus_TrackSel,EFlowTrack_1))")
+	   	.Define("RecoKplusTrack_absZ0",		"return abs(ReconstructedParticle2Track::getRP2TRK_Z0(RecoKplus_TrackSel,EFlowTrack_1))")
+	   	.Define("RecoKplusTrack_absD0sig",	"return abs(ReconstructedParticle2Track::getRP2TRK_D0_sig(RecoKplus_TrackSel,EFlowTrack_1))") #significance
+	   	.Define("RecoKplusTrack_absZ0sig",	"return abs(ReconstructedParticle2Track::getRP2TRK_Z0_sig(RecoKplus_TrackSel,EFlowTrack_1))")
+	   	.Define("RecoKplusTrack_D0cov",		"ReconstructedParticle2Track::getRP2TRK_D0_cov(RecoKplus_TrackSel,EFlowTrack_1)") #variance (not sigma)
+	   	.Define("RecoKplusTrack_Z0cov",		"ReconstructedParticle2Track::getRP2TRK_Z0_cov(RecoKplus_TrackSel,EFlowTrack_1)")
 	   	
 	   	### KAON SELECTION ###
 	   	.Filter("RecoKplus_MassCut.size()==4 && (RecoKplus_charge.at(0)+RecoKplus_charge.at(1)+RecoKplus_charge.at(2)+RecoKplus_charge.at(3))==0")
