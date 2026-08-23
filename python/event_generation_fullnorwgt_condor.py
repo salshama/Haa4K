@@ -14,21 +14,21 @@ import hashlib
 import os
 import itertools
 
-### CONFIGURATION ###
-alp_scan: dict[float, list[float]] = {
-            0.05:	[1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6],
-            0.1:    [1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6],
-            0.5:    [1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6],
-            1.0:    [1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6],
-            1.5:    [1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6],
-            5.0:    [1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6],
-            10.0:	[1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6],
-            20.0:	[1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6],
-            30.0:	[1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6],
-            40.0:	[1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6],
-            50.0:	[1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6],
-            60.0:	[1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6],
-}
+SCAN_MODE = "mass_only"   # <-- flip this to "full" to go back to the original behavior
+CAH_FIXED = 1.0
+
+# masses to scan (GeV)
+alp_masses = [0.05, 0.1, 0.5, 1.0, 1.5, 5.0, 10.0, 20.0, 30.0, 40.0, 50.0, 60.0]
+
+# coupling values to scan (only used when SCAN_MODE == "full")
+alp_cah = [1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6]
+
+if SCAN_MODE == "full":
+    alp_scan: dict[float, list[float]] = {ma: alp_cah for ma in alp_masses}
+elif SCAN_MODE == "mass_only":
+    alp_scan: dict[float, list[float]] = {ma: [CAH_FIXED] for ma in alp_masses}
+else:
+    raise ValueError(f"Unknown SCAN_MODE: {SCAN_MODE!r} (use 'full' or 'mass_only')")
 
 z_channels: dict[str, str]	= {
             "ee":	"e+ e-",
@@ -42,36 +42,29 @@ ncpus			= 1
 request_sec		= 28800
 nevents    		= 500000
 use_condor		= True
-skip_mg			= True
+skip_mg			= False
 skip_existing	= False
 dry_run			= False
 
 ### PATHS ###
 base_dir        = "/ceph/salshamaily/haa4K_FCCee/"
-delphes_tcl		= "/ceph/sgiappic/card_IDEA.tcl"
-edm4hep_cfg		= base_dir + "edm4hep_output_config.tcl" # steers EDM4HEP output
+delphes_tcl		= base_dir + "delphes/card_IDEA.tcl"
+edm4hep_cfg		= base_dir + "delphes/edm4hep_output_config.tcl" # steers EDM4HEP output
 condor_dir		= base_dir + "HTCondor/" # HTCondor submission files & logs
 mg_dir    		= base_dir + "madgraph_3.7.1/" # path for lhe files
-delphes_dir		= base_dir + "delphes/" # delphes .root output
+delphes_dir		= base_dir + "delphes/root_files/" # delphes .root output
 local_setup		= base_dir + "setup_local.sh" # local path for stack
 generation_dir	= base_dir + "generation/" # cards for all samples
 
 ### FUNCTIONS ###
 def make_dir(path: dir):
-    """
-    - Creates directory if it does not exist then chmod +x
-    """
     os.makedirs(path, exist_ok=True)
     os.system(f"chmod -R +x {path}")
     
 def format_cah(cah: float) -> str:
-	"""
-	- Converts a coupling value to string and uses scientific notation
-	"""
 	s	= f"{cah:.0e}"
 	s	= s.replace("e-0", "em")
 	s	= s.replace("e-", "em")
-	
 	return s
     
 def point_tag(channel: str, ma: float, cah: float) -> str:
@@ -79,7 +72,7 @@ def point_tag(channel: str, ma: float, cah: float) -> str:
     - Job label following for one (channel, mass) point
     - Returns:
     specific naming convention like the process:
-    mgp8_ee_{z_channel}H_HAlpAlp_m1p5_ecm240 -> ma = 1.5
+    mgp8_ee_{z_channel}H_HAlpAlp_m1p5_ecm240 -> ma = 1.5 GeV
     - Args:
     channel: str, z channel
     ma: float, alp mass
@@ -121,11 +114,9 @@ def write_mg_card(channel: str, ma: float, cah: float, gen_dir: str, mg_out_dir:
     content +=	'set no_parton_cut\n\n'
     content +=	'# ALP model parameters\n'
     content +=	f'set malp {ma}		# ALP mass [GeV]\n'
-    content +=	f'set CAH  {cah}	# Higgs-ALP coupling [GeV^-1]\n'
-    content +=	f'set czh5 0\n'
-    content	+=	f'set param_card DECAY 9000005 Auto\n\n'
+    content +=	f'set CAH  {cah}	# Higgs-ALP coupling [GeV^-1]\n\n'
     content +=	f'set nevents {nevents}\n'
-    content +=	'done\n\n'
+    content +=	'done'
     
     m		= f"{ma}".replace(".", "p")
     c		= format_cah(cah)
@@ -168,10 +159,10 @@ def write_pythia_card(ma: float, cah: float, gen_dir: str, lhe_path: str) -> str
     content	+=	'PartonLevel:FSR = on\n'
     content	+=	'\n'
     content	+=	'! decay of ALP\n'
-    content	+=	f'9000005:all = ALP ALP 0 0 0 {ma} __ALP_WIDTH__ 0.05 75.0 0\n'
-    content	+=	'9000005:oneChannel = 1 1.000 101 321 -321\n'
+    content	+=	f'9000005:all = ALP void 0 0 0 {ma} __ALP_WIDTH__ 0.1 60.0 0\n'
+    content	+=	'9000005:oneChannel = 1 1.000 0 321 -321\n'
     content	+=	'9000005:mayDecay = on\n'
-    content	+=	'9000005:isResonance = on\n'
+    content	+=	'9000005:isResonance = off\n'
     content	+=	'9000005:onMode = off      ! turn off all channels first\n'
     content	+=	'9000005:onIfAny = 321     ! then re-enable channels with K+\n'
     content	+=	'\n'
@@ -309,9 +300,13 @@ def run(dry_run: bool=True, skip_existing: bool=True, use_condor: bool=True, ski
     ntotal		= len(z_channels) * len(scan_points)
 
     print('ALP production scan — FCC-ee @ sqrt(s) = 240 GeV\n')
+    print(f'Scan mode:		{SCAN_MODE}')
     print(f'Z channels:		{list(z_channels.keys())}')
     print(f'Masses [GeV]:	{list(alp_scan.keys())}')
-    print(f'CAH values:		{list(list(alp_scan.values())[0])}')
+    if SCAN_MODE == "mass_only":
+        print(f'CAH (fixed):	{CAH_FIXED}')
+    else:
+        print(f'CAH values:		{list(list(alp_scan.values())[0])}')
     print(f'Events/job:		{nevents:,}')
     print(f'Total jobs:		{ntotal:,}')
     print(f'Dry run:		{dry_run}\n')

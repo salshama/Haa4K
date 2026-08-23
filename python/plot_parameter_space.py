@@ -1,212 +1,228 @@
-#!/usr/bin/env pyyhon3
+#!/usr/bin/env python3
 """
-ctau: proper decay length from ALP total width
-fdec: probability that both back-to-back ALPs from h>aa decay before traveling a distance ldet
-xsec: theoretical cross-section from MG sample cards
-n_events: xsec * int_lumi * fdec
+Parameter space over (m_a, ctau) where n_events = xsec * int_lumi * fdec
 """
+
 import re
 import warnings
 from pathlib import Path
+
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib.lines import Line2D
-from scipy.interpolate import griddata
+from matplotlib.colors import LogNorm
 
-malp	= [0.05, 0.1, 0.5, 1.0, 1.5, 5.0, 10, 20, 30]
-cah_exp = [1, 2, 3, 4, 5, 6]
-cah_val = [10.0**(-exp) for exp in cah_exp]
+malp = [0.05, 0.1, 0.5, 1.0, 1.5, 5.0, 10, 20, 30, 40, 50, 60]
 
-sqrt_s			= 240.0
-mh				= 125.0
-mz				= 91.2
-ldet			= 2.0 # effective detector length used for decays inside/outside detector
-int_lumi		= 10.8e6 # pb^-1
-n_events_thresh	= 3
-hbarc			= 1.973269804e-16 # gev * m
-channels		= ["ee", "mumu"]
-base_dir 		= Path("/ceph/salshamaily/haa4K_FCCee/madgraph_3.7.1")
-out_plot_path	= "/ceph/salshamaily/haa4K_FCCee/analysis/plots_output/param_space/"
+# ctau values as sampled on disk, with their numeric value in mm
+CTAU_LABELS = ["1mm", "10mm", "1m", "2m"]
+CTAU_MM = {"1mm": 1.0, "10mm": 10.0, "1m": 1000.0, "2m": 2000.0}
 
-def format_mass_tag(malp):
-	s = f"{malp:g}"
+sqrt_s   = 240.0
+mh       = 125.0
+mz       = 91.2
+ldet     = 2.0          # effective detector length used for decays inside/outside detector [m]
+int_lumi = 10.8e6       # pb^-1
+n_events_thresh = 1
+channels = ["ee", "mumu"]
+
+base_dir      = Path("/ceph/salshamaily/haa4K_FCCee/madgraph_3.7.1")
+out_plot_path = Path("/ceph/salshamaily/haa4K_FCCee/analysis/plots_output/param_space/")
+
+# hbar*c in GeV*mm (hbar*c = 1.973269804e-16 GeV*m -> *1000 mm/m)
+HBAR_C_GEV_MM = 1.973269804e-13
+
+def alp_width_from_ctau(ctau_mm: float) -> float:
+	"""Gamma = 1 / ctau -> converted from mm to natural units"""
+	ctau_natural = ctau_mm / HBAR_C_GEV_MM   # GeV^-1
+	return 1.0 / ctau_natural                # GeV
+
+def format_mass_tag(malp_val):
+	s = f"{malp_val:g}"
 	if "." not in s:
 		s += ".0"
 	return "m" + s.replace(".", "p")
-	
-def format_cah_tag(cah_exp):
-	return f"cah1em{cah_exp}"
-	
-def run_dir(channel, malp, cah_exp):
-	mass_tag	= format_mass_tag(malp)
-	cah_tag		= format_cah_tag(cah_exp)
-	dirname		= f"mgp8_ee_{channel}H_HAlpAlp_{mass_tag}_{cah_tag}_ecm240"
+
+def run_dir(channel, malp_val, ctau_label):
+	mass_tag = format_mass_tag(malp_val)
+	dirname = f"mgp8_ee_{channel}H_HAlpAlp_{mass_tag}_ecm240"
 	return base_dir / dirname
-	
-def events_dir(channel, malp, cah_exp):
-	return run_dir(channel, malp, cah_exp)/ "Events" / "run_01"
-	
-def cards_dir(channel, malp, cah_exp):
-	return run_dir(channel, malp, cah_exp) / "Cards"
-	
+
+def events_dir(channel, malp_val, ctau_label):
+	return run_dir(channel, malp_val, ctau_label) / "Events" / "run_01"
+
 def read_xsec(banner_path):
-	banner_path	= Path(banner_path)
+	banner_path = Path(banner_path)
 	if not banner_path.exists():
 		return np.nan
-		
-	text	= banner_path.read_text()
-	m		= re.search(r"Integrated weight \(pb\)\s*:\s*([0-9.eE+\-]+)", text)
+
+	text = banner_path.read_text()
+	m = re.search(r"Integrated weight \(pb\)\s*:\s*([0-9.eE+\-]+)", text)
 	if not m:
 		warnings.warn(f"Could not find integrated weight in {banner_path}")
 		return np.nan
 	return float(m.group(1))
-	
-def read_walp(param_card_path, alp_pdg=9000005):
-	param_card_path	= Path(param_card_path)
-	if not param_card_path.exists():
-		return np.nan
-	text	= param_card_path.read_text()
-	pattern	= rf"DECAY\s+{alp_pdg}\s+([0-9.eE+\-]+)"
-	m		= re.search(pattern, text)
-	if not m:
-		warnings.warn(f"Could not find ALP width in {param_card_path}")
-		return np.nan
-	return float(m.group(1))
-	
+
 def higgs_lab_kin(sqrt_s, mh, mz):
-	Eh			= (sqrt_s ** 2 + mh ** 2 - mz ** 2) / (2.0 * sqrt_s)
-	ph			= np.sqrt(max(Eh ** 2 - mh ** 2, 0.0))
-	betah		= ph/ Eh
-	gammah		= Eh/mh
+	Eh     = (sqrt_s ** 2 + mh ** 2 - mz ** 2) / (2.0 * sqrt_s)
+	ph     = np.sqrt(max(Eh ** 2 - mh ** 2, 0.0))
+	betah  = ph / Eh
+	gammah = Eh / mh
 	return Eh, ph, betah, gammah
-	
+
 def alp_rest_kin(mh, ma):
-	Estar	= mh / 2.0
-	pstar2	= Estar**2 - ma**2
+	Estar  = mh / 2.0
+	pstar2 = Estar ** 2 - ma ** 2
 	if pstar2 <= 0:
 		return Estar, 0.0
 	return Estar, np.sqrt(pstar2)
-	
+
 def alp_lab_kin(betah, gammah, Estar, pstar, costheta):
 	pz = gammah * (pstar * costheta + betah * Estar)
 	pt = pstar * np.sqrt(np.clip(1.0 - costheta ** 2, 0.0, None))
-	return np.sqrt(pz**2 + pt**2)
-	
-def threshold_cah(xsec_pb_col, cah_vals, fdec_val, n_thresh, int_lumi):
-	valid = np.isfinite(xsec_pb_col) & (xsec_pb_col > 0)
-	if not np.any(valid) or not np.isfinite(fdec_val) or fdec_val <= 0:
-		return np.nan
-	cah_ref  = np.asarray(cah_vals)[valid][0]
-	xsec_ref = xsec_pb_col[valid][0]
-	denom = int_lumi * xsec_ref * fdec_val
-	if denom <= 0:
-		return np.nan
-	return cah_ref * np.sqrt(n_thresh / denom)
-	
+	return np.sqrt(pz ** 2 + pt ** 2)
+
 def f_dec(ma, ctau_m, sqrt_s, mh, mz, ldet, n_costheta=4000):
+	"""alp decay probability before traveling distance ldet with ctau [m]"""
 	if not np.isfinite(ctau_m) or ctau_m <= 0:
 		return np.nan
 	_, _, betah, gammah = higgs_lab_kin(sqrt_s, mh, mz)
-	Estar, pstar		= alp_rest_kin(mh, ma)
+	Estar, pstar = alp_rest_kin(mh, ma)
 	if pstar == 0.0:
 		return np.nan
-	costheta 	= np.linspace(-1.0, 1.0, n_costheta)
-	p1			= alp_lab_kin(betah,gammah, Estar, pstar, costheta)
-	p2			= alp_lab_kin(betah, gammah, Estar, pstar, -costheta)
-	L1			= (p1/ma) * ctau_m
-	L2			= (p2/ma) * ctau_m
-	P1			= 1.0 - np.exp(-ldet/L1)
-	P2			= 1.0 - np.exp(-ldet/L2)
-	
-	integrand	= P1*P2
-	trapz_fn	= getattr(np, "trapezoid", None) or np.trapz
+	costheta = np.linspace(-1.0, 1.0, n_costheta)
+	p1 = alp_lab_kin(betah, gammah, Estar, pstar, costheta)
+	p2 = alp_lab_kin(betah, gammah, Estar, pstar, -costheta)
+	L1 = (p1 / ma) * ctau_m
+	L2 = (p2 / ma) * ctau_m
+	P1 = 1.0 - np.exp(-ldet / L1)
+	P2 = 1.0 - np.exp(-ldet / L2)
+
+	integrand = P1 * P2
+	trapz_fn = getattr(np, "trapezoid", None) or np.trapz
 	return 0.5 * trapz_fn(integrand, costheta)
-	
+
 def build_grid():
-	n_malp		= len(malp)
-	n_cah		= len(cah_val)
-	xsec_pb		= np.zeros((n_cah, n_malp))
-	xsec_found	= np.zeros((n_cah, n_malp), dtype=bool)
-	walp		= np.full((n_cah, n_malp), np.nan)
-	
-	for i_c, cah_exp_val in enumerate(cah_exp):
+	n_malp = len(malp)
+	n_ctau = len(CTAU_LABELS)
+
+	xsec_pb    = np.zeros((n_ctau, n_malp))
+	xsec_found = np.zeros((n_ctau, n_malp), dtype=bool)
+
+	for i_c, ctau_label in enumerate(CTAU_LABELS):
 		for i_m, malp_val in enumerate(malp):
 			for channel in channels:
-				edir		= events_dir(channel, malp_val, cah_exp_val)
-				cdir		= cards_dir(channel, malp_val, cah_exp_val)
-				banner		= edir / "run_01_tag_1_banner.txt"
-				param_card	= cdir / "param_card.dat"
+				edir   = events_dir(channel, malp_val, ctau_label)
+				banner = edir / "run_01_tag_1_banner.txt"
 				if not banner.exists():
 					print(f"MISSING BANNER: {banner}")
-				xsec		= read_xsec(banner)
+				xsec = read_xsec(banner)
 				if np.isfinite(xsec):
-					xsec_pb[i_c, i_m]		+= xsec
-					xsec_found[i_c, i_m]	= True
-				if not np.isfinite(walp[i_c, i_m]):
-					walp[i_c, i_m]			= read_walp(param_card)
-	xsec_pb[~xsec_found]	= np.nan
-	ctau_m					= np.full(n_malp, np.nan)
-	for i_m in range(n_malp):
-		col			= walp[:, i_m]
-		valid		= col[np.isfinite(col) & (col>0)]
-		if len(valid)==0:
-			continue
-		gamma_tot	= valid[0]
-		ctau_m[i_m]	= hbarc / gamma_tot
-	fdec_m			= np.array([f_dec(ma, ctau_m[i_m], sqrt_s, mh, mz, ldet) for i_m, ma in enumerate(malp)])
-	n_events		= int_lumi * xsec_pb * fdec_m[np.newaxis, :]
-	return n_events, ctau_m, fdec_m, xsec_pb
+					xsec_pb[i_c, i_m]    += xsec
+					xsec_found[i_c, i_m]  = True
+	xsec_pb[~xsec_found] = np.nan
 
-def make_plot(n_events, xsec_pb, fdec_m, out_dir="/ceph/salshamaily/haa4K_FCCee/analysis/plots_output/param_space/", out_name="alp_parameter_space"):
-	out_dir			= Path(out_dir)
-	out_dir.mkdir(parents=True,exist_ok=True)	
-	mass_flat		= np.tile(malp, len(cah_val))
-	log_cah_flat	= np.repeat(np.log10(cah_val), len(malp))
-	cah_thresh		= np.array([
-	threshold_cah(xsec_pb[:, i_m], cah_val, fdec_m[i_m], n_events_thresh, int_lumi)
-	
-	for i_m in range(len(malp))])
-	valid_thresh	= np.isfinite(cah_thresh) & (cah_thresh > 0)
-		
-	fig, ax			= plt.subplots(figsize=(8,8))
-	
-	ax.fill_between(
-	np.array(malp)[valid_thresh],
-	np.log10(cah_thresh[valid_thresh]),
-	np.log10(min(cah_val)) if False else max(np.log10(cah_val)),
-	color="#4e7b37", alpha=0.25,)
-	
-	ax.plot(
-	np.array(malp)[valid_thresh],
-	np.log10(cah_thresh[valid_thresh]),
-	color="#89c262", linewidth=3, linestyle="-",)
-	
-	ax.scatter(mass_flat, log_cah_flat, marker='x', c='k', s=25, zorder=5)
-	
-	ax.set_xlabel(r"$m_a$ [GeV]", fontsize=13)
-	ax.set_ylabel(r"$\log_{10} C_{ah}$", fontsize=13)
-	title=(
-	r"$e^+e^-\to ZH,\ H\to aa\to K^{+}K^{-}K^{+}K^{-},\ Z\to\ell\ell$"
-	f"\n$\\sqrt{{s}}={sqrt_s:.0f}$ GeV, "
-	rf"$\mathcal{{L}}={int_lumi/1e6:.1f}\times 10^{{6}}\,\mathrm{{pb}}^{{-1}}$")
-	ax.set_title(title, fontsize=16)
-	ax.tick_params(direction='out', labelsize=13)
-	legend_line=Line2D([0],[0],color="#89c262", lw=3)
-	ax.legend(
-	[legend_line],
-	[rf"$N_{{\rm events}} = {n_events_thresh}$"],
-	loc='lower right', fontsize=13,)
-	
+	ctau_mm_arr = np.array([CTAU_MM[c] for c in CTAU_LABELS])
+	ctau_m_arr  = ctau_mm_arr / 1000.0
+	width_arr   = np.array([alp_width_from_ctau(c) for c in ctau_mm_arr])  # GeV, one per ctau
+
+	fdec = np.full((n_ctau, n_malp), np.nan)
+	for i_c, ctau_m_val in enumerate(ctau_m_arr):
+		for i_m, ma in enumerate(malp):
+			fdec[i_c, i_m] = f_dec(ma, ctau_m_val, sqrt_s, mh, mz, ldet)
+
+	n_events = int_lumi * xsec_pb * fdec
+	return n_events, xsec_pb, fdec, ctau_mm_arr, width_arr
+
+def _draw_heatmap(vals, x_ticklabels, y_ticklabels, x_axis_label, y_axis_label,
+                   out_dir, out_name, x_rotation=45):
+	out_dir = Path(out_dir)
+	out_dir.mkdir(parents=True, exist_ok=True)
+
+	n_rows, n_cols = vals.shape
+
+	fig, ax = plt.subplots(figsize=(10, 5.5))
+
+	plot_vals = np.where(np.isfinite(vals) & (vals > 0), vals, np.nan)
+	if np.all(np.isnan(plot_vals)):
+		warnings.warn("No valid n_events values to plot.")
+		plt.close(fig)
+		return
+
+	im = ax.imshow(
+		plot_vals,
+		aspect="auto",
+		origin="lower",
+		norm=LogNorm(vmin=np.nanmin(plot_vals), vmax=np.nanmax(plot_vals)),
+		cmap="viridis",
+		extent=[-0.5, n_cols - 0.5, -0.5, n_rows - 0.5],
+	)
+
+	vmax = np.nanmax(plot_vals)
+	for i in range(n_rows):
+		for j in range(n_cols):
+			val = vals[i, j]
+			if np.isfinite(val) and val > 0:
+				txt_color = "white" if val < vmax ** 0.5 else "black"
+				ax.text(j, i, f"{val:.1e}", ha="center", va="center",
+				         fontsize=7, color=txt_color)
+
+	ax.set_xticks(range(n_cols))
+	ax.set_xticklabels(x_ticklabels, rotation=x_rotation, ha="right")
+	ax.set_yticks(range(n_rows))
+	ax.set_yticklabels(y_ticklabels)
+
+	ax.set_xlabel(x_axis_label, fontsize=12)
+	ax.set_ylabel(y_axis_label, fontsize=12)
+
+	title = (
+		r"$e^+e^-\to ZH,\ H\to aa\to K^{+}K^{-}K^{+}K^{-},\ Z\to\ell\ell$"
+		f"\n$\\sqrt{{s}}={sqrt_s:.0f}$ GeV, "
+		rf"$\mathcal{{L}}={int_lumi/1e6:.1f}\times 10^{{6}}\,\mathrm{{pb}}^{{-1}}$"
+	)
+	ax.set_title(title, fontsize=13)
+
+	cbar = fig.colorbar(im, ax=ax, pad=0.02)
+	cbar.set_label(r"$N_{\rm events}$", fontsize=12)
+
 	fig.tight_layout()
-	fig.savefig(out_dir/f"{out_name}.png", dpi=300)
-	fig.savefig(out_dir/f"{out_name}.pdf")
+	fig.savefig(out_dir / f"{out_name}.png", dpi=300)
+	fig.savefig(out_dir / f"{out_name}.pdf")
 	print(f"Saved plot to {out_dir / out_name}.[pdf|png]")
-	
+	plt.close(fig)
+
+def make_plot_2d_ctau(n_events, ctau_mm_arr, malp,
+                       out_dir=out_plot_path, out_name="alp_parameter_space_2d_ctau"):
+	x_ticklabels = [f"{m:g}" for m in malp]
+	_draw_heatmap(n_events, x_ticklabels, CTAU_LABELS,
+	              r"$m_a$ [GeV]", r"$c\tau_a$",
+	              out_dir, out_name)
+
+def make_plot_2d_gamma(n_events, width_arr, malp,
+                        out_dir=out_plot_path, out_name="alp_parameter_space_2d_gamma"):
+	n_events_T = n_events.T  # rows: malp, columns: ctau/gamma
+	y_ticklabels = [f"{m:g}" for m in malp]
+	x_ticklabels = [f"{w:.2e}" for w in width_arr]
+	_draw_heatmap(n_events_T, x_ticklabels, y_ticklabels,
+	              r"$\Gamma_a$ [GeV]", r"$m_a$ [GeV]",
+	              out_dir, out_name)
+
 if __name__ == "__main__":
-	n_events, ctau_m, fdec_m, xsec_pb = build_grid()
-	print("\nm_a [GeV]  :  c*tau_a [m]  :  f_dec")
-	for ma, ct, fd in zip(malp, ctau_m, fdec_m):
-		ct_str = f"{ct:.3e}" if np.isfinite(ct) else "nan"
-		fd_str = f"{fd:.3e}" if np.isfinite(fd) else "nan"
-		print(f"{ma:>9.2f}  :  {ct_str:>11}  :  {fd_str}")
-	make_plot(n_events, xsec_pb, fdec_m)
+	n_events, xsec_pb, fdec, ctau_mm_arr, width_arr = build_grid()
+
+	print("\nctau     :  Gamma [GeV]")
+	for c_label, c_mm, w in zip(CTAU_LABELS, ctau_mm_arr, width_arr):
+		print(f"{c_label:>8} :  {w:.3e}")
+
+	print("\nm_a [GeV]  |  ctau  |  fdec  |  xsec [pb]  |  n_events")
+	for i_c, c_label in enumerate(CTAU_LABELS):
+		for i_m, ma in enumerate(malp):
+			fd  = fdec[i_c, i_m]
+			xs  = xsec_pb[i_c, i_m]
+			nev = n_events[i_c, i_m]
+			fd_str  = f"{fd:.3e}"  if np.isfinite(fd)  else "nan"
+			xs_str  = f"{xs:.3e}"  if np.isfinite(xs)  else "nan"
+			nev_str = f"{nev:.3e}" if np.isfinite(nev) else "nan"
+			print(f"{ma:>9.2f}  |  {c_label:>5}  |  {fd_str:>10}  |  {xs_str:>10}  |  {nev_str}")
+
+	make_plot_2d_ctau(n_events, ctau_mm_arr, malp)
+	make_plot_2d_gamma(n_events, width_arr, malp)
