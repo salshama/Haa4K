@@ -799,6 +799,11 @@ class RDFanalysis():
 				"alp_1_pz",
 				"alp_1_eta",
 				"alp_1_phi",
+								
+				"dm_12",
+				"dm_13",
+				"dm_14",
+				"mass_diff_min",
 				
 				# RECO VERTEX
 				"RecoLeptonIP_p4",
@@ -812,7 +817,6 @@ class RDFanalysis():
 				"RecoKplusIP_pz",
 				
 				"RecoIP_Lxyz",
-				"mass_diff_min",
 
 				# RECO EMISS
 				"RecoEmiss_e",

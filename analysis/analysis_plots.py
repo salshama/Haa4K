@@ -1,6 +1,5 @@
 import os
 import ROOT
-import colorsys
 
 # global parameters
 intLumi			= 10.8e6 #pb^-1
@@ -20,8 +19,8 @@ yaxis			= ['log']
 stacksig		= ['nostack']
 stackbkg		= ['stack']
 legendCoord		= [0.68,0.55,0.96,0.88]
-# plotStatUnc	= True ### to include statistical uncertainty ###
-splitLeg		= True ### to split legend for backgrounds and signals ###
+# plotStatUnc	= True
+splitLeg		= True
 
 variables = [
 
@@ -236,6 +235,11 @@ variables = [
 	"alp_1_pz",
 	"alp_1_eta",
 	"alp_1_phi",
+	
+	"dm_12",
+	"dm_13",
+	"dm_14",
+	"mass_diff_min",
 
 	"RecoEmiss_e",
 	"RecoEmiss_mass",
@@ -259,23 +263,32 @@ extralabel["RecoHiggsMassCut"] = "m_{H} > 120 GeV"
 # SIGNAL #
 ##########
 
-#   ALL_MASSES = ["0p05","0p1","0p5","1p0","1p5","5p0",
-#                 "10p0","20p0","30p0","40p0","50p0","60p0"]
-#   ALL_CTAUS  = ["1mm","10mm","1m","2m"]
-
 masses = ["10p0", "30p0", "60p0"]
 ctaus  = ["1mm", "1m"]
+
+import colorsys
 
 def _hex_from_hls(h_deg, l, s=0.65):
     h = (h_deg % 360) / 360.0
     r, g, b = colorsys.hls_to_rgb(h, l, s)
     return f"#{int(round(r*255)):02x}{int(round(g*255)):02x}{int(round(b*255)):02x}"
 
-SIGNAL_HUE = 130  # green
+SIGNAL_COLOR_HEX = {
+    "red":     "#e6194b",
+    "blue":    "#4363d8",
+    "magenta": "#f032e6",
+    "orange":  "#f58231",
+    "green":   "#3cb44b",
+}
+SIGNAL_COLOR_ORDER = ["red", "blue", "magenta", "orange", "green"]
 
-def signal_color_hex(index, n_total):
-    lightness = 0.20 + 0.55 * (index / (n_total - 1)) if n_total > 1 else 0.35
-    return _hex_from_hls(SIGNAL_HUE, lightness, s=0.70)
+SIGNAL_POINTS = [
+    ("10p0", "1mm"),
+    ("60p0", "1mm"),
+    ("10p0", "1m"),
+    ("60p0", "1m"),
+    ("30p0", "10mm"),
+]
 
 colors = {}
 legend = {}
@@ -283,37 +296,31 @@ plots = {}
 
 plots['HAlpAlp'] = {'signal': {}, 'backgrounds': {}}
 
-n_signal_total = len(masses) * len(ctaus)
-idx = 0
-for m in masses:
-    for c in ctaus:
-        key = f"ee_llH_HAlpAlp_m{m}_ctau{c}"
-        proc_ee   = f"mgp8_ee_eeH_HAlpAlp_m{m}_ecm240_ctau{c}"
-        proc_mumu = f"mgp8_ee_mumuH_HAlpAlp_m{m}_ecm240_ctau{c}"
-        plots['HAlpAlp']['signal'][key] = [proc_ee, proc_mumu]
-        colors[key] = ROOT.TColor.GetColor(signal_color_hex(idx, n_signal_total))
-        legend[key] = f"e^{{+}}e^{{-}}#rightarrow l^{{+}}l^{{-}}H, m_{{a}}={m.replace('p','.')} GeV, c#tau={c}"
-        idx += 1
+for i, (m, c) in enumerate(SIGNAL_POINTS):
+    key = f"ee_llH_HAlpAlp_m{m}_ctau{c}"
+    proc_ee   = f"mgp8_ee_eeH_HAlpAlp_m{m}_ecm240_ctau{c}"
+    proc_mumu = f"mgp8_ee_mumuH_HAlpAlp_m{m}_ecm240_ctau{c}"
+    plots['HAlpAlp']['signal'][key] = [proc_ee, proc_mumu]
+    color_name = SIGNAL_COLOR_ORDER[i % len(SIGNAL_COLOR_ORDER)]
+    colors[key] = ROOT.TColor.GetColor(SIGNAL_COLOR_HEX[color_name])
+    legend[key] = f"e^{{+}}e^{{-}}#rightarrow l^{{+}}l^{{-}}H, m_{{a}}={m.replace('p','.')} GeV, c#tau={c}"
 
 #### Alternative: keep e/mu channels separate (2x the legend rows) ####
-
-# idx = 0
-# for m in masses:
-#     for c in ctaus:
-#         hexcode = signal_color_hex(idx, n_signal_total)
+# for i, (m, c) in enumerate(SIGNAL_POINTS):
+#     color_name = SIGNAL_COLOR_ORDER[i % len(SIGNAL_COLOR_ORDER)]
+#     hexcode = SIGNAL_COLOR_HEX[color_name]
 #
-#         key_ee = f"ee_eeH_HAlpAlp_m{m}_ctau{c}"
-#         proc_ee = f"mgp8_ee_eeH_HAlpAlp_m{m}_ecm240_ctau{c}"
-#         plots['HAlpAlp']['signal'][key_ee] = [proc_ee]
-#         colors[key_ee] = ROOT.TColor.GetColor(hexcode)
-#         legend[key_ee] = f"e^{{+}}e^{{-}}#rightarrow e^{{+}}e^{{-}}H, m_{{a}}={m.replace('p','.')} GeV, c#tau={c}"
+#     key_ee = f"ee_eeH_HAlpAlp_m{m}_ctau{c}"
+#     proc_ee = f"mgp8_ee_eeH_HAlpAlp_m{m}_ecm240_ctau{c}"
+#     plots['HAlpAlp']['signal'][key_ee] = [proc_ee]
+#     colors[key_ee] = ROOT.TColor.GetColor(hexcode)
+#     legend[key_ee] = f"e^{{+}}e^{{-}}#rightarrow e^{{+}}e^{{-}}H, m_{{a}}={m.replace('p','.')} GeV, c#tau={c}"
 #
-#         key_mumu = f"ee_mumuH_HAlpAlp_m{m}_ctau{c}"
-#         proc_mumu = f"mgp8_ee_mumuH_HAlpAlp_m{m}_ecm240_ctau{c}"
-#         plots['HAlpAlp']['signal'][key_mumu] = [proc_mumu]
-#         colors[key_mumu] = ROOT.TColor.GetColor(hexcode)
-#         legend[key_mumu] = f"e^{{+}}e^{{-}}#rightarrow #mu^{{+}}#mu^{{-}}H, m_{{a}}={m.replace('p','.')} GeV, c#tau={c}"
-#         idx += 1
+#     key_mumu = f"ee_mumuH_HAlpAlp_m{m}_ctau{c}"
+#     proc_mumu = f"mgp8_ee_mumuH_HAlpAlp_m{m}_ecm240_ctau{c}"
+#     plots['HAlpAlp']['signal'][key_mumu] = [proc_mumu]
+#     colors[key_mumu] = ROOT.TColor.GetColor(hexcode)
+#     legend[key_mumu] = f"e^{{+}}e^{{-}}#rightarrow #mu^{{+}}#mu^{{-}}H, m_{{a}}={m.replace('p','.')} GeV, c#tau={c}"
 
 ##############
 # BACKGROUND #
@@ -341,25 +348,16 @@ bkg_groups["ZH_other"] = [
     for hdecay in zh_hdecays
 ]
 
-petroff10_hex = [
-    "#3f90da",  # blue
-    "#ffa90e",  # amber
-    "#bd1f01",  # red
-    "#94a4a2",  # grey
-    "#832db6",  # purple
-    "#a96b59",  # brown
-    "#e76300",  # orange
-    "#b9ac70",  # khaki
-    "#717581",  # grey
-    "#92dadd",  # teal
-]
+BKG_GREY_LMIN = 0.20
+BKG_GREY_LMAX = 0.85
 
-bkg_colors_hex = dict(zip(bkg_groups.keys(), petroff10_hex))
+def bkg_color_hex(index, n_total):
+    lightness = BKG_GREY_LMIN + (BKG_GREY_LMAX - BKG_GREY_LMIN) * (index / (n_total - 1)) \
+        if n_total > 1 else 0.5
+    return _hex_from_hls(0, lightness, s=0.0)
 
-bkg_colors_hex['ZZ'], bkg_colors_hex['Zqq'] = bkg_colors_hex['Zqq'], bkg_colors_hex['ZZ']
-
-bkg_colors_hex['nuenueZ']  = "#b9ac70"
-bkg_colors_hex['ZH_other'] = "#717581"
+bkg_colors_hex = {key: bkg_color_hex(i, len(bkg_groups))
+                  for i, key in enumerate(bkg_groups.keys())}
 
 bkg_legend_labels = {
     "WW":       "e^{+}e^{-} #rightarrow WW",
