@@ -349,7 +349,7 @@ def save_diagnostic_plot(h_density, results, best_func):
 def build_bkg_sum():
     """
     Loads merged bkg_sum histogram, optionally rebins it coarser, fits
-    every candidate function, prints the comparison table, saves a
+    every fit function, prints the comparison table, saves a
     diagnostic overlay, and returns the fine-binned bkg histogram sampled
     from the chosen best fit
     """

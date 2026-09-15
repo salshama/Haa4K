@@ -1,7 +1,4 @@
 #!/usr/bin/env python3
-"""
-Parameter space over (m_a, ctau) where n_events = xsec * int_lumi * fdec
-"""
 
 import re
 import warnings
@@ -20,7 +17,7 @@ CTAU_MM = {"1mm": 1.0, "10mm": 10.0, "1m": 1000.0, "2m": 2000.0}
 sqrt_s   = 240.0
 mh       = 125.0
 mz       = 91.2
-ldet     = 2.0          # effective detector length used for decays inside/outside detector [m]
+ldet     = 2.0          # effective detector radius [m]
 int_lumi = 10.8e6       # pb^-1
 n_events_thresh = 1
 channels = ["ee", "mumu"]
@@ -28,7 +25,7 @@ channels = ["ee", "mumu"]
 base_dir      = Path("/ceph/salshamaily/haa4K_FCCee/madgraph_3.7.1")
 out_plot_path = Path("/ceph/salshamaily/haa4K_FCCee/analysis/plots_output/param_space/")
 
-# hbar*c in GeV*mm (hbar*c = 1.973269804e-16 GeV*m -> *1000 mm/m)
+# hbar*c in GeV*mm
 HBAR_C_GEV_MM = 1.973269804e-13
 
 def alp_width_from_ctau(ctau_mm: float) -> float:
@@ -76,26 +73,45 @@ def alp_rest_kin(mh, ma):
 		return Estar, 0.0
 	return Estar, np.sqrt(pstar2)
 
-def alp_lab_kin(betah, gammah, Estar, pstar, costheta):
+def alp_lab_components(betah, gammah, Estar, pstar, costheta):
+	"""
+	Boost alp from the Higgs rest frame
+	"""
 	pz = gammah * (pstar * costheta + betah * Estar)
 	pt = pstar * np.sqrt(np.clip(1.0 - costheta ** 2, 0.0, None))
-	return np.sqrt(pz ** 2 + pt ** 2)
+	return pz, pt
 
 def f_dec(ma, ctau_m, sqrt_s, mh, mz, ldet, n_costheta=4000):
-	"""alp decay probability before traveling distance ldet with ctau [m]"""
+	"""
+	Probability that both alps from h -> aa decay inside the detector
+	"""
 	if not np.isfinite(ctau_m) or ctau_m <= 0:
 		return np.nan
 	_, _, betah, gammah = higgs_lab_kin(sqrt_s, mh, mz)
 	Estar, pstar = alp_rest_kin(mh, ma)
 	if pstar == 0.0:
 		return np.nan
+
 	costheta = np.linspace(-1.0, 1.0, n_costheta)
-	p1 = alp_lab_kin(betah, gammah, Estar, pstar, costheta)
-	p2 = alp_lab_kin(betah, gammah, Estar, pstar, -costheta)
-	L1 = (p1 / ma) * ctau_m
-	L2 = (p2 / ma) * ctau_m
-	P1 = 1.0 - np.exp(-ldet / L1)
-	P2 = 1.0 - np.exp(-ldet / L2)
+
+	# alps are back-to-back in the Higgs rest frame
+	pz1, pt1 = alp_lab_components(betah, gammah, Estar, pstar, costheta)
+	pz2, pt2 = alp_lab_components(betah, gammah, Estar, pstar, -costheta)
+
+	p1 = np.sqrt(pz1 ** 2 + pt1 ** 2)
+	p2 = np.sqrt(pz2 ** 2 + pt2 ** 2)
+
+	# lab-frame polar angle w.r.t. the beam axis for each ALP
+	theta_lab1 = np.arctan2(pt1, pz1)
+	theta_lab2 = np.arctan2(pt2, pz2)
+
+	# L_perp = (p/ma) * ctau * sin(theta_lab)
+	L1_perp = (p1 / ma) * ctau_m * np.sin(theta_lab1)
+	L2_perp = (p2 / ma) * ctau_m * np.sin(theta_lab2)
+
+	with np.errstate(divide="ignore", invalid="ignore"):
+		P1 = np.where(L1_perp > 0, 1.0 - np.exp(-ldet / np.where(L1_perp > 0, L1_perp, 1.0)), 0.0)
+		P2 = np.where(L2_perp > 0, 1.0 - np.exp(-ldet / np.where(L2_perp > 0, L2_perp, 1.0)), 0.0)
 
 	integrand = P1 * P2
 	trapz_fn = getattr(np, "trapezoid", None) or np.trapz
@@ -133,8 +149,7 @@ def build_grid():
 	n_events = int_lumi * xsec_pb * fdec
 	return n_events, xsec_pb, fdec, ctau_mm_arr, width_arr
 
-def _draw_heatmap(vals, x_ticklabels, y_ticklabels, x_axis_label, y_axis_label,
-                   out_dir, out_name, x_rotation=45):
+def _draw_heatmap(vals, x_ticklabels, y_ticklabels, x_axis_label, y_axis_label, out_dir, out_name, x_rotation=45):
 	out_dir = Path(out_dir)
 	out_dir.mkdir(parents=True, exist_ok=True)
 
@@ -190,15 +205,13 @@ def _draw_heatmap(vals, x_ticklabels, y_ticklabels, x_axis_label, y_axis_label,
 	print(f"Saved plot to {out_dir / out_name}.[pdf|png]")
 	plt.close(fig)
 
-def make_plot_2d_ctau(n_events, ctau_mm_arr, malp,
-                       out_dir=out_plot_path, out_name="alp_parameter_space_2d_ctau"):
+def make_plot_2d_ctau(n_events, ctau_mm_arr, malp, out_dir=out_plot_path, out_name="alp_parameter_space_2d_ctau"):
 	x_ticklabels = [f"{m:g}" for m in malp]
 	_draw_heatmap(n_events, x_ticklabels, CTAU_LABELS,
 	              r"$m_a$ [GeV]", r"$c\tau_a$",
 	              out_dir, out_name)
 
-def make_plot_2d_gamma(n_events, width_arr, malp,
-                        out_dir=out_plot_path, out_name="alp_parameter_space_2d_gamma"):
+def make_plot_2d_gamma(n_events, width_arr, malp, out_dir=out_plot_path, out_name="alp_parameter_space_2d_gamma"):
 	n_events_T = n_events.T  # rows: malp, columns: ctau/gamma
 	y_ticklabels = [f"{m:g}" for m in malp]
 	x_ticklabels = [f"{w:.2e}" for w in width_arr]
