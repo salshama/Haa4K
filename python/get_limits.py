@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""limit plots vs m_a: one figure per flavour, linear sigma x BR [pb]"""
 
 from __future__ import annotations
 import os
@@ -8,23 +9,27 @@ import numpy as np
 import matplotlib.pyplot as plt
 import ROOT
 
+try:
+    import mplhep as hep
+    plt.style.use(hep.style.CMS)
+except Exception:
+    pass
+
+plt.rcParams.update({"font.size": 20})
 ROOT.gROOT.SetBatch(True)
 
 DATACARD_DIR = "/ceph/salshamaily/haa4K_FCCee/combine/datacards"
-OUT_DIR = "/ceph/salshamaily/haa4K_FCCee/analysis/plots_output/limits"
+OUT_DIR = "/ceph/salshamaily/haa4K_FCCee/analysis/plots_output/statistics"
 COMBINE_FILE = "higgsCombineTest.AsymptoticLimits.mH120.root"
+# None = most sensitive ctau at each mass. Or e.g. "1mm".
+CTAU = None
 SIGNAL_RE = re.compile(r"^mgp8_ee_(ee|mumu)H_HAlpAlp_(m[0-9p]+)_ecm240_(ctau[0-9]+m+)$")
 CTAU_ORDER = ["1mm", "10mm", "1m", "2m"]
 CHANNEL_LABEL = {
     "ee": r"$Z\to e^+e^-$",
-    "mumu": r"$Z\to\mu^+\mu^-$",
-}
-
-# quantileExpected -> name. Median and +/-1sigma are required.
+    "mumu": r"$Z\to\mu^+\mu^-$",}
 Q_EXP, Q_M1, Q_P1 = 0.50, 0.16, 0.84
-Q_M2, Q_P2, Q_OBS = 0.025, 0.975, -1.0
-
-# Generated MadGraph cross sections [pb], same as finalSel.py
+Q_M2, Q_P2 = 0.025, 0.975
 XSEC_PB = {
     ("ee", 0.05): 9.5532e-04, ("mumu", 0.05): 9.5531e-04,
     ("ee", 0.1): 9.5532e-04, ("mumu", 0.1): 9.5531e-04,
@@ -37,8 +42,7 @@ XSEC_PB = {
     ("ee", 30.0): 1.1290e-03, ("mumu", 30.0): 1.1290e-03,
     ("ee", 40.0): 6.9960e-02, ("mumu", 40.0): 6.9920e-02,
     ("ee", 50.0): 3.9978e-02, ("mumu", 50.0): 3.9972e-02,
-    ("ee", 60.0): 1.17362e-02, ("mumu", 60.0): 1.17360e-02,
-}
+    ("ee", 60.0): 1.17362e-02, ("mumu", 60.0): 1.17360e-02,}
 
 def mass_from_tag(tag):
     return float(tag[1:].replace("p", "."))
@@ -89,147 +93,144 @@ def load_rows():
         exp = match_quantile(qmap, Q_EXP)
         m1 = match_quantile(qmap, Q_M1)
         p1 = match_quantile(qmap, Q_P1)
-        if exp is None or m1 is None or p1 is None:
-            print(f"skip {name}: {path}: missing median or +/-1sigma")
-            continue
-
         m2 = match_quantile(qmap, Q_M2)
         p2 = match_quantile(qmap, Q_P2)
+        if exp is None or m1 is None or p1 is None:
+            print(f"skip {name}: missing median or +/-1sigma")
+            continue
         if m2 is None:
-            print(f"note {name}: missing quantile 0.025, using +/-1sigma")
             m2 = m1
+            print(f"note {name}: missing 0.025, using 0.16 for -2sigma")
         if p2 is None:
-            print(f"note {name}: missing quantile 0.975, using +/-1sigma")
             p2 = p1
+            print(f"note {name}: missing 0.975, using 0.84 for +2sigma")
 
-        channel = match.group(1)
-        mass = mass_from_tag(match.group(2))
-        ctau = ctau_from_tag(match.group(3))
-        xsec = XSEC_PB.get((channel, mass), np.nan)
+        flavour, mass_tag, ctau_tag = match.groups()
+        mass = mass_from_tag(mass_tag)
+        ctau = ctau_from_tag(ctau_tag)
+        xsec = XSEC_PB.get((flavour, mass))
+        if xsec is None:
+            print(f"skip {name}: no xsec for {(flavour, mass)}")
+            continue
 
         rows.append(
             dict(
-                name=name,
-                channel=channel,
-                mass=mass,
+                channel=flavour,
                 ctau=ctau,
+                mass=mass,
                 exp=exp,
                 m1=m1,
                 p1=p1,
                 m2=m2,
                 p2=p2,
-                obs=match_quantile(qmap, Q_OBS),
                 xsec=xsec,
             )
         )
     return rows
 
-def draw_brazil(ax, pts, ylabel):
-    pts = sorted(pts, key=lambda r: r["mass"])
-    m = np.array([r["mass"] for r in pts])
-    exp = np.array([r["exp"] for r in pts])
-    m1 = np.array([r["m1"] for r in pts])
-    p1 = np.array([r["p1"] for r in pts])
-    m2 = np.array([r["m2"] for r in pts])
-    p2 = np.array([r["p2"] for r in pts])
+def pick_points(rows, channel):
+    by_mass = defaultdict(list)
+    for r in rows:
+        if r["channel"] != channel:
+            continue
+        if CTAU is not None and r["ctau"] != CTAU:
+            continue
+        by_mass[r["mass"]].append(r)
 
-    ax.fill_between(m, m2, p2, color="#F5BB54", lw=0, zorder=1, label=r"Expected $\pm 2\sigma$")
-    ax.fill_between(m, m1, p1, color="#8CD48C", lw=0, zorder=2, label=r"Expected $\pm 1\sigma$")
-    ax.plot(m, exp, color="black", ls="--", lw=1.4, zorder=3, label="Median expected")
-    ax.set_xscale("log")
-    ax.set_yscale("log")
+    picked = []
+    for mass in sorted(by_mass):
+        cands = by_mass[mass]
+        best = min(cands, key=lambda r: r["exp"] * r["xsec"])
+        picked.append(best)
+        if CTAU is None and len(cands) > 1:
+            print(
+                f"{channel}  m_a={mass:g} GeV  using ctau={best['ctau']}  "
+                f"sigmaBR={best['exp'] * best['xsec']:.3e} pb"
+            )
+    return picked
+
+def draw_channel(rows, channel):
+    pts = pick_points(rows, channel)
+    if not pts:
+        print(f"no points for {channel}")
+        return
+
+    ma = np.array([p["mass"] for p in pts], dtype=float)
+    exp = np.array([p["exp"] * p["xsec"] for p in pts], dtype=float)
+    m1 = np.array([p["m1"] * p["xsec"] for p in pts], dtype=float)
+    p1 = np.array([p["p1"] * p["xsec"] for p in pts], dtype=float)
+    m2 = np.array([p["m2"] * p["xsec"] for p in pts], dtype=float)
+    p2 = np.array([p["p2"] * p["xsec"] for p in pts], dtype=float)
+
+    theo_m, theo_s = [], []
+    for (flav, mass), xsec in sorted(XSEC_PB.items()):
+        if flav == channel:
+            theo_m.append(mass)
+            theo_s.append(xsec)
+    theo_m = np.array(theo_m)
+    theo_s = np.array(theo_s)
+
+    fig, ax = plt.subplots()
+    fill_2s = ax.fill_between(ma, m2, p2, color="gold", alpha=1.0, zorder=1)
+    fill_1s = ax.fill_between(ma, m1, p1, color="limegreen", alpha=1.0, zorder=2)
+    line_theo = ax.plot(
+        theo_m, theo_s, color="red", linewidth=2, linestyle="-", zorder=3
+    )
+    line_exp = ax.plot(
+        ma,
+        exp,
+        color="black",
+        linestyle="--",
+        marker="o",
+        markersize=7,
+        linewidth=2,
+        zorder=4,
+    )
+
     ax.set_xlabel(r"$m_a$ [GeV]")
-    ax.set_ylabel(ylabel)
-    ax.set_xticks(m)
-    ax.set_xticklabels([f"{x:g}" for x in m], rotation=45, ha="right")
-    ax.minorticks_off()
-    ax.grid(True, which="major", alpha=0.25)
+    ax.set_ylabel(
+        r"$\sigma \times \mathrm{BR}(H\rightarrow aa\rightarrow K^+K^-K^+K^-)$ [pb]"
+    )
+    ax.set_xlim(ma.min(), ma.max())
+    ax.set_ylim(0.0, float(np.max(p2)) * 1.25)
+    ax.ticklabel_format(axis="y", style="sci", scilimits=(0, 0))
+    ax.yaxis.get_offset_text().set_fontsize(20)
 
-def plot(rows):
+    ax.set_title(r"$\mathbf{FCC\!-\!ee\ Simulation\ (Delphes)}$", loc="left", fontsize=20)
+    ax.set_title(r"10.8 ab$^{-1}$ (240 $\mathrm{GeV}$)", loc="right", fontsize=19)
+    ax.text(
+        0.03,
+        0.92,
+        CHANNEL_LABEL[channel],
+        transform=ax.transAxes,
+        fontsize=16,
+        va="top",
+    )
+
+    ax.legend(
+        handles=[line_exp[0], line_theo[0], fill_1s, fill_2s],
+        labels=["Expected Limit", "Theoretical Limit", "68% expected", "95% expected"],
+        loc="upper right",
+        frameon=False,
+    )
+    fig.subplots_adjust(left=0.18, right=0.97, bottom=0.15, top=0.90)
+
     os.makedirs(OUT_DIR, exist_ok=True)
-
-    by_key = defaultdict(list)
-    for row in rows:
-        by_key[(row["channel"], row["ctau"])].append(row)
-
-    for channel in ("ee", "mumu"):
-        fig, axes = plt.subplots(2, 2, figsize=(11.0, 8.5), sharex=False)
-        axes = axes.ravel()
-        handles, labels = None, None
-        for i, ctau in enumerate(CTAU_ORDER):
-            ax = axes[i]
-            pts = by_key.get((channel, ctau), [])
-            ax.set_title(rf"{CHANNEL_LABEL[channel]}, $c\tau_a={ctau}$")
-            if not pts:
-                ax.text(0.5, 0.5, "no points", ha="center", va="center", transform=ax.transAxes)
-                continue
-            draw_brazil(ax, pts, r"Expected 95% CL limit on $\mu$")
-            handles, labels = ax.get_legend_handles_labels()
-
-        fig.suptitle(
-            r"$e^+e^-\to ZH,\ H\to aa\to K^+K^-K^+K^-$"
-            "\n"
-            r"FCC-ee IDEA, $\sqrt{s}=240$ GeV, $\mathcal{L}=10.8$ ab$^{-1}$",
-            fontsize=13,
-        )
-        if handles:
-            fig.legend(handles, labels, loc="center left", bbox_to_anchor=(0.82, 0.5), frameon=False)
-        fig.subplots_adjust(left=0.10, right=0.80, bottom=0.10, top=0.86, wspace=0.32, hspace=0.38)
-        out = os.path.join(OUT_DIR, f"limits_{channel}_mu")
-        fig.savefig(out + ".pdf")
-        fig.savefig(out + ".png", dpi=200)
-        print(f"Wrote {out}.pdf")
-        plt.close(fig)
-
-        fig, axes = plt.subplots(2, 2, figsize=(11.0, 8.5))
-        axes = axes.ravel()
-        handles, labels = None, None
-        for i, ctau in enumerate(CTAU_ORDER):
-            ax = axes[i]
-            pts = by_key.get((channel, ctau), [])
-            ax.set_title(rf"{CHANNEL_LABEL[channel]}, $c\tau_a={ctau}$")
-            xsec_pts = []
-            for r in pts:
-                if not np.isfinite(r["xsec"]):
-                    continue
-                xsec_pts.append(
-                    dict(
-                        mass=r["mass"],
-                        exp=r["exp"] * r["xsec"],
-                        m1=r["m1"] * r["xsec"],
-                        p1=r["p1"] * r["xsec"],
-                        m2=r["m2"] * r["xsec"],
-                        p2=r["p2"] * r["xsec"],
-                    )
-                )
-            if not xsec_pts:
-                ax.text(0.5, 0.5, "no points", ha="center", va="center", transform=ax.transAxes)
-                continue
-            draw_brazil(ax, xsec_pts, r"Expected 95% CL limit on $\sigma\times\mathcal{B}$ [pb]")
-            handles, labels = ax.get_legend_handles_labels()
-
-        fig.suptitle(
-            r"$e^+e^-\to ZH,\ H\to aa\to K^+K^-K^+K^-$"
-            "\n"
-            r"FCC-ee IDEA, $\sqrt{s}=240$ GeV, $\mathcal{L}=10.8$ ab$^{-1}$",
-            fontsize=13,
-        )
-        if handles:
-            fig.legend(handles, labels, loc="center left", bbox_to_anchor=(0.82, 0.5), frameon=False)
-        fig.subplots_adjust(left=0.10, right=0.80, bottom=0.10, top=0.86, wspace=0.32, hspace=0.38)
-        out = os.path.join(OUT_DIR, f"limits_{channel}_xsec")
-        fig.savefig(out + ".pdf")
-        fig.savefig(out + ".png", dpi=200)
-        print(f"Wrote {out}.pdf")
-        plt.close(fig)
+    out = os.path.join(OUT_DIR, f"limit_{channel}")
+    fig.savefig(out + ".pdf")
+    fig.savefig(out + ".png", dpi=200)
+    print(f"Wrote {out}.pdf")
+    plt.close(fig)
 
 def print_table(rows):
-    print("\nchannel  ctau    m_a [GeV]   mu_exp    mu-1s     mu+1s     xsec[pb]")
-    print("-" * 76)
-    for r in sorted(rows, key=lambda x: (x["channel"], CTAU_ORDER.index(x["ctau"]), x["mass"])):
+    print("\nchannel  ctau    m_a [GeV]   mu_exp    sigmaBR_exp [pb]")
+    print("-" * 62)
+    for r in sorted(
+        rows, key=lambda x: (x["channel"], CTAU_ORDER.index(x["ctau"]), x["mass"])
+    ):
         print(
             f"{r['channel']:6s}  {r['ctau']:6s}  {r['mass']:9.2f}  "
-            f"{r['exp']:8.3g}  {r['m1']:8.3g}  {r['p1']:8.3g}  {r['xsec']:8.3g}"
+            f"{r['exp']:8.3g}  {r['exp'] * r['xsec']:8.3g}"
         )
 
 if __name__ == "__main__":
@@ -238,4 +239,5 @@ if __name__ == "__main__":
     if not rows:
         raise SystemExit("No usable Combine outputs")
     print_table(rows)
-    plot(rows)
+    draw_channel(rows, "ee")
+    draw_channel(rows, "mumu")
