@@ -8,12 +8,18 @@ intLumi			= 10.8e6 #pb^-1
 ###If scaleSig or scaleBack is not defined, plots will be normalized to 1
 # scaleSig		= 0.
 # scaleBack		= 0.
-ana_tex			= "e^{+}e^{-} #rightarrow Z #rightarrow ZH, H #rightarrow aa"
+FLAVOUR = "mumu"  # change to "mumu" for the second run
+if FLAVOUR == "ee":
+    ana_tex = r"e^{+}e^{-} #rightarrow ZH, Z #rightarrow e^{+}e^{-}, H #rightarrow aa"
+    outdir = ("/ceph/salshamaily/haa4K_FCCee/analysis/plots_output/all_samples_mgp8sig_norwt_082026/ee/")
+else:
+    ana_tex = r"e^{+}e^{-} #rightarrow ZH, Z #rightarrow #mu^{+}#mu^{-}, H #rightarrow aa"
+    outdir = ("/ceph/salshamaily/haa4K_FCCee/analysis/plots_output/all_samples_mgp8sig_norwt_082026/mumu/")
 delphesVersion	= '3.4.2'
 energy			= 240
 collider 		= 'FCC-ee'
 inputDir 		= '/ceph/salshamaily/haa4K_FCCee/analysis/final_output/all_samples_mgp8sig_norwt_082026/'
-outdir			= '/ceph/salshamaily/haa4K_FCCee/analysis/plots_output/all_samples_mgp8sig_norwt_082026/'
+outputdir		= outdir
 formats			= ['png','pdf']
 yaxis			= ['log']
 stacksig		= ['nostack']
@@ -88,6 +94,9 @@ variables = [
 	"RecoKplus_py",
 	"RecoKplus_pz",
 	"RecoKplus_charge",
+	"RecoKplus_eta",
+	"RecoKplus_phi",
+	"RecoKplus_theta",
 
 	# RECO gamma
 	"n_RecoPhotons",
@@ -119,7 +128,7 @@ variables = [
 	"RecoMuon_py",
 	"RecoMuon_pz",
 	"RecoMuon_charge",
-
+	
 	# RECO lepton
 	"n_RecoLeptons",
 	"RecoLepton_e",
@@ -130,6 +139,9 @@ variables = [
 	"RecoLepton_py",
 	"RecoLepton_pz",
 	"RecoLepton_charge",
+	"RecoLepton_eta",
+	"RecoLepton_phi",
+	"RecoLepton_theta",
 
 	# RECO H
 	"RecoHiggs_e",
@@ -141,6 +153,7 @@ variables = [
 	"RecoHiggs_pz",
 	"RecoHiggs_eta",
 	"RecoHiggs_phi",
+ 	"RecoHiggs_theta",
 
 	# RECO IND k+
 	"Kplus_0_m",
@@ -193,6 +206,7 @@ variables = [
 	"RecoZ_pz",
 	"RecoZ_eta",
 	"RecoZ_phi",
+ 	"RecoZ_theta",
 
 	# RECO IND lepton
 	"Lepton_0_m",
@@ -225,6 +239,7 @@ variables = [
 	"alp_0_pz",
 	"alp_0_eta",
 	"alp_0_phi",
+	"alp_0_theta",
 
 	"alp_1_m",
 	"alp_1_e",
@@ -290,6 +305,17 @@ SIGNAL_POINTS = [
     ("30p0", "10mm"),
 ]
 
+FLAVOUR_CFG = {
+    "ee": {
+        "proc": "mgp8_ee_eeH_HAlpAlp_m{m}_ecm240_ctau{c}",
+        "leg":  r"e^{{+}}e^{{-}}#rightarrow e^{{+}}e^{{-}}H, m_{{a}}={mass} GeV, c#tau={c}",
+    },
+    "mumu": {
+        "proc": "mgp8_ee_mumuH_HAlpAlp_m{m}_ecm240_ctau{c}",
+        "leg":  r"e^{{+}}e^{{-}}#rightarrow #mu^{{+}}#mu^{{-}}H, m_{{a}}={mass} GeV, c#tau={c}",},}
+
+cfg = FLAVOUR_CFG[FLAVOUR]
+
 colors = {}
 legend = {}
 plots = {}
@@ -297,30 +323,21 @@ plots = {}
 plots['HAlpAlp'] = {'signal': {}, 'backgrounds': {}}
 
 for i, (m, c) in enumerate(SIGNAL_POINTS):
-    key = f"ee_llH_HAlpAlp_m{m}_ctau{c}"
-    proc_ee   = f"mgp8_ee_eeH_HAlpAlp_m{m}_ecm240_ctau{c}"
-    proc_mumu = f"mgp8_ee_mumuH_HAlpAlp_m{m}_ecm240_ctau{c}"
-    plots['HAlpAlp']['signal'][key] = [proc_ee, proc_mumu]
+    key = f"{FLAVOUR}_HAlpAlp_m{m}_ctau{c}"
+    proc = cfg["proc"].format(m=m, c=c)
+    plots["HAlpAlp"]["signal"][key] = [proc]
     color_name = SIGNAL_COLOR_ORDER[i % len(SIGNAL_COLOR_ORDER)]
     colors[key] = ROOT.TColor.GetColor(SIGNAL_COLOR_HEX[color_name])
-    legend[key] = f"e^{{+}}e^{{-}}#rightarrow l^{{+}}l^{{-}}H, m_{{a}}={m.replace('p','.')} GeV, c#tau={c}"
+    legend[key] = cfg["leg"].format(mass=m.replace("p", "."), c=c)
 
-#### Alternative: keep e/mu channels separate (2x the legend rows) ####
 # for i, (m, c) in enumerate(SIGNAL_POINTS):
-#     color_name = SIGNAL_COLOR_ORDER[i % len(SIGNAL_COLOR_ORDER)]
-#     hexcode = SIGNAL_COLOR_HEX[color_name]
-#
-#     key_ee = f"ee_eeH_HAlpAlp_m{m}_ctau{c}"
-#     proc_ee = f"mgp8_ee_eeH_HAlpAlp_m{m}_ecm240_ctau{c}"
-#     plots['HAlpAlp']['signal'][key_ee] = [proc_ee]
-#     colors[key_ee] = ROOT.TColor.GetColor(hexcode)
-#     legend[key_ee] = f"e^{{+}}e^{{-}}#rightarrow e^{{+}}e^{{-}}H, m_{{a}}={m.replace('p','.')} GeV, c#tau={c}"
-#
-#     key_mumu = f"ee_mumuH_HAlpAlp_m{m}_ctau{c}"
+#     key = f"ee_llH_HAlpAlp_m{m}_ctau{c}"
+#     proc_ee   = f"mgp8_ee_eeH_HAlpAlp_m{m}_ecm240_ctau{c}"
 #     proc_mumu = f"mgp8_ee_mumuH_HAlpAlp_m{m}_ecm240_ctau{c}"
-#     plots['HAlpAlp']['signal'][key_mumu] = [proc_mumu]
-#     colors[key_mumu] = ROOT.TColor.GetColor(hexcode)
-#     legend[key_mumu] = f"e^{{+}}e^{{-}}#rightarrow #mu^{{+}}#mu^{{-}}H, m_{{a}}={m.replace('p','.')} GeV, c#tau={c}"
+#     plots['HAlpAlp']['signal'][key] = [proc_ee, proc_mumu]
+#     color_name = SIGNAL_COLOR_ORDER[i % len(SIGNAL_COLOR_ORDER)]
+#     colors[key] = ROOT.TColor.GetColor(SIGNAL_COLOR_HEX[color_name])
+#     legend[key] = f"e^{{+}}e^{{-}}#rightarrow l^{{+}}l^{{-}}H, m_{{a}}={m.replace('p','.')} GeV, c#tau={c}"
 
 ##############
 # BACKGROUND #

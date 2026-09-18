@@ -357,6 +357,7 @@ class RDFanalysis():
 	   	.Define("Kplus_0_pz",	"Kplus_0.Pz()")
 	   	.Define("Kplus_0_eta",	"Kplus_0.Eta()")
 	   	.Define("Kplus_0_phi",	"Kplus_0.Phi()")
+	   	.Define("Kplus_0_theta","Kplus_0.Theta()")
 	   
 	   	.Define("Kplus_1_m",	"Kplus_1.M()")
 	   	.Define("Kplus_1_e",	"Kplus_1.E()")
@@ -414,6 +415,7 @@ class RDFanalysis():
 		.Define("alp_0_pz",		"alp_0.Pz()")
 		.Define("alp_0_eta",	"alp_0.Eta()")
 		.Define("alp_0_phi",	"alp_0.Phi()")
+		.Define("alp_0_theta",	"alp_0.Theta()")
 		
 		.Define("alp_1_m",		"alp_1.M()")
 		.Define("alp_1_e", 		"alp_1.E()")
@@ -438,6 +440,7 @@ class RDFanalysis():
 		.Define("RecoHiggs_pz",		"RecoHiggs.Pz()")
 		.Define("RecoHiggs_eta",	"RecoHiggs.Eta()")
 		.Define("RecoHiggs_phi",	"RecoHiggs.Phi()")
+		.Define("RecoHiggs_theta",	"RecoHiggs.Theta()")
 		
 		### LEPTON SELECTION ###
 		.Filter("""( (n_RecoElectrons==2 && n_RecoMuons==0 && (RecoElectron_charge.at(0)+RecoElectron_charge.at(1))==0) || (n_RecoMuons==2 && n_RecoElectrons==0 && (RecoMuon_charge.at(0)+RecoMuon_charge.at(1))==0) )""")
@@ -457,6 +460,7 @@ class RDFanalysis():
 		.Define("Lepton_0_pz",	"Lepton_0.Pz()")
 		.Define("Lepton_0_eta",	"Lepton_0.Eta()")
 		.Define("Lepton_0_phi",	"Lepton_0.Phi()")
+		.Define("Lepton_0_theta","Lepton_0.Theta()")
 		
 		.Define("Lepton_1_m",	"Lepton_1.M()")
 		.Define("Lepton_1_e",	"Lepton_1.E()")
@@ -484,6 +488,7 @@ class RDFanalysis():
 		.Define("RecoZ_pz",		"RecoZ.Pz()")
 		.Define("RecoZ_eta",	"RecoZ.Eta()")
 		.Define("RecoZ_phi",	"RecoZ.Phi()")
+		.Define("RecoZ_theta",	"RecoZ.Theta()")
 		
 		### MISSING ENERGY ###
 		.Define("RecoEmiss",		"FCCAnalyses::ZHfunctions::missingEnergy(240., ReconstructedParticles)") #ecm=240
@@ -494,38 +499,8 @@ class RDFanalysis():
         .Define("RecoEmiss_p",		"return sqrt(RecoEmiss_px*RecoEmiss_px + RecoEmiss_py*RecoEmiss_py + RecoEmiss_pz*RecoEmiss_pz)")
         .Define("RecoEmiss_e",		"RecoEmiss[0].energy")
         .Define("RecoEmiss_mass",	"RecoEmiss[0].mass")
-        
-        ### JETS ###
-		# jet clustering with different algorithm, only on non leptons #
-		#.Define("RP_px",	"ReconstructedParticle::get_px(RecoKplus) ")
-		#.Define("RP_py",	"ReconstructedParticle::get_py(RecoKplus) ")
-		#.Define("RP_pz",	"ReconstructedParticle::get_pz(RecoKplus) ")
-		#.Define("RP_e",	"ReconstructedParticle::get_e(RecoKplus) ")
-		
-		# build pseudo jets with the RP, using the interface that takes px,py,pz,E
-		#.Define("pseudo_jets",	"JetClusteringUtils::set_pseudoJets(RP_px, RP_py, RP_pz, RP_e)")
-		
-		# Durham algo, exclusive clustering (first number 2) N_jets=4 (second number), E-scheme=0 (third and forth numbers) #
-		#.Define("FCCAnalysesJets_ee_kt",	"JetClustering::clustering_ee_kt(2, 4, 1, 0)(pseudo_jets)")
-		#.Define("Jets_kt2",				"JetClusteringUtils::get_pseudoJets( FCCAnalysesJets_ee_kt )")
-		#.Define("Jet_GetConstituents_kt2",	"JetClusteringUtils::get_constituents(FCCAnalysesJets_ee_kt)") # constituents indices
-		#.Define("Jets_Constituents_kt2",	"JetConstituentsUtils::build_constituents_cluster(RecoKplus, Jet_GetConstituents_kt2)") #build jet constituents lists for reconstruction
-		#.Define("Jets_kt2_e",				"JetClusteringUtils::get_e(Jets_kt2)")
-		#.Define("Jets_kt2_mass",			"JetClusteringUtils::get_m(Jets_kt2)")
-		#.Define("Jets_kt2_p",				"JetClusteringUtils::get_p(Jets_kt2)")  #momentum p
-		#.Define("Jets_kt2_pt",				"JetClusteringUtils::get_pt(Jets_kt2)") #transverse momentum pt
-		#.Define("Jets_kt2_px",				"JetClusteringUtils::get_px(Jets_kt2)")
-		#.Define("Jets_kt2_py",				"JetClusteringUtils::get_py(Jets_kt2)")
-		#.Define("Jets_kt2_pz",				"JetClusteringUtils::get_pz(Jets_kt2)")
-		#.Define("Jets_kt2_eta",			"JetClusteringUtils::get_eta(Jets_kt2)") #pseudorapidity eta
-		#.Define("Jets_kt2_theta",   		"JetClusteringUtils::get_theta(Jets_kt2)")
-		#.Define("Jets_kt2_phi",			"JetClusteringUtils::get_phi(Jets_kt2)") #polar angle in the transverse plane phi
-		#.Define("n_Jets_kt2_constituents",	"JetConstituentsUtils::get_n_constituents(Jets_Constituents_kt2)")
-		#.Define("n_Jets_kt2_charged_constituents", "JetConstituentsUtils::get_ncharged_constituents(Jets_Constituents_kt2)")
-		#.Define("n_Jets_kt2_neutral_constituents", "JetConstituentsUtils::get_nneutral_constituents(Jets_Constituents_kt2)")
-		#.Define("n_Jets_kt2",						"Jets_kt2_e.size()")
-		)
-		
+        )
+
 		return df2
 
 	#__________________________________________________________
@@ -704,6 +679,7 @@ class RDFanalysis():
 				"RecoHiggs_pz",
 				"RecoHiggs_eta",
 				"RecoHiggs_phi",
+				"RecoHiggs_theta",
 				
 				# RECO IND k+
 				"Kplus_0_m", 
@@ -715,6 +691,7 @@ class RDFanalysis():
 				"Kplus_0_pz",
 				"Kplus_0_eta",
 				"Kplus_0_phi",
+				"Kplus_0_theta",
 				
 				"Kplus_1_m", 
 				"Kplus_1_e", 
@@ -756,6 +733,7 @@ class RDFanalysis():
 				"RecoZ_pz",
 				"RecoZ_eta",
 				"RecoZ_phi",
+				"RecoZ_theta",
 				"RecoZ_leptonFlavor",
 				
 				# RECO IND leptons
@@ -768,6 +746,7 @@ class RDFanalysis():
 				"Lepton_0_pz",
 				"Lepton_0_eta",
 				"Lepton_0_phi",
+				"Lepton_0_theta",
 				
 				"Lepton_1_m",	
 				"Lepton_1_e",	
@@ -789,6 +768,7 @@ class RDFanalysis():
 				"alp_0_pz",
 				"alp_0_eta",
 				"alp_0_phi",
+				"alp_0_theta",
 				
 				"alp_1_m",	
 				"alp_1_e",	
