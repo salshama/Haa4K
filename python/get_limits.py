@@ -195,16 +195,28 @@ def draw_channel(rows, channel):
     ax.set_ylim(0.0, float(np.max(p2)) * 1.25)
     ax.ticklabel_format(axis="y", style="sci", scilimits=(0, 0))
     ax.yaxis.get_offset_text().set_fontsize(20)
+    ax.set_title(
+        r"$\mathbf{FCCAnalyses:\ FCC\!-\!ee\ Simulation\ (Delphes)}$",
+        loc="center",
+        fontsize=18,
+        pad=14,
+    )
 
-    ax.set_title(r"$\mathbf{FCC\!-\!ee\ Simulation\ (Delphes)}$", loc="left", fontsize=20)
-    ax.set_title(r"10.8 ab$^{-1}$ (240 $\mathrm{GeV}$)", loc="right", fontsize=19)
+    LEPTON_TEX = {"ee": r"e^+e^-", "mumu": r"\mu^+\mu^-"}
+    info_lines = "\n".join([
+        r"$\sqrt{s} = 240.0$ GeV",
+        r"$\mathcal{L} = 10.8$ ab$^{-1}$",
+        rf"$e^+e^- \rightarrow ZH,\ Z\rightarrow {LEPTON_TEX[channel]},\ H\rightarrow aa$",
+    ])
     ax.text(
         0.03,
-        0.92,
-        CHANNEL_LABEL[channel],
+        0.95,
+        info_lines,
         transform=ax.transAxes,
-        fontsize=16,
+        fontsize=14,
         va="top",
+        ha="left",
+        linespacing=1.6,
     )
 
     ax.legend(
@@ -212,9 +224,9 @@ def draw_channel(rows, channel):
         labels=["Expected Limit", "Theoretical Limit", "68% expected", "95% expected"],
         loc="upper right",
         frameon=False,
+        fontsize=13,
     )
-    fig.subplots_adjust(left=0.18, right=0.97, bottom=0.15, top=0.90)
-
+    fig.subplots_adjust(left=0.18, right=0.97, bottom=0.15, top=0.88)
     os.makedirs(OUT_DIR, exist_ok=True)
     out = os.path.join(OUT_DIR, f"limit_{channel}")
     fig.savefig(out + ".pdf")
